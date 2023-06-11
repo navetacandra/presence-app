@@ -28,7 +28,7 @@ class WhatsappController extends GetxController {
 
   Future<Map<String, dynamic>?> getIsReady() async {
     try {
-      final response = await http.post(_host()).timeout(const Duration(seconds: 10));
+      final response = await http.post(_host()).timeout(const Duration(seconds: 30));
       if ([200, 400].contains(response.statusCode)) {
         return jsonDecode(response.body);
       }
