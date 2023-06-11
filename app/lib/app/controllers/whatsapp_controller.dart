@@ -9,7 +9,7 @@ class WhatsappController extends GetxController {
   Uri _host({
     String? path = "/",
   }) =>
-      Uri.parse("http://192.168.100.6:3000$path");
+      Uri.parse("https://ma5terabsensi-developmentz.navetacandra.repl.co$path");
 
   @override
   void onInit() {

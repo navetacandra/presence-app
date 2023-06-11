@@ -9,6 +9,7 @@ import 'package:presence/app/data/random_data.dart';
 class KoneksiWhatsappController extends GetxController {
   final _waController = Get.put<WhatsappController>(WhatsappController());
   RxMap isReady = {}.obs;
+  RxBool isQueryLoading = false.obs;
   RxString qrcode = blankWhiteImage.obs;
 
   RxBool streamingIsReady = true.obs;
@@ -31,8 +32,10 @@ class KoneksiWhatsappController extends GetxController {
 
   void streamIsReady() async {
     while (streamingIsReady.value) {
+      isQueryLoading.value = true;
       final response = await _waController.getIsReady() ?? {};
       isReady.value = response;
+      isQueryLoading.value = false;
 
       if (logoutLoading.isTrue) {
         logoutLoading.value = false;

@@ -28,14 +28,30 @@ class KoneksiWhatsappView extends GetView<KoneksiWhatsappController> {
                     Container(
                       width: Get.width * .75,
                       margin: const EdgeInsets.only(bottom: 25),
-                      child: Text(
-                        "Terhubung Sebagai",
-                        style: GoogleFonts.poppins(
-                          color: Colors.black,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        textAlign: TextAlign.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "Terhubung Sebagai",
+                            style: GoogleFonts.poppins(
+                              color: Colors.black,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          selfC.isQueryLoading.isFalse
+                              ? Container()
+                              : Container(
+                                  width: 18,
+                                  height: 18,
+                                  margin: const EdgeInsets.only(left: 5),
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                        ],
                       ),
                     ),
                     ClipRRect(
@@ -107,7 +123,9 @@ class KoneksiWhatsappView extends GetView<KoneksiWhatsappController> {
                     ),
                     const SizedBox(height: 60),
                     InkWell(
-                      onTap: () => selfC.logoutLoading.isTrue ? null : selfC.logoutSession(),
+                      onTap: () => selfC.logoutLoading.isTrue
+                          ? null
+                          : selfC.logoutSession(),
                       child: Container(
                         height: 50,
                         decoration: BoxDecoration(
@@ -125,11 +143,11 @@ class KoneksiWhatsappView extends GetView<KoneksiWhatsappController> {
                                   ),
                                 )
                               : const Padding(
-                                padding: EdgeInsets.all(5),
-                                child: CircularProgressIndicator(
+                                  padding: EdgeInsets.all(5),
+                                  child: CircularProgressIndicator(
                                     color: Color(0XFFFFFFFF),
                                   ),
-                              ),
+                                ),
                         ),
                       ),
                     ),
@@ -148,14 +166,30 @@ class KoneksiWhatsappView extends GetView<KoneksiWhatsappController> {
                     Container(
                       width: Get.width * .75,
                       margin: const EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        "Scan QR WhatsApp",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          color: Colors.black,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "Scan QR WhatsApp",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              color: Colors.black,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          selfC.isQueryLoading.isFalse
+                              ? Container()
+                              : Container(
+                                  width: 18,
+                                  height: 18,
+                                  margin: const EdgeInsets.only(left: 5),
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                        ],
                       ),
                     ),
                     Container(
