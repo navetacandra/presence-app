@@ -9,9 +9,9 @@
 | Sign Out                       | ✅       | 11 June 2023 |
 | Home Page                      | ✅       | 11 June 2023 |
 | Add Employee                   | ✅       | 11 June 2023 |
-| Employees List                 | ✅       | 11 June 2023 |
-| Edit Employee                  | ❌       | 11 June 2023 |
-| Delete Employee                | ❌       | 11 June 2023 |
+| Employees List                 | ✅       | 12 June 2023 |
+| Edit Employee                  | ✅       | 12 June 2023 |
+| Delete Employee                | ✅       | 12 June 2023 |
 | Add Card                       | ✅       | 11 June 2023 |
 | Download Presence Report       | ❌       | 11 June 2023 |
 | Set Presence Schedule          | ✅       | 11 June 2023 |

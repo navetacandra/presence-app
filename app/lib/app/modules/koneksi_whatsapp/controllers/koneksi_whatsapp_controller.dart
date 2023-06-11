@@ -46,12 +46,12 @@ class KoneksiWhatsappController extends GetxController {
           "Terjadi Kesalahan",
           "",
           backgroundColor: const Color.fromARGB(150, 255, 50, 50),
-          colorText: const Color(0XFF0f0f0f),
+          colorText: const Color.fromARGB(255, 15, 15, 15),
           messageText: Text(
             "Tidak ada koneksi atau server WhatsApp terputus",
             style: GoogleFonts.poppins(
               fontWeight: FontWeight.w500,
-              color: const Color(0XFF0f0f0f),
+              color: const Color.fromARGB(255, 15, 15, 15),
             ),
           ),
         );

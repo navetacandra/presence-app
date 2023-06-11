@@ -50,7 +50,8 @@ class DaftarPegawaiView extends GetView<DaftarPegawaiController> {
                       ),
                     );
                   }
-
+                  
+                  selfC.pegawai.clear();
                   for (var ch in snap.children) {
                     selfC.pegawai.add(
                       {

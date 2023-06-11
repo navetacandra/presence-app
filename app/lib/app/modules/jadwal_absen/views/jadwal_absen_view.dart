@@ -565,7 +565,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                         }
                         rows.add(
                           Container(
-                            margin: EdgeInsets.only(bottom: 8),
+                            margin: const EdgeInsets.only(bottom: 8),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,

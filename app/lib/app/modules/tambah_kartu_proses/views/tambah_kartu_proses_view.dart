@@ -38,7 +38,9 @@ class TambahKartuProsesView extends GetView<TambahKartuProsesController> {
               "${selfC.method == "new" ? "Tambah" : "Pilih"} Pegawai",
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
-                  fontSize: 26, fontWeight: FontWeight.w600),
+                fontSize: 26,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 30),
             selfC.method == "select"

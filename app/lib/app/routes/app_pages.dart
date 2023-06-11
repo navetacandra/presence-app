@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/daftar_pegawai/bindings/daftar_pegawai_binding.dart';
 import '../modules/daftar_pegawai/views/daftar_pegawai_view.dart';
+import '../modules/edit_pegawai/bindings/edit_pegawai_binding.dart';
+import '../modules/edit_pegawai/views/edit_pegawai_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/jadwal_absen/bindings/jadwal_absen_binding.dart';
@@ -83,6 +85,11 @@ class AppPages {
       name: _Paths.JADWAL_ABSEN,
       page: () => JadwalAbsenView(),
       binding: JadwalAbsenBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_PEGAWAI,
+      page: () => EditPegawaiView(),
+      binding: EditPegawaiBinding(),
     ),
   ];
 }

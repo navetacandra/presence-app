@@ -15,6 +15,7 @@ abstract class Routes {
   static const SIGNUP = _Paths.SIGNUP;
   static const KONTROL_MODE = _Paths.KONTROL_MODE;
   static const JADWAL_ABSEN = _Paths.JADWAL_ABSEN;
+  static const EDIT_PEGAWAI = _Paths.EDIT_PEGAWAI;
 }
 
 abstract class _Paths {
@@ -29,4 +30,5 @@ abstract class _Paths {
   static const SIGNUP = '/signup';
   static const KONTROL_MODE = '/kontrol-mode';
   static const JADWAL_ABSEN = '/jadwal-absen';
+  static const EDIT_PEGAWAI = '/edit-pegawai';
 }
