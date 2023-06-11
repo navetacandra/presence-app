@@ -1,0 +1,32 @@
+name: presence
+version: 1.0.0+1
+publish_to: none
+description: A presence app built with flutter
+environment: 
+  sdk: '>=2.19.4 <3.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.2
+  get: 4.6.5
+  google_fonts: 4.0.3
+  email_validator: 2.1.17
+  http: 0.13.5
+  connectivity_plus: 3.0.5
+  network_info_plus: 3.0.4
+  flutter: 
+    sdk: flutter
+  firebase_core: ^2.13.1
+  firebase_auth: ^4.6.2
+  firebase_database: ^10.2.2
+  uuid: ^3.0.7
+
+dev_dependencies: 
+  flutter_lints: ^2.0.0
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  assets: 
+    - assets/
+  uses-material-design: true
+
