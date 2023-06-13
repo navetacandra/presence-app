@@ -42,5 +42,5 @@ const b = [
 
 
 // console.log(obj);
-update(ref(db, "absen_detail"), template_detail)
+update(ref(db, "schedule"), template_detail)
 update(ref(db, "absensi"), obj)

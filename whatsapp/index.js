@@ -5,7 +5,6 @@ const Firebase = require('./firebase');
 
 const app = express();
 
-// WhatsApp.connectToWhatsApp();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -56,16 +55,3 @@ app.post("/logout", async (req, res) => {
 });
 
 app.listen(3000);
-
-
-
-// -------- FIREBASE SECTION -------- //
-(async () => {
-  // const u = await Firebase.createAccount('abc', 'abc@gmail.com', '123465');
-  // const u = await Firebase.deleteAccount('abc@gmail.com');
-  // console.log(u);
-})();
-
-// const m = [
-//   'januari'
-// ]

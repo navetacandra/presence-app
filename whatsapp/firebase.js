@@ -1,6 +1,6 @@
 const { initializeApp } = require('firebase/app');
 const { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, deleteUser, signOut } = require('firebase/auth');
-const { getDatabase, onChildAdded, update, remove, get, ref, query, orderByChild, equalTo, onChildChanged, onValue, set } = require('firebase/database');
+const { getDatabase, onChildAdded, update, remove, get, ref, query, orderByChild, equalTo, onChildChanged, onValue, set, onChildRemoved } = require('firebase/database');
 const { AES, enc } = require('crypto-js');
 require('dotenv').config();
 
@@ -41,8 +41,10 @@ class Firebase {
         await signOut(this.authApp);
         signInWithEmailAndPassword(this.authApp, this.mainEmail, this.mainPassword)
             .then(() => {
+                console.log("Firebase intialize");
                 this.streamMode();
-                this.streamDetail();
+                this.streamSchedule();
+                this.streamDeletePegawai();
             })
             .catch(err => console.log(err));
     }
@@ -99,8 +101,8 @@ class Firebase {
         }
     }
 
-    streamDetail() {
-        onValue(ref(this.dbApp, 'absen_detail'), snap => {
+    streamSchedule() {
+        onValue(ref(this.dbApp, 'schedule'), snap => {
             [
                 'januari',
                 'februari',
@@ -139,7 +141,31 @@ class Firebase {
                 'desember',
             ].forEach(mth => {
                 Array(31).fill(0).map((_, i) => i + 1).forEach(dy => {
-                    update(ref(this.dbApp, `absensi/${mth}/${dy}`), {[snap.key]: snap.val()});
+                    update(ref(this.dbApp, `absensi/${mth}/${dy}`), { [snap.key]: snap.val() });
+                })
+            })
+        })
+    }
+
+    streamDeletePegawai() {
+        onChildRemoved(ref(this.dbApp, 'pegawai'), snap => {
+            let removedId = snap.key;
+            [
+                'januari',
+                'februari',
+                'maret',
+                'april',
+                'mei',
+                'juni',
+                'juli',
+                'agustus',
+                'september',
+                'oktober',
+                'november',
+                'desember',
+            ].forEach(mth => {
+                Array(31).fill(0).map((_, i) => i + 1).forEach(dy => {
+                    remove(ref(this.dbApp, `absensi/${mth}/${dy}/pegawai/${removedId}`));
                 })
             })
         })
