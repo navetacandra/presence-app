@@ -30,8 +30,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.delayed(const Duration(seconds: 3)),
-      // future: Future.delayed(Duration.zero),
+      // future: Future.delayed(const Duration(seconds: 3)),
+      future: Future.delayed(Duration.zero),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return StreamBuilder<User?>(
