@@ -11,7 +11,8 @@ class WhatsApp {
       restartOnAuthFail: true,
       authStrategy: new LocalAuth({ clientId: 'wa-session' }),
       puppeteer: {
-        // executablePath: '',
+        timeout: 0,
+        // executablePath: '/nix/store/x205pbkd5xh5g4iv0g58xjla55has3cx-chromium-108.0.5359.94/bin/chromium-browser',
         // headless: true,
         args: [
           '--no-sandbox',
@@ -26,17 +27,18 @@ class WhatsApp {
         ],
       },
     })
-
+    
+    this.client.on('authenticated', m => {
+      this.qrcode = '';
+    })
     this.client.on('ready', m => {
       this.isReady = true;
-      this.qrcode = '';
       console.log("WhatsApp is ready.");
     });
-    this.client.on('disconnected', m => {
+    this.client.on('disconnected', async m => {
       this.isReady = false;
       console.log("WhatsApp disconnected.");
-      this.client.destroy();
-      this.client.initialize();
+      await this.client.initialize();
     });
     this.client.on('qr', qr => {
       this.qrcode = qr;
@@ -45,42 +47,6 @@ class WhatsApp {
     this.client.initialize();
   }
 
-  // ------------------------------- connecting socket to whatsapp ------------------------------- //
-  // async connectToWhatsApp() {
-  //   const { state, saveCreds } = await useMultiFileAuthState("baileys_state");
-  //   this.socket = makeWASocket({
-  //     auth: state,
-  //     printQRInTerminal: false,
-  //   });
-
-  //   this.socket.ev.on("creds.update", saveCreds);
-  //   this.socket.ev.on("connection.update", (update) => {
-  //     const { qr, connection, lastDisconnect } = update;
-  //     if (typeof qr != "undefined" && qr.length > 1) {
-  //       this.qrcode = qr;
-  //     }
-
-  //     if (connection === "close") {
-  //       if (typeof lastDisconnect !== "undefined" && lastDisconnect !== null) {
-  //         this.isReady = false;
-  //         const shouldReconnect =
-  //           typeof lastDisconnect !== "undefined" &&
-  //           typeof lastDisconnect.error !== "undefined" &&
-  //           typeof lastDisconnect.error.output !== "undefined" &&
-  //           typeof lastDisconnect.error.output.statusCode !== "undefined" &&
-  //           lastDisconnect.error.output.statusCode !=
-  //             DisconnectReason.loggedOut;
-  //         if (shouldReconnect) {
-  //           this.connectToWhatsApp();
-  //         }
-  //       }
-  //     } else if (connection === "open") {
-  //       console.log("opened connection");
-  //       this.isReady = true;
-  //       this.qrcode = "";
-  //     }
-  //   });
-  // }
   // ---------------------------------- logout current session ----------------------------------- //
   async getQR() {
     if (this.qrcode.length > 1) {
@@ -114,9 +80,8 @@ class WhatsApp {
     if (this.isReady) {
       try {
         await this.client.logout();
-        this.client.destroy();
-        this.client.initialize();
         this.isReady = false;
+        await this.client.initialize();
         return { code: 200, data: {} };
       } catch (error) {
         return { code: 500, data: {} };
