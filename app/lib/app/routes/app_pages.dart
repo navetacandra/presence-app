@@ -8,6 +8,8 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/jadwal_absen/bindings/jadwal_absen_binding.dart';
 import '../modules/jadwal_absen/views/jadwal_absen_view.dart';
+import '../modules/koneksi_esp/bindings/koneksi_esp_binding.dart';
+import '../modules/koneksi_esp/views/koneksi_esp_view.dart';
 import '../modules/koneksi_whatsapp/bindings/koneksi_whatsapp_binding.dart';
 import '../modules/koneksi_whatsapp/views/koneksi_whatsapp_view.dart';
 import '../modules/kontrol_mode/bindings/kontrol_mode_binding.dart';
@@ -90,6 +92,11 @@ class AppPages {
       name: _Paths.EDIT_PEGAWAI,
       page: () => EditPegawaiView(),
       binding: EditPegawaiBinding(),
+    ),
+    GetPage(
+      name: _Paths.KONEKSI_ESP,
+      page: () => KoneksiEspView(),
+      binding: KoneksiEspBinding(),
     ),
   ];
 }

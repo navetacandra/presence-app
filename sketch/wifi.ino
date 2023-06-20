@@ -90,6 +90,20 @@ void handleNetworkConnecting() {
     server.send(200, "text/html", content);
   });
 
+  server.on("/network-list", []() {
+    int wifiListLength = WiFi.scanNetworks();
+    String content = "{\"networks\": [";
+    for (int i = 0; i < wifiListLength; i++) {
+      content += "{\"ssid\": \"";
+      content += WiFi.SSID(i);
+      content += "\", \"secure\": ";
+      content += (WiFi.encryptionType(i) == ENC_TYPE_NONE) ? "false" : "true";
+      content += ((wifiListLength - 1) == i) ? "}" : "},";
+    }
+    content += "]}";
+    server.send(200, "application/json", content);
+  });
+
   server.on("/connect", []() {
     for (int i = 0; i < server.args(); i++) {
       if (server.argName(i) == "ssid") {

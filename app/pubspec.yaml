@@ -11,7 +11,6 @@ dependencies:
   google_fonts: 4.0.3
   email_validator: 2.1.17
   http: 0.13.5
-  connectivity_plus: 3.0.5
   network_info_plus: 3.0.4
   flutter: 
     sdk: flutter

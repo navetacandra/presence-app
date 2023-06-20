@@ -1,5 +1,13 @@
 # PRESENCE APP
 
+```sh
+git clone https://github.com/navetacandra/presence-app presence
+cd presence/app
+flutter pub get
+flutter create .
+flutterfire configure
+```
+
 ## Features
 
 | Feature                        | Available | Last Update |
@@ -16,5 +24,5 @@
 | Download Presence Report       | ❌       | 11 June 2023 |
 | Set Presence Schedule          | ✅       | 11 June 2023 |
 | Change IOT Mode                | ✅       | 11 June 2023 |
-| Control IOT Connection         | ❌       | 11 June 2023 |
+| Control IOT Connection         | ✅       | 20 June 2023 |
 | Control WhatsApp Connection    | ✅       | 11 June 2023 |

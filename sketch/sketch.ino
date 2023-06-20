@@ -74,6 +74,29 @@ void setup() {
     handleNetworkConnecting();
   }
 
+  server.on("/file-state", []() {
+    String content = "{";
+    content += "\"ssid\": \"";
+    content += ssid;
+    content += "\",";
+    content += "\"password\": \"";
+    content += pass;
+    content += "\",";
+    content += "\"firebase-host\": \"";
+    content += firebaseHost;
+    content += "\",";
+    content += "\"firebase-apikey\": \"";
+    content += firebaseKey;
+    content += "\",";
+    content += "\"auth-email\": \"";
+    content += firebaseAuthEmail;
+    content += "\",";
+    content += "\"auth-pass\": \"";
+    content += firebaseAuthPassword;
+    content += "\"}";
+    server.send(200, "application/json", content);
+  });
+
   server.on("/is-esp", []() {
     server.send(200, "application/json", "{\"isEsp\": true}");
   });

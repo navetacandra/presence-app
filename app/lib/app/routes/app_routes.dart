@@ -16,6 +16,7 @@ abstract class Routes {
   static const KONTROL_MODE = _Paths.KONTROL_MODE;
   static const JADWAL_ABSEN = _Paths.JADWAL_ABSEN;
   static const EDIT_PEGAWAI = _Paths.EDIT_PEGAWAI;
+  static const KONEKSI_ESP = _Paths.KONEKSI_ESP;
 }
 
 abstract class _Paths {
@@ -31,4 +32,5 @@ abstract class _Paths {
   static const KONTROL_MODE = '/kontrol-mode';
   static const JADWAL_ABSEN = '/jadwal-absen';
   static const EDIT_PEGAWAI = '/edit-pegawai';
+  static const KONEKSI_ESP = '/koneksi-esp';
 }

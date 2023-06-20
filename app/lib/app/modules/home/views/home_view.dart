@@ -196,7 +196,8 @@ class HomeView extends GetView<HomeController> {
                                     ],
                                   ),
                                   StreamBuilder<DatabaseEvent>(
-                                    stream: dbC.stream("absensi/${selfC.month}/${selfC.date}/pegawai"),
+                                    stream: dbC.stream(
+                                        "absensi/${selfC.month}/${selfC.date}/pegawai"),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                               ConnectionState.active &&
@@ -275,6 +276,7 @@ class HomeView extends GetView<HomeController> {
                           menuItem(
                             image: "assets/esp-hotspot.png",
                             label: "Koneksi ESP8266",
+                            navigation: Routes.KONEKSI_ESP,
                           ),
                           menuItem(
                             image: "assets/whatsapp.png",
