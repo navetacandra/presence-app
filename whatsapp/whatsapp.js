@@ -13,7 +13,7 @@ class WhatsApp {
       puppeteer: {
         timeout: 0,
         // executablePath: '/nix/store/x205pbkd5xh5g4iv0g58xjla55has3cx-chromium-108.0.5359.94/bin/chromium-browser',
-        // headless: true,
+        // headless: false,
         args: [
           '--no-sandbox',
           '--headless=new',
@@ -109,6 +109,15 @@ class WhatsApp {
     if (!number.endsWith("@c.us"))
       number = number + "@c.us";
     return number;
+  }
+  // --------------------------------- getting user profile pict --------------------------------- //
+  async sendMessage(number = "0", message = "") {
+    const num = this.prettifyNumber(number);
+    const isOnWhatsApp = await this.client.isRegisteredUser(num);
+    if (!isOnWhatsApp) {
+      console.log(`${num} is not registered in WhatsApp`);
+    }
+    await this.client.sendMessage(num, message);
   }
   // --------------------------------- getting user profile pict --------------------------------- //
   async getProfilePict() {
