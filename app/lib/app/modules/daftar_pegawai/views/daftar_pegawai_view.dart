@@ -70,10 +70,10 @@ class DaftarPegawaiView extends GetView<DaftarPegawaiController> {
                     ),
                   );
                 }
-                return Column(
+                return const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
+                  children: [
                     CircularProgressIndicator(
                       color: Colors.black87,
                     ),

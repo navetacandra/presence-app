@@ -17,6 +17,7 @@ abstract class Routes {
   static const JADWAL_ABSEN = _Paths.JADWAL_ABSEN;
   static const EDIT_PEGAWAI = _Paths.EDIT_PEGAWAI;
   static const KONEKSI_ESP = _Paths.KONEKSI_ESP;
+  static const LAPORAN_ABSEN = _Paths.LAPORAN_ABSEN;
 }
 
 abstract class _Paths {
@@ -33,4 +34,5 @@ abstract class _Paths {
   static const JADWAL_ABSEN = '/jadwal-absen';
   static const EDIT_PEGAWAI = '/edit-pegawai';
   static const KONEKSI_ESP = '/koneksi-esp';
+  static const LAPORAN_ABSEN = '/laporan-absen';
 }

@@ -14,6 +14,8 @@ import '../modules/koneksi_whatsapp/bindings/koneksi_whatsapp_binding.dart';
 import '../modules/koneksi_whatsapp/views/koneksi_whatsapp_view.dart';
 import '../modules/kontrol_mode/bindings/kontrol_mode_binding.dart';
 import '../modules/kontrol_mode/views/kontrol_mode_view.dart';
+import '../modules/laporan_absen/bindings/laporan_absen_binding.dart';
+import '../modules/laporan_absen/views/laporan_absen_view.dart';
 import '../modules/signin/bindings/signin_binding.dart';
 import '../modules/signin/views/signin_view.dart';
 import '../modules/signup/bindings/signup_binding.dart';
@@ -97,6 +99,11 @@ class AppPages {
       name: _Paths.KONEKSI_ESP,
       page: () => KoneksiEspView(),
       binding: KoneksiEspBinding(),
+    ),
+    GetPage(
+      name: _Paths.LAPORAN_ABSEN,
+      page: () => LaporanAbsenView(),
+      binding: LaporanAbsenBinding(),
     ),
   ];
 }

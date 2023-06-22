@@ -35,7 +35,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                     String jamPulangEnd = snapshot.data!.snapshot
                         .child('jam_pulang_end')
                         .value as String;
-        
+
                     return Container(
                       margin: const EdgeInsets.only(bottom: 20, top: 20),
                       child: Column(
@@ -111,20 +111,22 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                                 );
                                               },
                                             );
-        
+
                                             // ignore: unnecessary_null_comparison
                                             if (stp != null) {
-                                              var hour =
-                                                  stp.hour.toString().length < 2
-                                                      ? "0${stp.hour.toString()}"
-                                                      : stp.hour.toString();
+                                              var hour = stp.hour
+                                                          .toString()
+                                                          .length <
+                                                      2
+                                                  ? "0${stp.hour.toString()}"
+                                                  : stp.hour.toString();
                                               var minute = stp.minute
                                                           .toString()
                                                           .length <
                                                       2
                                                   ? "0${stp.minute.toString()}"
                                                   : stp.minute.toString();
-        
+
                                               if (jamHadirStart !=
                                                   "$hour:$minute") {
                                                 await selfC.dbC.updates(
@@ -134,7 +136,8 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                                         "$hour:$minute",
                                                   },
                                                 ).whenComplete(
-                                                  () => isQueryLoad.value = false,
+                                                  () =>
+                                                      isQueryLoad.value = false,
                                                 );
                                               } else {
                                                 isQueryLoad.value = false;
@@ -151,7 +154,8 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                               color: Colors.blue.shade300,
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: Text(
                                                 "${jamHadirStart.split(':')[0]}  :  ${jamHadirStart.split(':')[1]}",
                                                 textAlign: TextAlign.center,
@@ -194,20 +198,22 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                                 );
                                               },
                                             );
-        
+
                                             // ignore: unnecessary_null_comparison
                                             if (stp != null) {
-                                              var hour =
-                                                  stp.hour.toString().length < 2
-                                                      ? "0${stp.hour.toString()}"
-                                                      : stp.hour.toString();
+                                              var hour = stp.hour
+                                                          .toString()
+                                                          .length <
+                                                      2
+                                                  ? "0${stp.hour.toString()}"
+                                                  : stp.hour.toString();
                                               var minute = stp.minute
                                                           .toString()
                                                           .length <
                                                       2
                                                   ? "0${stp.minute.toString()}"
                                                   : stp.minute.toString();
-        
+
                                               if (jamHadirEnd !=
                                                   "$hour:$minute") {
                                                 await selfC.dbC.updates(
@@ -217,7 +223,8 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                                         "$hour:$minute",
                                                   },
                                                 ).whenComplete(
-                                                  () => isQueryLoad.value = false,
+                                                  () =>
+                                                      isQueryLoad.value = false,
                                                 );
                                               }
                                               isQueryLoad.value = false;
@@ -233,7 +240,8 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                               color: Colors.blue.shade300,
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: Text(
                                                 "${jamHadirEnd.split(':')[0]}  :  ${jamHadirEnd.split(':')[1]}",
                                                 textAlign: TextAlign.center,
@@ -253,7 +261,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                               },
                             ),
                           ),
-        
+
                           // --- Jam Pulang --- //
                           Container(
                             margin: const EdgeInsets.only(bottom: 5, top: 5),
@@ -324,20 +332,22 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                                 );
                                               },
                                             );
-        
+
                                             // ignore: unnecessary_null_comparison
                                             if (stp != null) {
-                                              var hour =
-                                                  stp.hour.toString().length < 2
-                                                      ? "0${stp.hour.toString()}"
-                                                      : stp.hour.toString();
+                                              var hour = stp.hour
+                                                          .toString()
+                                                          .length <
+                                                      2
+                                                  ? "0${stp.hour.toString()}"
+                                                  : stp.hour.toString();
                                               var minute = stp.minute
                                                           .toString()
                                                           .length <
                                                       2
                                                   ? "0${stp.minute.toString()}"
                                                   : stp.minute.toString();
-        
+
                                               if (jamPulangStart !=
                                                   "$hour:$minute") {
                                                 await selfC.dbC.updates(
@@ -347,7 +357,8 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                                         "$hour:$minute",
                                                   },
                                                 ).whenComplete(
-                                                  () => isQueryLoad.value = false,
+                                                  () =>
+                                                      isQueryLoad.value = false,
                                                 );
                                               }
                                               isQueryLoad.value = false;
@@ -363,7 +374,8 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                               color: Colors.blue.shade300,
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: Text(
                                                 "${jamPulangStart.split(':')[0]}  :  ${jamPulangStart.split(':')[1]}",
                                                 textAlign: TextAlign.center,
@@ -376,7 +388,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                             ),
                                           ),
                                         ),
-        
+
                                         Text(
                                           "-",
                                           style: GoogleFonts.poppins(
@@ -384,7 +396,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                             fontSize: 24,
                                           ),
                                         ),
-        
+
                                         // --- Jam Pulang End --- //
                                         InkWell(
                                           onTap: () async {
@@ -409,20 +421,22 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                                 );
                                               },
                                             );
-        
+
                                             // ignore: unnecessary_null_comparison
                                             if (stp != null) {
-                                              var hour =
-                                                  stp.hour.toString().length < 2
-                                                      ? "0${stp.hour.toString()}"
-                                                      : stp.hour.toString();
+                                              var hour = stp.hour
+                                                          .toString()
+                                                          .length <
+                                                      2
+                                                  ? "0${stp.hour.toString()}"
+                                                  : stp.hour.toString();
                                               var minute = stp.minute
                                                           .toString()
                                                           .length <
                                                       2
                                                   ? "0${stp.minute.toString()}"
                                                   : stp.minute.toString();
-        
+
                                               if (jamPulangEnd !=
                                                   "$hour:$minute") {
                                                 await selfC.dbC.updates(
@@ -432,7 +446,8 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                                         "$hour:$minute",
                                                   },
                                                 ).whenComplete(
-                                                  () => isQueryLoad.value = false,
+                                                  () =>
+                                                      isQueryLoad.value = false,
                                                 );
                                               }
                                               isQueryLoad.value = false;
@@ -448,7 +463,8 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                               color: Colors.blue.shade300,
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: Text(
                                                 "${jamPulangEnd.split(':')[0]}  :  ${jamPulangEnd.split(':')[1]}",
                                                 textAlign: TextAlign.center,
@@ -482,7 +498,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                       DataSnapshot snap = snapshot.data!.snapshot;
                       List<Widget> colItems = [];
                       List<List<List<Map>>> all = [];
-        
+
                       for (var i = 0; i < 12; i++) {
                         all.add([]);
                       }
@@ -496,6 +512,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                               "active": snap
                                   .child(ch.key as String)
                                   .child("${i + 1}")
+                                  .child("details")
                                   .child("active")
                                   .value as bool,
                             },
@@ -505,10 +522,10 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                           tgl1.add(tgl0.sublist(
                               i, i + 6 > tgl0.length ? tgl0.length : i + 6));
                         }
-        
+
                         all[selfC.month.indexOf(ch.key)] = tgl1;
                       }
-        
+
                       for (var i = 0; i < all.length; i++) {
                         var rows = <Widget>[];
                         for (var j = 0; j < all[i].length; j++) {
@@ -521,7 +538,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                   onTap: () async {
                                     isLoad.value = true;
                                     await selfC.dbC.updates(
-                                      "absensi/${selfC.month[i]}/${el['key']}",
+                                      "absensi/${selfC.month[i]}/${el['key']}/details",
                                       {
                                         "active": !(el["active"] as bool),
                                       },
@@ -530,34 +547,33 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                     );
                                   },
                                   child: Container(
-                                      width: Get.width / 7,
-                                      height: Get.width / 7,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: (el['active'] as bool)
-                                            ? Colors.green
-                                            : Colors.red.shade700,
-                                      ),
-                                      child: Center(
-                                        child: isLoad.isFalse
-                                            ? Text(
-                                                el['key'] ?? "-",
-                                                style: GoogleFonts.poppins(
-                                                  color: Colors.white,
-                                                  fontSize: Get.width * .075,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              )
-                                            : SizedBox(
-                                                width: Get.width * .06,
-                                                height: Get.width * .06,
-                                                child:
-                                                    const CircularProgressIndicator(
-                                                  color: Colors.white,
-                                                ),
+                                    width: Get.width / 7,
+                                    height: Get.width / 7,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: (el['active'] as bool)
+                                          ? Colors.green
+                                          : Colors.red.shade700,
+                                    ),
+                                    child: Center(
+                                      child: isLoad.isFalse
+                                          ? Text(
+                                              el['key'] ?? "-",
+                                              style: GoogleFonts.poppins(
+                                                color: Colors.white,
+                                                fontSize: Get.width * .075,
+                                                fontWeight: FontWeight.w500,
                                               ),
-                                      ),
-                                    
+                                            )
+                                          : SizedBox(
+                                              width: Get.width * .06,
+                                              height: Get.width * .06,
+                                              child:
+                                                  const CircularProgressIndicator(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                    ),
                                   ),
                                 );
                               }),
@@ -567,7 +583,8 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                             Container(
                               margin: const EdgeInsets.only(bottom: 8),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: row,
                               ),
@@ -595,14 +612,14 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                           ),
                         );
                       }
-        
+
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: colItems,
                       );
                     }
-        
+
                     return Container();
                   }),
               // ...selfC.buildWidgets(),

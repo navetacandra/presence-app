@@ -1,5 +1,5 @@
+// ignore_for_file: unnecessary_overrides
 import 'dart:convert';
-
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,6 +24,10 @@ class KoneksiEspController extends GetxController {
   TextEditingController fkey = TextEditingController();
   TextEditingController fauthEmail = TextEditingController();
   TextEditingController fauthPass = TextEditingController();
+
+  bool messageShown = false;
+  int messageCounter = 0;
+  bool setted = false;
 
   @override
   void onInit() async {
@@ -50,6 +54,7 @@ class KoneksiEspController extends GetxController {
   void streamGatewayESP() async {
     while (true) {
       gateway.value = await netInfo.getWifiGatewayIP() ?? "";
+      print(gateway.value);
       if (gateway.value == "192.168.255.0") {
         try {
           http.Response resIsESP = await http.get(
@@ -73,97 +78,130 @@ class KoneksiEspController extends GetxController {
 
               networks.value = jsonDecode(resNetworks.body)['networks'] as List;
 
-              if (ssid.text.isEmpty) {
-                ssid.clear();
+              if (!setted) {
                 ssid.text = jsonDecode(resFileState.body)['ssid'] ?? "";
-              }
-              if (pass.text.isEmpty) {
-                pass.clear();
                 pass.text = jsonDecode(resFileState.body)['password'] ?? "";
-              }
-              if (fhost.text.isEmpty) {
-                fhost.clear();
                 fhost.text =
                     jsonDecode(resFileState.body)['firebase-host'] ?? "";
-              }
-              if (fkey.text.isEmpty) {
-                fkey.clear();
                 fkey.text =
                     jsonDecode(resFileState.body)['firebase-apikey'] ?? "";
-              }
-              if (fauthEmail.text.isEmpty) {
-                fauthEmail.clear();
                 fauthEmail.text =
                     jsonDecode(resFileState.body)['auth-email'] ?? "";
-              }
-              if (fauthPass.text.isEmpty) {
-                fauthPass.clear();
                 fauthPass.text =
                     jsonDecode(resFileState.body)['auth-pass'] ?? "";
+                setted = true;
               }
             } catch (e) {
+              if (messageShown) {
+                messageCounter++;
+                return await Future.delayed(const Duration(seconds: 5));
+              }
+              if (messageCounter > 5) {
+                messageShown = false;
+                return await Future.delayed(const Duration(seconds: 5));
+              }
+              if (!messageShown) {
+                Get.snackbar(
+                  "Terjadi Kesalahan",
+                  "",
+                  backgroundColor: const Color.fromARGB(150, 255, 50, 50),
+                  colorText: const Color.fromARGB(255, 15, 15, 15),
+                  messageText: Text(
+                    "Perangkat gagal terkoneksi dengan server",
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w500,
+                      color: const Color.fromARGB(255, 15, 15, 15),
+                    ),
+                  ),
+                );
+                messageShown = true;
+                return await Future.delayed(const Duration(seconds: 5));
+              }
+            }
+          } else {
+            if (messageShown) {
+              messageCounter++;
+              return await Future.delayed(const Duration(seconds: 5));
+            }
+            if (messageCounter > 5) {
+              messageShown = false;
+              return await Future.delayed(const Duration(seconds: 5));
+            }
+            if (!messageShown) {
               Get.snackbar(
                 "Terjadi Kesalahan",
                 "",
                 backgroundColor: const Color.fromARGB(150, 255, 50, 50),
                 colorText: const Color.fromARGB(255, 15, 15, 15),
                 messageText: Text(
-                  "Perangkat gagal terkoneksi dengan server",
+                  "Perangkat tidak terhubung dengan WiFi \"ESP WIFI MANAGER\"",
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w500,
                     color: const Color.fromARGB(255, 15, 15, 15),
                   ),
                 ),
               );
+              messageShown = true;
+              return await Future.delayed(const Duration(seconds: 5));
             }
-          } else {
+          }
+        } catch (e) {
+          if (messageShown) {
+            messageCounter++;
+            return await Future.delayed(const Duration(seconds: 5));
+          }
+          if (messageCounter > 5) {
+            messageShown = false;
+            return await Future.delayed(const Duration(seconds: 5));
+          }
+          if (!messageShown) {
             Get.snackbar(
               "Terjadi Kesalahan",
               "",
               backgroundColor: const Color.fromARGB(150, 255, 50, 50),
               colorText: const Color.fromARGB(255, 15, 15, 15),
               messageText: Text(
-                "Perangkat tidak terhubung dengan WiFi \"ESP WIFI MANAGER\"",
+                "Perangkat gagal terkoneksi dengan server",
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   color: const Color.fromARGB(255, 15, 15, 15),
                 ),
               ),
             );
+            messageShown = true;
+            return await Future.delayed(const Duration(seconds: 5));
           }
-        } catch (e) {
+        }
+      } else {
+        isEsp.value = false;
+        if (messageShown) {
+          messageCounter++;
+          return await Future.delayed(const Duration(seconds: 5));
+        }
+        if (messageCounter > 5) {
+          messageShown = false;
+          return await Future.delayed(const Duration(seconds: 5));
+        }
+        if (!messageShown) {
           Get.snackbar(
             "Terjadi Kesalahan",
             "",
             backgroundColor: const Color.fromARGB(150, 255, 50, 50),
             colorText: const Color.fromARGB(255, 15, 15, 15),
             messageText: Text(
-              "Perangkat gagal terkoneksi dengan server",
+              "Perangkat tidak terhubung dengan WiFi \"ESP WIFI MANAGER\"",
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w500,
                 color: const Color.fromARGB(255, 15, 15, 15),
               ),
             ),
           );
+          messageShown = true;
+          return await Future.delayed(const Duration(seconds: 5));
         }
-      } else {
-        isEsp.value = false;
-        Get.snackbar(
-          "Terjadi Kesalahan",
-          "",
-          backgroundColor: const Color.fromARGB(150, 255, 50, 50),
-          colorText: const Color.fromARGB(255, 15, 15, 15),
-          messageText: Text(
-            "Perangkat tidak terhubung dengan WiFi \"ESP WIFI MANAGER\"",
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
-              color: const Color.fromARGB(255, 15, 15, 15),
-            ),
-          ),
-        );
       }
 
-      await Future.delayed(const Duration(seconds: 5));
+      return await Future.delayed(const Duration(seconds: 5));
     }
   }
 
@@ -178,6 +216,7 @@ class KoneksiEspController extends GetxController {
             "Data Terkirim",
             "",
             backgroundColor: const Color.fromRGBO(0, 150, 0, .5),
+            duration: const Duration(seconds: 1000),
             colorText: const Color.fromARGB(255, 255, 255, 255),
             messageText: Text(
               "Data berhasil dikirim ke server",
@@ -187,6 +226,7 @@ class KoneksiEspController extends GetxController {
               ),
             ),
           );
+          await Future.delayed(const Duration(seconds: 1200));
           Get.offAllNamed(Routes.HOME);
         }
       } catch (e) {
@@ -194,6 +234,7 @@ class KoneksiEspController extends GetxController {
           "Terjadi Kesalahan",
           "",
           backgroundColor: const Color.fromARGB(150, 255, 50, 50),
+          duration: const Duration(seconds: 1000),
           colorText: const Color.fromARGB(255, 15, 15, 15),
           messageText: Text(
             "Perangkat gagal terkoneksi dengan server",
@@ -203,6 +244,7 @@ class KoneksiEspController extends GetxController {
             ),
           ),
         );
+        await Future.delayed(const Duration(seconds: 1200));
       }
     }
     isLoading.value = false;

@@ -254,6 +254,7 @@ class HomeView extends GetView<HomeController> {
                           menuItem(
                             image: "assets/report.png",
                             label: "Buat Laporan",
+                            navigation: Routes.LAPORAN_ABSEN,
                           ),
                         ],
                       ),
