@@ -17,7 +17,7 @@ class WhatsApp {
         headless: false,
         args: [
           '--no-sandbox',
-          // '--headless=new',
+          '--headless=new',
           '--disable-setuid-sandbox',
           '--disable-dev-shm-usage',
           '--disable-accelerated-2d-canvas',
@@ -28,7 +28,6 @@ class WhatsApp {
         ],
       },
     })
-    
     this.client.on('authenticated', m => {
       this.qrcode = '';
     })

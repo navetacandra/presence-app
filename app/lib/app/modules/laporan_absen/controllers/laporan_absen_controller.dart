@@ -81,7 +81,6 @@ class LaporanAbsenController extends GetxController {
   Future<void> _prepareSaveDir() async {
     _localPath = (await _findLocalPath())!;
 
-    print(_localPath);
     final savedDir = Directory(_localPath);
     bool hasExisted = await savedDir.exists();
     if (!hasExisted) {
@@ -133,7 +132,6 @@ class LaporanAbsenController extends GetxController {
           ),
         );
       } catch (e) {
-        print(e);
         Get.snackbar(
           "Terjadi kesalahan",
           "",

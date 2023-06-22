@@ -65,7 +65,6 @@ class KoneksiEspController extends GetxController {
       }
 
       gateway.value = await netInfo.getWifiGatewayIP() ?? "";
-      print(gateway.value);
       if (gateway.value == "192.168.255.0") {
         try {
           http.Response resIsESP = await http.get(

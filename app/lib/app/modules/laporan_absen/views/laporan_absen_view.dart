@@ -24,7 +24,6 @@ class LaporanAbsenView extends GetView<LaporanAbsenController> {
           child: Obx(
             () {
               List<Widget> items = [];
-              List<List<List<Map>>> all = [];
               List<List<Map>> tgl1 = [];
               for (var i = 0; i < selfC.tgl.length; i += 6) {
                 tgl1.add(
