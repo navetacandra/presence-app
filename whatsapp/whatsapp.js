@@ -8,21 +8,19 @@ class WhatsApp {
     this.socket = null;
     this.isReady = false;
     this.client = new Client({
-      restartOnAuthFail: true,
       authStrategy: new LocalAuth({ clientId: 'wa-session' }),
+      restartOnAuthFail: true,
       puppeteer: {
         timeout: 0,
         // executablePath: '/nix/store/x205pbkd5xh5g4iv0g58xjla55has3cx-chromium-108.0.5359.94/bin/chromium-browser',
         // headless: false,
         args: [
           '--no-sandbox',
-          '--headless=new',
+          // '--headless=new',
           '--disable-setuid-sandbox',
           '--disable-dev-shm-usage',
           '--disable-accelerated-2d-canvas',
-          '--no-first-run',
-          '--no-zygote',
-          '--single-process', // <- this one doesn't works in Windows
+          '--no-zygote', // <- this one doesn't works in Windows
           '--disable-gpu'
         ],
       },
@@ -35,10 +33,11 @@ class WhatsApp {
       this.isReady = true;
       console.log("WhatsApp is ready.");
     });
-    this.client.on('disconnected', async m => {
+    this.client.on('disconnected', async reason => {
       this.isReady = false;
-      console.log("WhatsApp disconnected.");
-      await this.client.initialize();
+      console.log("WhatsApp disconnected.", reason);
+      this.client.destroy();
+      this.client.initialize();
     });
     this.client.on('qr', qr => {
       this.qrcode = qr;
@@ -81,7 +80,7 @@ class WhatsApp {
       try {
         await this.client.logout();
         this.isReady = false;
-        await this.client.initialize();
+        // await this.client.initialize();
         return { code: 200, data: {} };
       } catch (error) {
         return { code: 500, data: {} };
