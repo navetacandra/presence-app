@@ -72,7 +72,7 @@ app.post("/export", async (req, res) => {
   }
 });
 
-app.post("/export-csv", async (req, res) => {
+app.get("/export-csv", async (req, res) => {
   try {
     const {
       code,
@@ -83,7 +83,7 @@ app.post("/export-csv", async (req, res) => {
     );
     const filePath = resolve(join(cwd(), Date.now() + '.csv'));
     writeFileSync(filePath, csv, 'utf-8');
-    res.status(code).sendFile(filePath);
+    res.status(code).send(readFileSync(filePath));
     unlinkSync(filePath)
   } catch (err) {
     console.log(err);
