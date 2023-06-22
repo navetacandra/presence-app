@@ -24,9 +24,8 @@ class SignupView extends GetView<SignupController> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(Get.width * .5 / 2),
                     child: Image.asset(
-                      "assets/avatar.jpg",
+                      "assets/app-logo.png",
                       width: Get.width * .5,
                       height: Get.width * .5,
                     ),
