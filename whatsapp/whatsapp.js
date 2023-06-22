@@ -12,16 +12,19 @@ class WhatsApp {
       restartOnAuthFail: true,
       puppeteer: {
         timeout: 0,
+        waitForInitialPage: false,
         // executablePath: '/nix/store/x205pbkd5xh5g4iv0g58xjla55has3cx-chromium-108.0.5359.94/bin/chromium-browser',
-        // headless: false,
+        headless: false,
         args: [
           '--no-sandbox',
           // '--headless=new',
           '--disable-setuid-sandbox',
           '--disable-dev-shm-usage',
           '--disable-accelerated-2d-canvas',
+          '--no-first-run',
           '--no-zygote', // <- this one doesn't works in Windows
-          '--disable-gpu'
+          '--disable-gpu',
+          '--hide-crash-restore-bubble',
         ],
       },
     })
