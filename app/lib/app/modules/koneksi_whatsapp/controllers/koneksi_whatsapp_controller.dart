@@ -16,6 +16,9 @@ class KoneksiWhatsappController extends GetxController {
   RxBool streamingQrCode = false.obs;
   RxBool logoutLoading = false.obs;
 
+  bool messageShown = false;
+  int messageCounter = 0;
+
   @override
   void onInit() async {
     super.onInit();
@@ -32,6 +35,14 @@ class KoneksiWhatsappController extends GetxController {
 
   void streamIsReady() async {
     while (streamingIsReady.value) {
+      if (messageCounter > 2) {
+        messageShown = false;
+        messageCounter = 0;
+      }
+      if (messageShown) {
+        messageCounter++;
+      }
+
       isQueryLoading.value = true;
       final response = await _waController.getIsReady() ?? {};
       isReady.value = response;
@@ -42,19 +53,21 @@ class KoneksiWhatsappController extends GetxController {
       }
 
       if (response["isReady"] == null) {
-        Get.snackbar(
-          "Terjadi Kesalahan",
-          "",
-          backgroundColor: const Color.fromARGB(150, 255, 50, 50),
-          colorText: const Color.fromARGB(255, 15, 15, 15),
-          messageText: Text(
-            "Tidak ada koneksi atau server WhatsApp terputus",
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
-              color: const Color.fromARGB(255, 15, 15, 15),
+        if (!messageShown) {
+          Get.snackbar(
+            "Terjadi Kesalahan",
+            "",
+            backgroundColor: const Color.fromARGB(150, 255, 50, 50),
+            colorText: const Color.fromARGB(255, 15, 15, 15),
+            messageText: Text(
+              "Tidak ada koneksi atau server WhatsApp terputus",
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w500,
+                color: const Color.fromARGB(255, 15, 15, 15),
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
 
       if (response["isReady"] ?? false) {

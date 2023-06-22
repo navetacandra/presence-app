@@ -28,10 +28,12 @@ class KoneksiEspController extends GetxController {
   bool messageShown = false;
   int messageCounter = 0;
   bool setted = false;
+  bool stream = false;
 
   @override
   void onInit() async {
     super.onInit();
+    stream = true;
     streamGatewayESP();
   }
 
@@ -43,6 +45,7 @@ class KoneksiEspController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+    stream = false;
   }
 
   String? validateEmail(String? emailValue) {
@@ -52,7 +55,15 @@ class KoneksiEspController extends GetxController {
   }
 
   void streamGatewayESP() async {
-    while (true) {
+    while (stream) {
+      if (messageCounter > 2) {
+        messageShown = false;
+        messageCounter = 0;
+      }
+      if (messageShown) {
+        messageCounter++;
+      }
+
       gateway.value = await netInfo.getWifiGatewayIP() ?? "";
       print(gateway.value);
       if (gateway.value == "192.168.255.0") {
@@ -92,14 +103,6 @@ class KoneksiEspController extends GetxController {
                 setted = true;
               }
             } catch (e) {
-              if (messageShown) {
-                messageCounter++;
-                return await Future.delayed(const Duration(seconds: 5));
-              }
-              if (messageCounter > 5) {
-                messageShown = false;
-                return await Future.delayed(const Duration(seconds: 5));
-              }
               if (!messageShown) {
                 Get.snackbar(
                   "Terjadi Kesalahan",
@@ -115,18 +118,9 @@ class KoneksiEspController extends GetxController {
                   ),
                 );
                 messageShown = true;
-                return await Future.delayed(const Duration(seconds: 5));
               }
             }
           } else {
-            if (messageShown) {
-              messageCounter++;
-              return await Future.delayed(const Duration(seconds: 5));
-            }
-            if (messageCounter > 5) {
-              messageShown = false;
-              return await Future.delayed(const Duration(seconds: 5));
-            }
             if (!messageShown) {
               Get.snackbar(
                 "Terjadi Kesalahan",
@@ -142,18 +136,9 @@ class KoneksiEspController extends GetxController {
                 ),
               );
               messageShown = true;
-              return await Future.delayed(const Duration(seconds: 5));
             }
           }
         } catch (e) {
-          if (messageShown) {
-            messageCounter++;
-            return await Future.delayed(const Duration(seconds: 5));
-          }
-          if (messageCounter > 5) {
-            messageShown = false;
-            return await Future.delayed(const Duration(seconds: 5));
-          }
           if (!messageShown) {
             Get.snackbar(
               "Terjadi Kesalahan",
@@ -169,19 +154,10 @@ class KoneksiEspController extends GetxController {
               ),
             );
             messageShown = true;
-            return await Future.delayed(const Duration(seconds: 5));
           }
         }
       } else {
         isEsp.value = false;
-        if (messageShown) {
-          messageCounter++;
-          return await Future.delayed(const Duration(seconds: 5));
-        }
-        if (messageCounter > 5) {
-          messageShown = false;
-          return await Future.delayed(const Duration(seconds: 5));
-        }
         if (!messageShown) {
           Get.snackbar(
             "Terjadi Kesalahan",
@@ -197,11 +173,10 @@ class KoneksiEspController extends GetxController {
             ),
           );
           messageShown = true;
-          return await Future.delayed(const Duration(seconds: 5));
         }
       }
 
-      return await Future.delayed(const Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds: 5));
     }
   }
 
