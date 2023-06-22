@@ -40,6 +40,10 @@ bool initWiFi() {
     lcd.clear();
     connected = true;
 
+    timeClient.begin();
+    timeClient.setTimeOffset(25200);
+
+
     firebaseConnect();
 
     return true;
