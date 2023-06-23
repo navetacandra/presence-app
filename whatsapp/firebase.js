@@ -23,14 +23,6 @@ const {
 const { AES, enc } = require("crypto-js");
 require("dotenv").config();
 
-function convertTZ(date, tzString) {
-  return new Date(
-    (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
-      timeZone: tzString,
-    })
-  );
-}
-
 const months = [
   "januari",
   "februari",
@@ -226,7 +218,7 @@ class Firebase {
               if (intialData.filter((f) => f.id == snap.val().id).length > 0)
                 return;
 
-              const d = convertTZ(new Date());
+              const d = new Date();
               if (months.indexOf(mth) == d.getMonth() && d.getDate() == dy) {
                 if (snap.val().masuk != null) {
                   const pgw = await get(
@@ -250,7 +242,7 @@ class Firebase {
               if (intialData.filter((f) => f.id == snap.val().id).length > 0)
                 return;
 
-              const d = convertTZ(new Date());
+              const d = new Date();
               if (months.indexOf(mth) == d.getMonth() && d.getDate() == dy) {
                 if (snap.val().masuk != null && snap.val().pulang != null) {
                   const pgw = await get(

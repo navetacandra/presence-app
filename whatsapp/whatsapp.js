@@ -1,6 +1,6 @@
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client, LocalAuth } = require("whatsapp-web.js");
 const Qrcode = require("qrcode");
-const qrt = require('qrcode-terminal');
+const qrt = require("qrcode-terminal");
 
 class WhatsApp {
   constructor() {
@@ -8,42 +8,44 @@ class WhatsApp {
     this.socket = null;
     this.isReady = false;
     this.client = new Client({
-      authStrategy: new LocalAuth({ clientId: 'wa-session' }),
+      authStrategy: new LocalAuth({ clientId: "wa-session" }),
       restartOnAuthFail: true,
       puppeteer: {
-        timeout: 0,
         waitForInitialPage: false,
-        // executablePath: '/nix/store/x205pbkd5xh5g4iv0g58xjla55has3cx-chromium-108.0.5359.94/bin/chromium-browser',
-        headless: false,
+        timeout: 0,
+        executablePath: process.env.CHROME_PATH,
+        // headless: false,
         args: [
-          '--no-sandbox',
-          '--headless=new',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-accelerated-2d-canvas',
-          '--no-first-run',
-          '--no-zygote', // <- this one doesn't works in Windows
-          '--disable-gpu',
-          '--hide-crash-restore-bubble',
+          "--no-sandbox",
+          "--headless=new",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-accelerated-2d-canvas",
+          "--no-first-run", // <- this one doesn't works in Windows
+          "--no-zygote", // <- this one doesn't works in Windows
+          "--disable-gpu",
+          "--single-process",
+          "--hide-crash-restore-bubble",
         ],
       },
-    })
-    this.client.on('authenticated', m => {
-      this.qrcode = '';
-    })
-    this.client.on('ready', m => {
+    });
+
+    this.client.on("authenticated", (m) => {
+      this.qrcode = "";
+    });
+    this.client.on("ready", (m) => {
       this.isReady = true;
       console.log("WhatsApp is ready.");
     });
-    this.client.on('disconnected', async reason => {
+    this.client.on("disconnected", async (reason) => {
       this.isReady = false;
       console.log("WhatsApp disconnected.", reason);
       this.client.destroy();
       this.client.initialize();
     });
-    this.client.on('qr', qr => {
+    this.client.on("qr", (qr) => {
       this.qrcode = qr;
-      qrt.generate(qr, {small: true});
+      qrt.generate(qr, { small: true });
     });
     this.client.initialize();
   }
@@ -93,7 +95,9 @@ class WhatsApp {
   // -------------------------------- check number is on whatsapp --------------------------------- //
   async onWhatsApp(number = "0") {
     if (this.isReady) {
-      const result = await this.client.isRegisteredUser(this.prettifyNumber(number));
+      const result = await this.client.isRegisteredUser(
+        this.prettifyNumber(number)
+      );
       return {
         code: result ? 200 : 404,
         data: {
@@ -107,8 +111,7 @@ class WhatsApp {
   // ---------------------------------- prettify normal number ----------------------------------- //
   prettifyNumber(number = "0") {
     if (number.startsWith("0")) number = "62" + number.substring(1);
-    if (!number.endsWith("@c.us"))
-      number = number + "@c.us";
+    if (!number.endsWith("@c.us")) number = number + "@c.us";
     return number;
   }
   // --------------------------------- getting user profile pict --------------------------------- //
@@ -123,7 +126,9 @@ class WhatsApp {
   // --------------------------------- getting user profile pict --------------------------------- //
   async getProfilePict() {
     try {
-      return await this.client.getProfilePicUrl(this.client.info.me._serialized);
+      return await this.client.getProfilePicUrl(
+        this.client.info.me._serialized
+      );
     } catch (err) {
       return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
     }

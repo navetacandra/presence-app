@@ -1,9 +1,26 @@
 require("dotenv").config();
 const { initializeApp } = require("firebase/app");
-const { getDatabase, update, remove, ref, set } = require("firebase/database");
-
+const { getDatabase, ref, set } = require("firebase/database");
+const { writeFileSync } = require("fs");
 const app = initializeApp(JSON.parse(process.env.FCONFIG));
 const db = getDatabase(app);
+
+const arg = process.argv[2];
+
+const months = [
+  "januari",
+  "februari",
+  "maret",
+  "april",
+  "mei",
+  "juni",
+  "juli",
+  "agustus",
+  "september",
+  "oktober",
+  "november",
+  "desember",
+];
 
 const obj = {};
 const tgl_obj = {};
@@ -28,23 +45,50 @@ Array(31)
     };
   });
 
-const b = [
-  "januari",
-  "februari",
-  "maret",
-  "april",
-  "mei",
-  "juni",
-  "juli",
-  "agustus",
-  "september",
-  "oktober",
-  "november",
-  "desember",
-].forEach((e) => {
+months.forEach((e) => {
   obj[e] = tgl_obj;
 });
 
-// console.log(obj);
-set(ref(db, "schedule"), template_detail);
-set(ref(db, "absensi"), obj);
+if (arg == "setup-db") {
+  set(ref(db, "schedule"), template_detail);
+  set(ref(db, "absensi"), obj);
+}
+
+if (arg == "setup-rules") {
+  const rules = {
+    ".read": "auth.uid != null",
+    ".write": "auth.uid != null",
+    pegawai: {
+      ".indexOn": ["uid", "card", "email"],
+    },
+    users: {
+      ".indexOn": ["uid", "card", "email"],
+      $uid: {
+        password: {
+          ".read": "auth.uid != null || auth.uid == ''",
+          ".write": "auth.uid != null || auth.uid == ''",
+        },
+      },
+    },
+    absensi: {}
+  };
+  months.forEach((e) => {
+    rules.absensi[e] = {};
+    Array(31)
+    .fill(0)
+    .map((_, i) => i + 1)
+    .forEach((el) => {
+        rules.absensi[e][el] = {
+          pegawai: {".indexOn": ["id", "card"]}
+        };
+      });
+  });
+  writeFileSync("./dbrules.json", JSON.stringify({rules}, null, 2).split(`
+          "pegawai": {
+            ".indexOn": [
+              "id",
+              "card"
+            ]
+          }
+        `).join(` "pegawai": { ".indexOn": [ "id", "card" ] } `));
+}

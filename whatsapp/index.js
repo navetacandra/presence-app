@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const {readFileSync, writeFileSync, unlinkSync} = require("fs");
+const { readFileSync, writeFileSync, unlinkSync } = require("fs");
 const WhatsApp = require("./whatsapp");
 const Firebase = require("./firebase");
 const { cwd } = require("process");
@@ -81,14 +81,14 @@ app.get("/export-csv", async (req, res) => {
       (req.body.month || req.query.month) ?? "januari",
       ((req.body.tanggal || req.query.tanggal) ?? "1").split(",")
     );
-    const filePath = resolve(join(cwd(), Date.now() + '.csv'));
-    writeFileSync(filePath, csv, 'utf-8');
+    const filePath = resolve(join(cwd(), Date.now() + ".csv"));
+    writeFileSync(filePath, csv, "utf-8");
     res.status(code).send(readFileSync(filePath));
-    unlinkSync(filePath)
+    unlinkSync(filePath);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Failed get info.", error: err });
   }
 });
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
