@@ -190,7 +190,7 @@ class KoneksiEspController extends GetxController {
             "Data Terkirim",
             "",
             backgroundColor: const Color.fromRGBO(0, 150, 0, .5),
-            duration: const Duration(seconds: 1000),
+            duration: const Duration(milliseconds: 1000),
             colorText: const Color.fromARGB(255, 255, 255, 255),
             messageText: Text(
               "Data berhasil dikirim ke server",
@@ -200,7 +200,7 @@ class KoneksiEspController extends GetxController {
               ),
             ),
           );
-          await Future.delayed(const Duration(seconds: 1200));
+          await Future.delayed(const Duration(milliseconds: 1200));
           Get.offAllNamed(Routes.HOME);
         }
       } catch (e) {
@@ -208,7 +208,7 @@ class KoneksiEspController extends GetxController {
           "Terjadi Kesalahan",
           "",
           backgroundColor: const Color.fromARGB(150, 255, 50, 50),
-          duration: const Duration(seconds: 1000),
+          duration: const Duration(milliseconds: 1000),
           colorText: const Color.fromARGB(255, 15, 15, 15),
           messageText: Text(
             "Perangkat gagal terkoneksi dengan server",
@@ -218,7 +218,7 @@ class KoneksiEspController extends GetxController {
             ),
           ),
         );
-        await Future.delayed(const Duration(seconds: 1200));
+        await Future.delayed(const Duration(milliseconds: 1200));
       }
     }
     isLoading.value = false;

@@ -57,7 +57,7 @@ class SignupController extends GetxController {
   void validateForm() async {
     isLoading.value = true;
     if (formField.currentState!.validate()) {
-      authC.signUp(
+      await authC.signUp(
         emailController.text,
         passController.text,
         nameController.text,

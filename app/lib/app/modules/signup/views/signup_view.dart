@@ -25,7 +25,7 @@ class SignupView extends GetView<SignupController> {
                 children: <Widget>[
                   ClipRRect(
                     child: Image.asset(
-                      "assets/app-logo.png",
+                      "assets/avatar.png",
                       width: Get.width * .5,
                       height: Get.width * .5,
                     ),

@@ -207,60 +207,60 @@ class TambahKartuProsesController extends GetxController {
             ),
           );
         }
-      }
-
-      try {
-        await dbC.updates(
-          // ignore: invalid_use_of_protected_member
-          "pegawai/${selectedPegawai.value["id"]}",
-          {
-            "card": cardId,
-          },
-        );
-        nameController.clear();
-        emailController.clear();
-        for (var i = 0; i < textFieldControllers.length; i++) {
-          textFieldControllers[i].clear();
+      } else {
+        try {
+          await dbC.updates(
+            // ignore: invalid_use_of_protected_member
+            "pegawai/${selectedPegawai.value["id"]}",
+            {
+              "card": cardId,
+            },
+          );
+          nameController.clear();
+          emailController.clear();
+          for (var i = 0; i < textFieldControllers.length; i++) {
+            textFieldControllers[i].clear();
+          }
+          Get.showSnackbar(
+            GetSnackBar(
+              backgroundColor: const Color.fromRGBO(0, 150, 0, .5),
+              duration: const Duration(milliseconds: 1500),
+              snackPosition: SnackPosition.BOTTOM,
+              snackStyle: SnackStyle.FLOATING,
+              messageText: Text(
+                "Berhasil mengubah pegawai!",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.roboto(
+                  color: Colors.white,
+                  fontSize: Get.width * .05,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              borderRadius: Get.width * .025,
+            ),
+          );
+          await dbC.remove("cards/$cardId");
+          Get.offAllNamed(Routes.HOME);
+        } catch (e) {
+          Get.showSnackbar(
+            GetSnackBar(
+              backgroundColor: const Color.fromRGBO(255, 0, 0, .8),
+              duration: const Duration(milliseconds: 1500),
+              snackPosition: SnackPosition.BOTTOM,
+              snackStyle: SnackStyle.FLOATING,
+              messageText: Text(
+                "Gagal mengubah pegawai!",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.roboto(
+                  color: Colors.white,
+                  fontSize: Get.width * .05,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              borderRadius: Get.width * .025,
+            ),
+          );
         }
-        Get.showSnackbar(
-          GetSnackBar(
-            backgroundColor: const Color.fromRGBO(0, 150, 0, .5),
-            duration: const Duration(milliseconds: 1500),
-            snackPosition: SnackPosition.BOTTOM,
-            snackStyle: SnackStyle.FLOATING,
-            messageText: Text(
-              "Berhasil mengubah pegawai!",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.roboto(
-                color: Colors.white,
-                fontSize: Get.width * .05,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            borderRadius: Get.width * .025,
-          ),
-        );
-        await dbC.remove("cards/$cardId");
-        Get.offAllNamed(Routes.HOME);
-      } catch (e) {
-        Get.showSnackbar(
-          GetSnackBar(
-            backgroundColor: const Color.fromRGBO(255, 0, 0, .8),
-            duration: const Duration(milliseconds: 1500),
-            snackPosition: SnackPosition.BOTTOM,
-            snackStyle: SnackStyle.FLOATING,
-            messageText: Text(
-              "Gagal mengubah pegawai!",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.roboto(
-                color: Colors.white,
-                fontSize: Get.width * .05,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            borderRadius: Get.width * .025,
-          ),
-        );
       }
     }
     isLoading.value = false;

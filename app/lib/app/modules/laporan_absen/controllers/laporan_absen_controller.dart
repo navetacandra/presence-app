@@ -115,7 +115,7 @@ class LaporanAbsenController extends GetxController {
             "${_localPath}PresentData-${currentTime.day.toString()}-${currentTime.month.toString()}-${currentTime.year.toString()}-${currentTime.hour.toString()}${currentTime.minute.toString()}${currentTime.second.toString()}${currentTime.millisecond.toString()}.csv";
 
         await Dio().download(
-          "https://ma5terabsensi-developmentz.navetacandra.repl.co/export-csv?month=$selectedMonth&tanggal=${tgls.join(',')}",
+          "https://ma5terabsensi--ma5terabsensi1.repl.co/export-csv?month=$selectedMonth&tanggal=${tgls.join(',')}",
           filePath,
         );
         Get.snackbar(

@@ -130,30 +130,10 @@ class LaporanAbsenView extends GetView<LaporanAbsenController> {
                         gradient: mPrimaryGradientColor,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      // child: Center(
-                      //   child: Obx(
-                      //     () => selfC.isLoading.isFalse
-                      //         ? Text(
-                      //             "Sign In",
-                      //             style: GoogleFonts.poppins(
-                      //               color: Colors.white,
-                      //               fontSize: 20,
-                      //               fontWeight: FontWeight.w600,
-                      //             ),
-                      //           )
-                      //         : const Padding(
-                      //             padding: EdgeInsets.all(5),
-                      //             child: CircularProgressIndicator(
-                      //               color: Color(0xFFFFFFFF),
-                      //             ),
-                      //           ),
-                      //   ),
-                      // ),
                       child: Obx(
                         () => selfC.isLoading.isFalse
                             ? Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   Text(
@@ -163,6 +143,9 @@ class LaporanAbsenView extends GetView<LaporanAbsenController> {
                                       fontSize: 20,
                                       fontWeight: FontWeight.w600,
                                     ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
                                   ),
                                   const Icon(
                                     Icons.download_rounded,

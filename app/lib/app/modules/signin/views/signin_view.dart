@@ -25,7 +25,7 @@ class SigninView extends GetView<SigninController> {
                 children: <Widget>[
                   ClipRRect(
                     child: Image.asset(
-                      "assets/app-logo.png",
+                      "assets/avatar.png",
                       width: Get.width * .5,
                       height: Get.width * .5,
                     ),
@@ -73,18 +73,18 @@ class SigninView extends GetView<SigninController> {
                     ),
                   ),
                   const SizedBox(height: 60),
-                  InkWell(
-                    onTap: () =>
-                        selfC.isLoading.isTrue ? null : selfC.validateForm(),
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        gradient: mPrimaryGradientColor,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Obx(
-                          () => selfC.isLoading.isFalse
+                  Obx(
+                    () => InkWell(
+                      onTap: () =>
+                          selfC.isLoading.isTrue ? null : selfC.validateForm(),
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          gradient: mPrimaryGradientColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: selfC.isLoading.isFalse
                               ? Text(
                                   "Sign In",
                                   style: GoogleFonts.poppins(

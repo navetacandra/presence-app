@@ -30,26 +30,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      // future: Future.delayed(const Duration(seconds: 3)),
-      future: Future.delayed(Duration.zero),
+      future: Future.delayed(const Duration(seconds: 3)),
+      // future: Future.delayed(Duration.zero),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return StreamBuilder<User?>(
-              stream: authC.streamCredential,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.active) {
-                  return GetMaterialApp(
-                    title: "Presence",
-                    theme: ThemeData(
-                      scaffoldBackgroundColor: mBackgroundColor,
-                    ),
-                    debugShowCheckedModeBanner: false,
-                    initialRoute: snapshot.data != null ? Routes.HOME : Routes.SIGNIN,
-                    getPages: AppPages.routes,
-                  );
-                }
-                return Container();
-              });
+            stream: authC.streamCredential,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                return GetMaterialApp(
+                  title: "Ma5ter Absensi",
+                  theme: ThemeData(
+                    scaffoldBackgroundColor: mBackgroundColor,
+                  ),
+                  debugShowCheckedModeBanner: false,
+                  initialRoute:
+                      snapshot.data != null ? Routes.HOME : Routes.SIGNIN,
+                  // snapshot.data != null ? Routes.HOME : Routes.SIGNUP,
+                  getPages: AppPages.routes,
+                );
+              }
+              return Container();
+            },
+          );
         }
         return MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -60,11 +63,11 @@ class MyApp extends StatelessWidget {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      "Presence",
+                      "Ma5ter Absensi",
                       style: GoogleFonts.poppins(
                         color: Colors.black,
-                        fontSize: 28,
-                        fontWeight: FontWeight.w500,
+                        fontSize: Get.width / 10,
+                        fontWeight: FontWeight.bold,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
@@ -77,7 +80,7 @@ class MyApp extends StatelessWidget {
                         "SMKN 5 Kab. Tangerang",
                         style: GoogleFonts.poppins(
                           color: Colors.black,
-                          fontSize: 18,
+                          fontSize: Get.width / 18,
                           fontWeight: FontWeight.w500,
                           fontStyle: FontStyle.italic,
                         ),

@@ -45,7 +45,7 @@ flutter_launcher_icons:
     theme_color: "#ffffff"
   windows:
     generate: true
-    image_path: "assets/launcher_icon_256x256.png"
+    image_path: "assets/launcher_icon.png"
     icon_size: 256
   macos:
     generate: true
