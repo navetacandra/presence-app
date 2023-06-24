@@ -1,5 +1,10 @@
 ## Presence
 <img src="./app/assets/launcher_icon.png" alt="App Image" width="128px" height="128px" />
+<br>
+<img src="https://github.com/navetacandra/presence-app/assets/70505125/179640c5-a57f-4ed7-a5ee-19dba368b6db" alt="Flutter Icon" width="50px" />
+<img src="https://github.com/navetacandra/presence-app/assets/70505125/302c2476-9021-40e0-9922-26c24fbbd45c" alt="NodeJS Icon" width="50px" />
+<img src="https://github.com/navetacandra/presence-app/assets/70505125/e3652f5f-f44b-4a70-b35f-40bbd13a6ee1" alt="Arduino Icon" width="50px" />
+<br><br>
 
 Aplikasi dibangun dengan flutter dan terkoneksi dengan Firebase Realtime Database. Aplikasi ini berfungsi untuk mengubah data di dalam database. Database juga dihubungkan dengan NodeJS sebagai listener untuk mendeteksi perubahan di child database. Kemudian perangkat ESP8266 mengambil data ke database setiap user melakukan scan rfid.
 
