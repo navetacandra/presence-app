@@ -121,12 +121,6 @@ Menu dan Cara Kerjanya:
           ▴                                    ▾
           └───────────────────────────────── Tidak ◂┼▸ valid ──▸ Tambah Pegawai
   ```
-- Tambah Pegawai
-  ```flow
-  Menunggu user input data ──▸ Validasi data ──┐
-          ▴                                    ▾
-          └───────────────────────────────── Tidak ◂┼▸ valid ──▸ Tambah Pegawai
-  ```
 - Tambah Kartu
   ```flow
   Mengambil data kartu yang ada (belum terdaftar sebagai pegawai)
@@ -140,4 +134,43 @@ Menu dan Cara Kerjanya:
                     │                                                                                 │
                     │                                                                                 ▾
                     └──▸ Pilih Pegawai ──▸ Update data pegawai                         Masuk ke halaman tambah pegawai
+  ```
+- Ganti Mode
+  ```flow
+  Stream nilai "mode" ke nilai switch
+    └──▸ Jika switch dirubah nilainya ──▸ rubah nilai "mode" di database sesuai nilai switch
+  ```
+  
+- Koneksi ESP8266
+  ```flow
+  Stream nilai gateway network yang terhubung
+    │
+    └──▸ Jika nilai gateway sama dengan gateway alat ─┐
+                                                      ▾
+    ┌─────────────────────────────────────────────── Ya ◂┼▸ Tidak ──▸ "Perangkat tidak terhubung dengan WiFi ESP WIFI MANAGER"
+    │
+    └──▸ Memastikan perangkat terhubung (request ke <gateway>/is-esp) ──▸ Ambil state esp ──▸ Kirim data state baru
+  ```
+- Koneksi WhatsApp
+  ```flow
+  Stream koneksi WhatsApp ke API
+    │
+    └▸ WhatsApp belum login ◂┼▸ WhatsApp sudah login ──▸ Ambil data akun yang terkoneksi
+                │
+                │
+                └──▸ Request QR WhatsApp
+  ```
+- Buat Laporan
+  ```flow
+  User memilih bulan dan tanggal yang akan di rekap
+    │
+    └▸ Mendownload file CSV dari API sesuai request yang dikirim
+  ```
+- Jadwal Absen
+  ```flow
+  Mengambil jadwal absen yang sudah diterapkan
+    │
+    ├▸ User memilih tanggal untuk mengaktifkan atau menonaktifkan absen pada tanggal itu
+    │
+    └▸ User menyesuaikan jam/waktu mulai dan akhir kehadiran dan kepulangan
   ```
