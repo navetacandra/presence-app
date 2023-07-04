@@ -1,5 +1,5 @@
 ## Presence
-pla<img src="./app/assets/launcher_icon.png" alt="App Image" width="128px" height="128px" />
+<img src="./app/assets/launcher_icon.png" alt="App Image" width="128px" height="128px" />
 <br>
 <img src="https://github.com/navetacandra/presence-app/assets/70505125/179640c5-a57f-4ed7-a5ee-19dba368b6db" alt="Flutter Icon" width="50px" />
 <img src="https://github.com/navetacandra/presence-app/assets/70505125/302c2476-9021-40e0-9922-26c24fbbd45c" alt="NodeJS Icon" width="50px" />
