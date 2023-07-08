@@ -1,4 +1,0 @@
-run = "npm run pm2-start"
-
-[nix]
-channel = "stable-22_11"

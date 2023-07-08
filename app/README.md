@@ -21,7 +21,7 @@ flutterfire configure
 | Edit Employee                  | ✅       | 12 June 2023 |
 | Delete Employee                | ✅       | 12 June 2023 |
 | Add Card                       | ✅       | 11 June 2023 |
-| Download Presence Report       | ✅       | 11 June 2023 |
+| Download Presence Report       | ❌       | 11 June 2023 |
 | Set Presence Schedule          | ✅       | 11 June 2023 |
 | Change IOT Mode                | ✅       | 11 June 2023 |
 | Control IOT Connection         | ✅       | 20 June 2023 |

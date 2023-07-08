@@ -1,10 +1,10 @@
-require("dotenv").config();
 const { initializeApp } = require("firebase/app");
 const { getDatabase, ref, set } = require("firebase/database");
 const { writeFileSync } = require("fs");
-const app = initializeApp(JSON.parse(process.env.FCONFIG));
-const db = getDatabase(app);
+require("dotenv").config();
 
+const app = initializeApp({});
+const db = getDatabase(app);
 const arg = process.argv[2];
 
 const months = [

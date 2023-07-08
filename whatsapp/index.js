@@ -1,32 +1,60 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { readFileSync, writeFileSync, unlinkSync } = require("fs");
-const WhatsApp = require("./whatsapp");
-const Firebase = require("./firebase");
 const { cwd } = require("process");
 const { join, resolve } = require("path");
+const Controller = require("./controller");
+require("dotenv").config();
 
 const app = express();
-const firebase = new Firebase(WhatsApp);
+
+const states_config = readFileSync(resolve(join(cwd(), "states.json")));
+
+const states = states_config.map((e) => ({
+  key: e.key,
+  controller: new Controller(
+    e.wa,
+    e.firebase,
+    e.key,
+    e.firebase_email,
+    e.firebase_password
+  ),
+}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/", async (req, res) => {
+  const { key } = req.body || req.query;
+  if (!key) {
+    return res.status(400).json({ message: "KEY not stored." });
+  }
+
   try {
     const {
       code,
       data: { user },
-    } = await WhatsApp.getMe();
-    res.status(code).json({ isReady: WhatsApp.isReady, user });
+    } = await states.filter((f) => f.key == key)[0].controller.whatsapp.getMe();
+    res.status(code).json({
+      isReady: states.filter((f) => f.key == key)[0].controller.whatsapp
+        .isReady,
+      user,
+    });
   } catch (err) {
     res.status(500).json({ message: "QR failed converted.", error: err });
   }
 });
 
 app.post("/qr", async (req, res) => {
+  const { key } = req.body || req.query;
+  if (!key) {
+    return res.status(400).json({ message: "KEY not stored." });
+  }
+
   try {
-    const { code, data } = await WhatsApp.getQR();
+    const { code, data } = await states
+      .filter((f) => f.key == key)[0]
+      .controller.whatsapp.getQR();
     res.status(code).json(data);
   } catch (err) {
     res.status(500).json({ message: "QR failed converted.", error: err });
@@ -34,8 +62,15 @@ app.post("/qr", async (req, res) => {
 });
 
 app.post("/info-me", async (req, res) => {
+  const { key } = req.body || req.query;
+  if (!key) {
+    return res.status(400).json({ message: "KEY not stored." });
+  }
+
   try {
-    const { code, data } = await WhatsApp.getMe();
+    const { code, data } = await states
+      .filter((f) => f.key == key)[0]
+      .controller.whatsapp.getMe();
     res.status(code).json(data);
   } catch (err) {
     res.status(500).json({ message: "Failed get info.", error: err });
@@ -43,11 +78,15 @@ app.post("/info-me", async (req, res) => {
 });
 
 app.post("/onwhatsapp", async (req, res) => {
+  const { key } = req.body || req.query;
+  if (!key) {
+    return res.status(400).json({ message: "KEY not stored." });
+  }
+
   try {
-    console.log(req.body);
-    const { code, data } = await WhatsApp.onWhatsApp(
-      req.body.number || req.query.number
-    );
+    const { code, data } = await states
+      .filter((f) => f.key == key)[0]
+      .controller.whatsapp.onWhatsApp(req.body.number || req.query.number);
     res.status(code).json(data);
   } catch (err) {
     res.status(500).json({ message: "Failed get info.", error: err });
@@ -55,38 +94,57 @@ app.post("/onwhatsapp", async (req, res) => {
 });
 
 app.post("/logout", async (req, res) => {
-  const { code, data } = await WhatsApp.logout();
+  const { key } = req.body || req.query;
+  if (!key) {
+    return res.status(400).json({ message: "KEY not stored." });
+  }
+
+  const { code, data } = await states
+    .filter((f) => f.key == key)[0]
+    .controller.whatsapp.logout();
   res.status(code).json(data);
 });
 
 app.post("/export", async (req, res) => {
+  const { key } = req.body || req.query;
+  if (!key) {
+    return res.status(400).json({ message: "KEY not stored." });
+  }
+
   try {
-    const { code, data } = await firebase.exportAbsen(
-      (req.body.month || req.query.month) ?? "januari",
-      ((req.body.tanggal || req.query.tanggal) ?? "1").split(",")
-    );
+    const { code, data } = await states
+      .filter((f) => f.key == key)[0]
+      .controller.firebase.exportAbsen(
+        (req.body.month || req.query.month) ?? "januari",
+        ((req.body.tanggal || req.query.tanggal) ?? "1").split(",")
+      );
     res.status(code).json(data);
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: "Failed get info.", error: err });
   }
 });
 
 app.get("/export-csv", async (req, res) => {
+  const { key } = req.body || req.query;
+  if (!key) {
+    return res.status(400).json({ message: "KEY not stored." });
+  }
+
   try {
     const {
       code,
       data: { csv },
-    } = await firebase.exportAbsen(
-      (req.body.month || req.query.month) ?? "januari",
-      ((req.body.tanggal || req.query.tanggal) ?? "1").split(",")
-    );
+    } = await states
+      .filter((f) => f.key == key)[0]
+      .controller.firebase.exportAbsen(
+        (req.body.month || req.query.month) ?? "januari",
+        ((req.body.tanggal || req.query.tanggal) ?? "1").split(",")
+      );
     const filePath = resolve(join(cwd(), Date.now() + ".csv"));
     writeFileSync(filePath, csv, "utf-8");
     res.status(code).send(readFileSync(filePath));
     unlinkSync(filePath);
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: "Failed get info.", error: err });
   }
 });

@@ -1,14 +1,15 @@
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const Qrcode = require("qrcode");
 const qrt = require("qrcode-terminal");
+require("dotenv").config();
 
 class WhatsApp {
-  constructor() {
+  constructor(sessionName = "wa-session") {
     this.qrcode = "";
     this.socket = null;
     this.isReady = false;
     this.client = new Client({
-      authStrategy: new LocalAuth({ clientId: "wa-session" }),
+      authStrategy: new LocalAuth({ clientId: sessionName }),
       restartOnAuthFail: true,
       puppeteer: {
         waitForInitialPage: false,
@@ -116,10 +117,13 @@ class WhatsApp {
   }
   // --------------------------------- getting user profile pict --------------------------------- //
   async sendMessage(number = "0", message = "") {
+    if(!this.isReady) {
+      return console.log("WhatsApp not ready yet.");
+    }
     const num = this.prettifyNumber(number);
     const isOnWhatsApp = await this.client.isRegisteredUser(num);
     if (!isOnWhatsApp) {
-      console.log(`${num} is not registered in WhatsApp`);
+      return console.log(`${num} is not registered in WhatsApp`);
     }
     await this.client.sendMessage(num, message);
   }
@@ -135,4 +139,4 @@ class WhatsApp {
   }
 }
 
-module.exports = new WhatsApp();
+module.exports = WhatsApp;

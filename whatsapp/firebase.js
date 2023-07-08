@@ -39,12 +39,12 @@ const months = [
 ];
 
 class Firebase {
-  constructor(WA) {
+  constructor(configuration = {}, WA = null, name = "default", controlEmail, controlPassword) {
     this.encryptionAlgorithm = "aes-256-cbc";
     this.encryptionKey = "presence key";
-    this.mainEmail = process.env.EMAIL;
-    this.mainPassword = process.env.PASS;
-    this.mainApp = initializeApp(JSON.parse(process.env.FCONFIG));
+    this.mainEmail = controlEmail;
+    this.mainPassword = controlPassword;
+    this.mainApp = initializeApp(configuration, name);
     this.authApp = getAuth(this.mainApp);
     this.dbApp = getDatabase(this.mainApp);
     this.MOBJ = {};
