@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 class WhatsappController extends GetxController {
+  final apikey = "presence-app";
   Uri _host({
     String? path = "/",
   }) =>
@@ -28,8 +29,12 @@ class WhatsappController extends GetxController {
 
   Future<Map<String, dynamic>?> getIsReady() async {
     try {
-      final response =
-          await http.post(_host()).timeout(const Duration(seconds: 30));
+      final response = await http.post(
+        _host(),
+        body: {
+          "key": apikey,
+        },
+      ).timeout(const Duration(seconds: 30));
       if ([200, 400].contains(response.statusCode)) {
         return jsonDecode(response.body);
       }
@@ -41,14 +46,17 @@ class WhatsappController extends GetxController {
 
   Future<String?> getQrCode() async {
     try {
-      final response = await http.post(_host(path: "/qr"));
+      final response = await http.post(
+        _host(path: "/qr"),
+        body: {
+          "key": apikey,
+        },
+      );
       if (response.statusCode == 200) {
         final parsedData = jsonDecode(response.body);
         final base64 = parsedData["qrcode"].toString();
 
-        return base64.isEmpty
-            ? null
-            : base64.replaceFirst(RegExp(r'data:(.*);base64,'), "");
+        return base64.isEmpty ? null : base64.replaceFirst(RegExp(r'data:(.*);base64,'), "");
       }
     } catch (e) {
       return null;
@@ -59,8 +67,11 @@ class WhatsappController extends GetxController {
   Future<int?> checkIsOnWhatsApp(String? number) async {
     try {
       final response = await http.post(
-        _host(path: "/onwhatsapp?number=$number"),
-        body: {"number": number},
+        _host(path: "/onwhatsapp"),
+        body: {
+          "key": apikey,
+          "number": number,
+        },
       );
       return response.statusCode;
     } catch (e) {
@@ -70,7 +81,12 @@ class WhatsappController extends GetxController {
 
   Future<void> logoutSession() async {
     try {
-      final response = await http.post(_host(path: "/logout"));
+      final response = await http.post(
+        _host(path: "/logout"),
+        body: {
+          "key": apikey,
+        },
+      );
       if (response.statusCode != 200) {
         Get.snackbar(
           "Sign Out Error",

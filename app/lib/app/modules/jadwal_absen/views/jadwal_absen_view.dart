@@ -23,18 +23,10 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                 stream: selfC.dbC.stream('schedule'),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.active) {
-                    String jamHadirStart = snapshot.data!.snapshot
-                        .child('jam_hadir_start')
-                        .value as String;
-                    String jamHadirEnd = snapshot.data!.snapshot
-                        .child('jam_hadir_end')
-                        .value as String;
-                    String jamPulangStart = snapshot.data!.snapshot
-                        .child('jam_pulang_start')
-                        .value as String;
-                    String jamPulangEnd = snapshot.data!.snapshot
-                        .child('jam_pulang_end')
-                        .value as String;
+                    String jamHadirStart = snapshot.data!.snapshot.child('jam_hadir_start').value as String;
+                    String jamHadirEnd = snapshot.data!.snapshot.child('jam_hadir_end').value as String;
+                    String jamPulangStart = snapshot.data!.snapshot.child('jam_pulang_start').value as String;
+                    String jamPulangEnd = snapshot.data!.snapshot.child('jam_pulang_end').value as String;
 
                     return Container(
                       margin: const EdgeInsets.only(bottom: 20, top: 20),
@@ -53,10 +45,8 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                   children: <Widget>[
                                     Obx(
                                       () => Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: <Widget>[
                                           Text(
                                             "Jam Hadir",
@@ -74,8 +64,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                                   margin: const EdgeInsets.only(
                                                     left: 8,
                                                   ),
-                                                  child:
-                                                      const CircularProgressIndicator(
+                                                  child: const CircularProgressIndicator(
                                                     color: Colors.black87,
                                                   ),
                                                 ),
@@ -83,10 +72,8 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                       ),
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         InkWell(
                                           onTap: () async {
@@ -103,8 +90,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                               ),
                                               builder: (context, child) {
                                                 return MediaQuery(
-                                                  data: MediaQuery.of(context)
-                                                      .copyWith(
+                                                  data: MediaQuery.of(context).copyWith(
                                                     alwaysUse24HourFormat: true,
                                                   ),
                                                   child: child!,
@@ -113,49 +99,51 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                             );
 
                                             // ignore: unnecessary_null_comparison
+                                            // ----
+                                            // if show time picker value is not null
                                             if (stp != null) {
-                                              var hour = stp.hour
-                                                          .toString()
-                                                          .length <
-                                                      2
-                                                  ? "0${stp.hour.toString()}"
-                                                  : stp.hour.toString();
-                                              var minute = stp.minute
-                                                          .toString()
-                                                          .length <
-                                                      2
-                                                  ? "0${stp.minute.toString()}"
-                                                  : stp.minute.toString();
-
-                                              if (jamHadirStart !=
-                                                  "$hour:$minute") {
-                                                await selfC.dbC.updates(
-                                                  'schedule',
-                                                  {
-                                                    'jam_hadir_start':
-                                                        "$hour:$minute",
-                                                  },
-                                                ).whenComplete(
-                                                  () =>
-                                                      isQueryLoad.value = false,
+                                              // compare time picker value with previous data
+                                              if (stp.hour >= int.parse(jamHadirEnd.split(':')[0]) ||
+                                                  (stp.hour == int.parse(jamHadirEnd.split(':')[0]) && stp.minute >= int.parse(jamHadirEnd.split(':')[1]))) {
+                                                Get.snackbar(
+                                                  "Terjadi Kesalahan",
+                                                  "",
+                                                  backgroundColor: const Color.fromARGB(150, 255, 50, 50),
+                                                  colorText: const Color.fromARGB(255, 15, 15, 15),
+                                                  messageText: Text(
+                                                    "Jam Hadir Mulai Tidak Boleh Sama/Lebih dari Jam Hadir Akhir",
+                                                    style: GoogleFonts.poppins(
+                                                      fontWeight: FontWeight.w500,
+                                                      color: const Color.fromARGB(255, 15, 15, 15),
+                                                    ),
+                                                  ),
                                                 );
                                               } else {
-                                                isQueryLoad.value = false;
+                                                // convert time picker value to string
+                                                var hour = stp.hour.toString().length < 2 ? "0${stp.hour.toString()}" : stp.hour.toString();
+                                                var minute = stp.minute.toString().length < 2 ? "0${stp.minute.toString()}" : stp.minute.toString();
+
+                                                // update value if data didn't same with previous data
+                                                if (jamHadirStart != "$hour:$minute") {
+                                                  await selfC.dbC.updates(
+                                                    'schedule',
+                                                    {
+                                                      'jam_hadir_start': "$hour:$minute",
+                                                    },
+                                                  );
+                                                }
                                               }
-                                            } else {
-                                              isQueryLoad.value = false;
                                             }
+                                            isQueryLoad.value = false;
                                           },
                                           child: Container(
                                             width: 110,
                                             decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
+                                              borderRadius: BorderRadius.circular(10),
                                               color: Colors.blue.shade300,
                                             ),
                                             child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
+                                              padding: const EdgeInsets.all(8.0),
                                               child: Text(
                                                 "${jamHadirStart.split(':')[0]}  :  ${jamHadirStart.split(':')[1]}",
                                                 textAlign: TextAlign.center,
@@ -190,8 +178,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                               ),
                                               builder: (context, child) {
                                                 return MediaQuery(
-                                                  data: MediaQuery.of(context)
-                                                      .copyWith(
+                                                  data: MediaQuery.of(context).copyWith(
                                                     alwaysUse24HourFormat: true,
                                                   ),
                                                   child: child!,
@@ -200,48 +187,69 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                             );
 
                                             // ignore: unnecessary_null_comparison
+                                            // ---
+                                            // if show time picker not null
                                             if (stp != null) {
-                                              var hour = stp.hour
-                                                          .toString()
-                                                          .length <
-                                                      2
-                                                  ? "0${stp.hour.toString()}"
-                                                  : stp.hour.toString();
-                                              var minute = stp.minute
-                                                          .toString()
-                                                          .length <
-                                                      2
-                                                  ? "0${stp.minute.toString()}"
-                                                  : stp.minute.toString();
-
-                                              if (jamHadirEnd !=
-                                                  "$hour:$minute") {
-                                                await selfC.dbC.updates(
-                                                  'schedule',
-                                                  {
-                                                    'jam_hadir_end':
-                                                        "$hour:$minute",
-                                                  },
-                                                ).whenComplete(
-                                                  () =>
-                                                      isQueryLoad.value = false,
+                                              // Compare show time picker value with previous data
+                                              if (stp.hour <= int.parse(jamHadirStart.split(':')[0]) ||
+                                                  (stp.hour == int.parse(jamHadirStart.split(':')[0]) && stp.minute <= int.parse(jamHadirStart.split(':')[1]))) {
+                                                Get.snackbar(
+                                                  "Terjadi Kesalahan",
+                                                  "",
+                                                  backgroundColor: const Color.fromARGB(150, 255, 50, 50),
+                                                  colorText: const Color.fromARGB(255, 15, 15, 15),
+                                                  messageText: Text(
+                                                    "Jam Hadir Akhir Tidak Boleh Sama/Kurang dari Jam Hadir Mulai",
+                                                    style: GoogleFonts.poppins(
+                                                      fontWeight: FontWeight.w500,
+                                                      color: const Color.fromARGB(255, 15, 15, 15),
+                                                    ),
+                                                  ),
                                                 );
+                                                // Compare show time picker value with previous data
                                               }
-                                              isQueryLoad.value = false;
-                                            } else {
-                                              isQueryLoad.value = false;
+                                              // Compare show time picker value with previous data
+                                              else if (stp.hour >= int.parse(jamPulangStart.split(':')[0]) ||
+                                                  (stp.hour == int.parse(jamPulangStart.split(':')[0]) && stp.minute >= int.parse(jamPulangStart.split(':')[1]))) {
+                                                Get.snackbar(
+                                                  "Terjadi Kesalahan",
+                                                  "",
+                                                  backgroundColor: const Color.fromARGB(150, 255, 50, 50),
+                                                  colorText: const Color.fromARGB(255, 15, 15, 15),
+                                                  messageText: Text(
+                                                    "Jam Hadir Akhir Tidak Boleh Sama/Lebih dari Jam Pulang",
+                                                    style: GoogleFonts.poppins(
+                                                      fontWeight: FontWeight.w500,
+                                                      color: const Color.fromARGB(255, 15, 15, 15),
+                                                    ),
+                                                  ),
+                                                );
+                                              } else {
+                                                // Convert time picker value to string
+                                                var hour = stp.hour.toString().length < 2 ? "0${stp.hour.toString()}" : stp.hour.toString();
+                                                var minute = stp.minute.toString().length < 2 ? "0${stp.minute.toString()}" : stp.minute.toString();
+
+                                                // update value if data didn't same with previous data
+                                                if (jamHadirEnd != "$hour:$minute") {
+                                                  await selfC.dbC.updates(
+                                                    'schedule',
+                                                    {
+                                                      'jam_hadir_end': "$hour:$minute",
+                                                    },
+                                                  );
+                                                }
+                                              }
                                             }
+                                            isQueryLoad.value = false;
                                           },
                                           child: Container(
                                             width: 110,
                                             decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
+                                              borderRadius: BorderRadius.circular(10),
                                               color: Colors.blue.shade300,
                                             ),
                                             child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
+                                              padding: const EdgeInsets.all(8.0),
                                               child: Text(
                                                 "${jamHadirEnd.split(':')[0]}  :  ${jamHadirEnd.split(':')[1]}",
                                                 textAlign: TextAlign.center,
@@ -273,10 +281,8 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                   children: <Widget>[
                                     Obx(
                                       () => Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: <Widget>[
                                           Text(
                                             "Jam Pulang",
@@ -294,8 +300,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                                   margin: const EdgeInsets.only(
                                                     left: 8,
                                                   ),
-                                                  child:
-                                                      const CircularProgressIndicator(
+                                                  child: const CircularProgressIndicator(
                                                     color: Colors.black87,
                                                   ),
                                                 ),
@@ -303,10 +308,8 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                       ),
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         // --- Jam Pulang Hadir --- //
                                         InkWell(
@@ -324,8 +327,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                               ),
                                               builder: (context, child) {
                                                 return MediaQuery(
-                                                  data: MediaQuery.of(context)
-                                                      .copyWith(
+                                                  data: MediaQuery.of(context).copyWith(
                                                     alwaysUse24HourFormat: true,
                                                   ),
                                                   child: child!,
@@ -334,48 +336,69 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                             );
 
                                             // ignore: unnecessary_null_comparison
+                                            // ---
+                                            // if show time picker value not null
                                             if (stp != null) {
-                                              var hour = stp.hour
-                                                          .toString()
-                                                          .length <
-                                                      2
-                                                  ? "0${stp.hour.toString()}"
-                                                  : stp.hour.toString();
-                                              var minute = stp.minute
-                                                          .toString()
-                                                          .length <
-                                                      2
-                                                  ? "0${stp.minute.toString()}"
-                                                  : stp.minute.toString();
-
-                                              if (jamPulangStart !=
-                                                  "$hour:$minute") {
-                                                await selfC.dbC.updates(
-                                                  'schedule',
-                                                  {
-                                                    'jam_pulang_start':
-                                                        "$hour:$minute",
-                                                  },
-                                                ).whenComplete(
-                                                  () =>
-                                                      isQueryLoad.value = false,
+                                              // Compare show time picker value with previous data
+                                              if (stp.hour <= int.parse(jamHadirEnd.split(":")[0]) ||
+                                                  (stp.hour == int.parse(jamHadirEnd.split(":")[0]) && stp.minute <= int.parse(jamHadirEnd.split(":")[1]))) {
+                                                Get.snackbar(
+                                                  "Terjadi Kesalahan",
+                                                  "",
+                                                  backgroundColor: const Color.fromARGB(150, 255, 50, 50),
+                                                  colorText: const Color.fromARGB(255, 15, 15, 15),
+                                                  messageText: Text(
+                                                    "Jam Pulang Mulai Tidak Boleh Sama/Kurang dari Jam Hadir Akhir",
+                                                    style: GoogleFonts.poppins(
+                                                      fontWeight: FontWeight.w500,
+                                                      color: const Color.fromARGB(255, 15, 15, 15),
+                                                    ),
+                                                  ),
                                                 );
+                                                // Compare show time picker value with previous data
                                               }
-                                              isQueryLoad.value = false;
-                                            } else {
-                                              isQueryLoad.value = false;
+                                              // Compare show time picker value with previous data
+                                              else if (stp.hour >= int.parse(jamPulangEnd.split(":")[0]) ||
+                                                  (stp.hour == int.parse(jamPulangEnd.split(":")[0]) && stp.minute >= int.parse(jamPulangEnd.split(":")[1]))) {
+                                                Get.snackbar(
+                                                  "Terjadi Kesalahan",
+                                                  "",
+                                                  backgroundColor: const Color.fromARGB(150, 255, 50, 50),
+                                                  colorText: const Color.fromARGB(255, 15, 15, 15),
+                                                  messageText: Text(
+                                                    "Jam Pulang Mulai Tidak Boleh Sama/Lebih dari Jam Pulang Akhir",
+                                                    style: GoogleFonts.poppins(
+                                                      fontWeight: FontWeight.w500,
+                                                      color: const Color.fromARGB(255, 15, 15, 15),
+                                                    ),
+                                                  ),
+                                                );
+                                              } else {
+                                                // Convert time picker value to string
+                                                var hour = stp.hour.toString().length < 2 ? "0${stp.hour.toString()}" : stp.hour.toString();
+                                                var minute = stp.minute.toString().length < 2 ? "0${stp.minute.toString()}" : stp.minute.toString();
+
+                                                // update value if data didn't same with previous data
+                                                if (jamPulangStart != "$hour:$minute") {
+                                                  await selfC.dbC.updates(
+                                                    'schedule',
+                                                    {
+                                                      'jam_pulang_start': "$hour:$minute",
+                                                    },
+                                                  );
+                                                }
+                                              }
                                             }
+                                            isQueryLoad.value = false;
                                           },
                                           child: Container(
                                             width: 110,
                                             decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
+                                              borderRadius: BorderRadius.circular(10),
                                               color: Colors.blue.shade300,
                                             ),
                                             child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
+                                              padding: const EdgeInsets.all(8.0),
                                               child: Text(
                                                 "${jamPulangStart.split(':')[0]}  :  ${jamPulangStart.split(':')[1]}",
                                                 textAlign: TextAlign.center,
@@ -413,8 +436,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                               ),
                                               builder: (context, child) {
                                                 return MediaQuery(
-                                                  data: MediaQuery.of(context)
-                                                      .copyWith(
+                                                  data: MediaQuery.of(context).copyWith(
                                                     alwaysUse24HourFormat: true,
                                                   ),
                                                   child: child!,
@@ -423,48 +445,51 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                             );
 
                                             // ignore: unnecessary_null_comparison
+                                            // ---
+                                            // if show time picker value not null
                                             if (stp != null) {
-                                              var hour = stp.hour
-                                                          .toString()
-                                                          .length <
-                                                      2
-                                                  ? "0${stp.hour.toString()}"
-                                                  : stp.hour.toString();
-                                              var minute = stp.minute
-                                                          .toString()
-                                                          .length <
-                                                      2
-                                                  ? "0${stp.minute.toString()}"
-                                                  : stp.minute.toString();
-
-                                              if (jamPulangEnd !=
-                                                  "$hour:$minute") {
-                                                await selfC.dbC.updates(
-                                                  'schedule',
-                                                  {
-                                                    'jam_pulang_end':
-                                                        "$hour:$minute",
-                                                  },
-                                                ).whenComplete(
-                                                  () =>
-                                                      isQueryLoad.value = false,
+                                              // Compare time picker value with previous data
+                                              if (stp.hour <= int.parse(jamPulangStart.split(":")[0]) ||
+                                                  (stp.hour == int.parse(jamPulangStart.split(":")[0]) && stp.minute <= int.parse(jamPulangStart.split(":")[1]))) {
+                                                Get.snackbar(
+                                                  "Terjadi Kesalahan",
+                                                  "",
+                                                  backgroundColor: const Color.fromARGB(150, 255, 50, 50),
+                                                  colorText: const Color.fromARGB(255, 15, 15, 15),
+                                                  messageText: Text(
+                                                    "Jam Pulang Akhir Tidak Boleh Sama/Kurang dari Jam Pulang Mulai",
+                                                    style: GoogleFonts.poppins(
+                                                      fontWeight: FontWeight.w500,
+                                                      color: const Color.fromARGB(255, 15, 15, 15),
+                                                    ),
+                                                  ),
                                                 );
+                                              } else {
+                                                // Convert time picker value to string
+                                                var hour = stp.hour.toString().length < 2 ? "0${stp.hour.toString()}" : stp.hour.toString();
+                                                var minute = stp.minute.toString().length < 2 ? "0${stp.minute.toString()}" : stp.minute.toString();
+
+                                                // Update value if data didn't sasme with previous data
+                                                if (jamPulangEnd != "$hour:$minute") {
+                                                  await selfC.dbC.updates(
+                                                    'schedule',
+                                                    {
+                                                      'jam_pulang_end': "$hour:$minute",
+                                                    },
+                                                  );
+                                                }
                                               }
-                                              isQueryLoad.value = false;
-                                            } else {
-                                              isQueryLoad.value = false;
                                             }
+                                            isQueryLoad.value = false;
                                           },
                                           child: Container(
                                             width: 110,
                                             decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
+                                              borderRadius: BorderRadius.circular(10),
                                               color: Colors.blue.shade300,
                                             ),
                                             child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
+                                              padding: const EdgeInsets.all(8.0),
                                               child: Text(
                                                 "${jamPulangEnd.split(':')[0]}  :  ${jamPulangEnd.split(':')[1]}",
                                                 textAlign: TextAlign.center,
@@ -509,18 +534,12 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                           tgl0.add(
                             {
                               "key": "${i + 1}",
-                              "active": snap
-                                  .child(ch.key as String)
-                                  .child("${i + 1}")
-                                  .child("details")
-                                  .child("active")
-                                  .value as bool,
+                              "active": snap.child(ch.key as String).child("${i + 1}").child("details").child("active").value as bool,
                             },
                           );
                         }
                         for (var i = 0; i < tgl0.length; i += 6) {
-                          tgl1.add(tgl0.sublist(
-                              i, i + 6 > tgl0.length ? tgl0.length : i + 6));
+                          tgl1.add(tgl0.sublist(i, i + 6 > tgl0.length ? tgl0.length : i + 6));
                         }
 
                         all[selfC.month.indexOf(ch.key)] = tgl1;
@@ -551,9 +570,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                     height: Get.width / 7,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      color: (el['active'] as bool)
-                                          ? Colors.green
-                                          : Colors.red.shade700,
+                                      color: (el['active'] as bool) ? Colors.green : Colors.red.shade700,
                                     ),
                                     child: Center(
                                       child: isLoad.isFalse
@@ -568,8 +585,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                           : SizedBox(
                                               width: Get.width * .06,
                                               height: Get.width * .06,
-                                              child:
-                                                  const CircularProgressIndicator(
+                                              child: const CircularProgressIndicator(
                                                 color: Colors.white,
                                               ),
                                             ),
@@ -583,8 +599,7 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                             Container(
                               margin: const EdgeInsets.only(bottom: 8),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: row,
                               ),
