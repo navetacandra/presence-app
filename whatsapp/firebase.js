@@ -39,7 +39,14 @@ const months = [
 ];
 
 class Firebase {
-  constructor(configuration = {}, WA = null, name = "default", controlEmail, controlPassword) {
+  constructor(
+    configuration = {},
+    WA = null,
+    name = "default",
+    controlEmail,
+    controlPassword
+  ) {
+    this.name = name;
     this.encryptionAlgorithm = "aes-256-cbc";
     this.encryptionKey = "presence key";
     this.mainEmail = controlEmail;
@@ -68,13 +75,13 @@ class Firebase {
     await signOut(this.authApp);
     signInWithEmailAndPassword(this.authApp, this.mainEmail, this.mainPassword)
       .then(() => {
-        console.log("Firebase intialize");
+        console.log(`[${this.name}] Firebase intialize`);
         this.streamMode();
         this.streamSchedule();
         this.streamDeletePegawai();
         this.streamAbsensi();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(`[${this.name}] ${err}`));
   }
 
   async createAccount(name, email, pass) {
@@ -84,7 +91,7 @@ class Firebase {
         this.authApp,
         this.mainEmail,
         this.mainPassword
-      ).catch((err) => console.log(err));
+      ).catch((err) => console.log(`[${this.name}] ${err}`));
       const u = await createUserWithEmailAndPassword(this.authApp, email, pass);
       await update(ref(this.dbApp, `users/${u.user.uid}`), {
         name,
@@ -98,7 +105,7 @@ class Firebase {
         this.authApp,
         this.mainEmail,
         this.mainPassword
-      ).catch((err) => console.log(err));
+      ).catch((err) => console.log(`[${this.name}] ${err}`));
       return {
         code: 200,
         response: u,
@@ -161,6 +168,7 @@ class Firebase {
 
   streamSchedule() {
     onValue(ref(this.dbApp, "schedule"), (snap) => {
+      console.log(`[${this.name}] Schedule changed`);
       months.forEach((mth) => {
         Array(31)
           .fill(0)
@@ -174,6 +182,7 @@ class Firebase {
 
   streamMode() {
     onValue(ref(this.dbApp, "mode"), (snap) => {
+      console.log(`[${this.name}] Mode changed`);
       months.forEach((mth) => {
         Array(31)
           .fill(0)
@@ -224,12 +233,14 @@ class Firebase {
                   const pgw = await get(
                     ref(this.dbApp, `/pegawai/${snap.val().id}`)
                   );
-                  if (!pgw.exists()) console.log(snap.val().id, "is empty");
+                  if (!pgw.exists()) console.log(`[${this.name}] ${snap.val().id} is empty`);
                   this.WA.sendMessage(
                     pgw.val()["telPenanggungJawab"],
-                    `Saudara *${pgw.val()["name"]}* telah hadir pada pukul *${
+                    `Saudara *${pgw.val()["name"].trim()}* telah hadir pada pukul *${
                       snap.val().masuk
-                    }*`
+                    }* tanggal *${d.getDate()}/${
+                      months[d.getMonth()]
+                    }/${d.getFullYear()}*`
                   );
                 }
               }
@@ -248,12 +259,14 @@ class Firebase {
                   const pgw = await get(
                     ref(this.dbApp, `/pegawai/${snap.val().id}`)
                   );
-                  if (!pgw.exists()) console.log(snap.val().id, "is empty");
+                  if (!pgw.exists()) console.log(`[${this.name}] ${snap.val().id} is empty`);
                   this.WA.sendMessage(
                     pgw.val()["telPenanggungJawab"],
-                    `Saudara *${pgw.val().name}* telah pulang pada pukul *${
+                    `Saudara *${pgw.val().name.trim()}* telah pulang pada pukul *${
                       snap.val().pulang
-                    }*`
+                    }* tanggal *${d.getDate()}/${
+                      months[d.getMonth()]
+                    }/${d.getFullYear()}*`
                   );
                 }
               }

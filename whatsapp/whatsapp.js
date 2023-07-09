@@ -4,7 +4,8 @@ const qrt = require("qrcode-terminal");
 require("dotenv").config();
 
 class WhatsApp {
-  constructor(sessionName = "wa-session") {
+  constructor(sessionName = "wa-session", name ="wa") {
+    this.name = name;
     this.qrcode = "";
     this.socket = null;
     this.isReady = false;
@@ -30,23 +31,30 @@ class WhatsApp {
         ],
       },
     });
+    this.queue = [];
 
     this.client.on("authenticated", (m) => {
       this.qrcode = "";
+      console.log(`[${this.name}] WhatsApp is authenticated.`);
     });
-    this.client.on("ready", (m) => {
+    this.client.on("ready", async (m) => {
       this.isReady = true;
-      console.log("WhatsApp is ready.");
+      console.log(`[${this.name}] WhatsApp is ready.`);
+      for (const q of this.queue) {
+        let cmd = q.shift();
+        await this[cmd.func](...cmd.args)
+      }
     });
     this.client.on("disconnected", async (reason) => {
       this.isReady = false;
-      console.log("WhatsApp disconnected.", reason);
+      console.log(`[${this.name}] WhatsApp disconnected: ${reason}`);
       this.client.destroy();
       this.client.initialize();
     });
     this.client.on("qr", (qr) => {
       this.qrcode = qr;
-      qrt.generate(qr, { small: true });
+      console.log(`[${this.name}] QR: ${qr}`);
+      // qrt.generate(qr, { small: true });
     });
     this.client.initialize();
   }
@@ -115,17 +123,23 @@ class WhatsApp {
     if (!number.endsWith("@c.us")) number = number + "@c.us";
     return number;
   }
-  // --------------------------------- getting user profile pict --------------------------------- //
+  // --------------------------------- send message --------------------------------- //
   async sendMessage(number = "0", message = "") {
-    if(!this.isReady) {
-      return console.log("WhatsApp not ready yet.");
+    try {
+      if (!this.isReady) {
+        return this.queue.push({ func: "sendMessage", args: [number, message] });
+      }
+      const num = this.prettifyNumber(number);
+      const isOnWhatsApp = await this.client.isRegisteredUser(num);
+      if (!isOnWhatsApp) {
+        return console.log(
+          `[${this.name}] ${num} is not registered in WhatsApp`
+        );
+      }
+      await this.client.sendMessage(num, message);
+    } catch (err) {
+      console.log(err);
     }
-    const num = this.prettifyNumber(number);
-    const isOnWhatsApp = await this.client.isRegisteredUser(num);
-    if (!isOnWhatsApp) {
-      return console.log(`${num} is not registered in WhatsApp`);
-    }
-    await this.client.sendMessage(num, message);
   }
   // --------------------------------- getting user profile pict --------------------------------- //
   async getProfilePict() {

@@ -8,7 +8,18 @@ require("dotenv").config();
 
 const app = express();
 
-const states_config = readFileSync(resolve(join(cwd(), "states.json")));
+// [
+//   {
+//     "key": "KEY",
+//     "wa": "WHATSAPP_SESSION",
+//     "firebase": {
+//        ...
+//     },
+//     "firebase_email": "FIREBASE_CONTROL_EMAIL",
+//     "firebase_password": "FIREBASE_CONTROL_PASSWORD"
+//   },
+// ]
+const states_config = JSON.parse(readFileSync(resolve(join(cwd(), "states.json"))));
 
 const states = states_config.map((e) => ({
   key: e.key,
