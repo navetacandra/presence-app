@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LaporanAbsenController extends GetxController {
-  final apikey = "presence-app";
+  final apikey = "presence";
   late String _localPath;
   late bool _permissionReady;
   late TargetPlatform? platform;
@@ -110,7 +110,7 @@ class LaporanAbsenController extends GetxController {
             "${_localPath}PresentData-${currentTime.day.toString()}-${currentTime.month.toString()}-${currentTime.year.toString()}-${currentTime.hour.toString()}${currentTime.minute.toString()}${currentTime.second.toString()}${currentTime.millisecond.toString()}.csv";
 
         await Dio().download(
-          "https://ma5terabsensi--ma5terabsensi1.repl.co/export-csv?key=$apikey&month=$selectedMonth&tanggal=${tgls.join(',')}",
+          "http://103.181.183.181:3000/export-csv?key=$apikey&month=$selectedMonth&tanggal=${tgls.join(',')}",
           filePath,
         );
         Get.snackbar(
@@ -126,7 +126,8 @@ class LaporanAbsenController extends GetxController {
             ),
           ),
         );
-      } catch (e) {
+      } on DioException catch (e) {
+        print(e.response!.data);
         Get.snackbar(
           "Terjadi kesalahan",
           "",

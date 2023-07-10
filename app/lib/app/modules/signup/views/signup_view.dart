@@ -25,7 +25,7 @@ class SignupView extends GetView<SignupController> {
                 children: <Widget>[
                   ClipRRect(
                     child: Image.asset(
-                      "assets/avatar.png",
+                      "assets/avatar.jpg",
                       width: Get.width * .5,
                       height: Get.width * .5,
                     ),
@@ -71,12 +71,9 @@ class SignupView extends GetView<SignupController> {
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.lock),
                         suffixIcon: InkWell(
-                          onTap: () =>
-                              selfC.showPass.value = !selfC.showPass.value,
+                          onTap: () => selfC.showPass.value = !selfC.showPass.value,
                           child: Icon(
-                            selfC.showPass.value
-                                ? Icons.visibility_off
-                                : Icons.visibility,
+                            selfC.showPass.value ? Icons.visibility_off : Icons.visibility,
                           ),
                         ),
                         errorStyle: GoogleFonts.poppins(
@@ -98,12 +95,9 @@ class SignupView extends GetView<SignupController> {
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.lock),
                         suffixIcon: InkWell(
-                          onTap: () => selfC.showPassConfirmation.value =
-                              !selfC.showPassConfirmation.value,
+                          onTap: () => selfC.showPassConfirmation.value = !selfC.showPassConfirmation.value,
                           child: Icon(
-                            selfC.showPassConfirmation.value
-                                ? Icons.visibility_off
-                                : Icons.visibility,
+                            selfC.showPassConfirmation.value ? Icons.visibility_off : Icons.visibility,
                           ),
                         ),
                         errorStyle: GoogleFonts.poppins(
@@ -111,14 +105,12 @@ class SignupView extends GetView<SignupController> {
                           fontSize: 15,
                         ),
                       ),
-                      validator: (value) =>
-                          selfC.validatePasswordConfirmation(value),
+                      validator: (value) => selfC.validatePasswordConfirmation(value),
                     ),
                   ),
                   const SizedBox(height: 60),
                   InkWell(
-                    onTap: () =>
-                        selfC.isLoading.isTrue ? null : selfC.validateForm(),
+                    onTap: () => selfC.isLoading.isTrue ? null : selfC.validateForm(),
                     child: Container(
                       height: 50,
                       decoration: BoxDecoration(

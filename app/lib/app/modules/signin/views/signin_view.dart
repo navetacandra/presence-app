@@ -25,7 +25,7 @@ class SigninView extends GetView<SigninController> {
                 children: <Widget>[
                   ClipRRect(
                     child: Image.asset(
-                      "assets/avatar.png",
+                      "assets/avatar.jpg",
                       width: Get.width * .5,
                       height: Get.width * .5,
                     ),
@@ -56,12 +56,9 @@ class SigninView extends GetView<SigninController> {
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.lock),
                         suffixIcon: InkWell(
-                          onTap: () =>
-                              selfC.showPass.value = !selfC.showPass.value,
+                          onTap: () => selfC.showPass.value = !selfC.showPass.value,
                           child: Icon(
-                            selfC.showPass.value
-                                ? Icons.visibility_off
-                                : Icons.visibility,
+                            selfC.showPass.value ? Icons.visibility_off : Icons.visibility,
                           ),
                         ),
                         errorStyle: GoogleFonts.poppins(
@@ -75,8 +72,7 @@ class SigninView extends GetView<SigninController> {
                   const SizedBox(height: 60),
                   Obx(
                     () => InkWell(
-                      onTap: () =>
-                          selfC.isLoading.isTrue ? null : selfC.validateForm(),
+                      onTap: () => selfC.isLoading.isTrue ? null : selfC.validateForm(),
                       child: Container(
                         height: 50,
                         decoration: BoxDecoration(

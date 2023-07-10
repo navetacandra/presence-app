@@ -19,9 +19,7 @@ const app = express();
 //     "firebase_password": "FIREBASE_CONTROL_PASSWORD"
 //   },
 // ]
-const states_config = JSON.parse(readFileSync(resolve(join(cwd(), "states.json"))));
-
-const states = states_config.map((e) => ({
+const states = JSON.parse(readFileSync(resolve(join(cwd(), "states.json")), "utf-8")).map((e) => ({
   key: e.key,
   controller: new Controller(
     e.wa,
@@ -36,7 +34,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/", async (req, res) => {
-  const { key } = req.body || req.query;
+  const key = req.body.key || req.query.key;
   if (!key) {
     return res.status(400).json({ message: "KEY not stored." });
   }
@@ -57,7 +55,7 @@ app.post("/", async (req, res) => {
 });
 
 app.post("/qr", async (req, res) => {
-  const { key } = req.body || req.query;
+  const key = req.body.key || req.query.key;
   if (!key) {
     return res.status(400).json({ message: "KEY not stored." });
   }
@@ -73,7 +71,7 @@ app.post("/qr", async (req, res) => {
 });
 
 app.post("/info-me", async (req, res) => {
-  const { key } = req.body || req.query;
+  const key = req.body.key || req.query.key;
   if (!key) {
     return res.status(400).json({ message: "KEY not stored." });
   }
@@ -89,7 +87,7 @@ app.post("/info-me", async (req, res) => {
 });
 
 app.post("/onwhatsapp", async (req, res) => {
-  const { key } = req.body || req.query;
+  const key = req.body.key || req.query.key;
   if (!key) {
     return res.status(400).json({ message: "KEY not stored." });
   }
@@ -105,7 +103,7 @@ app.post("/onwhatsapp", async (req, res) => {
 });
 
 app.post("/logout", async (req, res) => {
-  const { key } = req.body || req.query;
+  const key = req.body.key || req.query.key;
   if (!key) {
     return res.status(400).json({ message: "KEY not stored." });
   }
@@ -117,7 +115,7 @@ app.post("/logout", async (req, res) => {
 });
 
 app.post("/export", async (req, res) => {
-  const { key } = req.body || req.query;
+  const key = req.body.key || req.query.key;
   if (!key) {
     return res.status(400).json({ message: "KEY not stored." });
   }
@@ -136,7 +134,7 @@ app.post("/export", async (req, res) => {
 });
 
 app.get("/export-csv", async (req, res) => {
-  const { key } = req.body || req.query;
+  const key = req.body.key || req.query.key;
   if (!key) {
     return res.status(400).json({ message: "KEY not stored." });
   }

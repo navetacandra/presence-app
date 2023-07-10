@@ -6,11 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 class WhatsappController extends GetxController {
-  final apikey = "presence-app";
+  final apikey = "presence";
   Uri _host({
     String? path = "/",
   }) =>
-      Uri.parse("https://ma5terabsensi--ma5terabsensi1.repl.co$path");
+      Uri.parse("http://103.181.183.181:3000$path");
 
   @override
   void onInit() {

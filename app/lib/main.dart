@@ -44,8 +44,7 @@ class MyApp extends StatelessWidget {
                     scaffoldBackgroundColor: mBackgroundColor,
                   ),
                   debugShowCheckedModeBanner: false,
-                  initialRoute:
-                      snapshot.data != null ? Routes.HOME : Routes.SIGNIN,
+                  initialRoute: snapshot.data != null ? Routes.HOME : Routes.SIGNIN,
                   // snapshot.data != null ? Routes.HOME : Routes.SIGNUP,
                   getPages: AppPages.routes,
                 );

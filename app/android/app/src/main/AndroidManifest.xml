@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:requestLegacyExternalStorage="true"
-        android:label="Presence"
+        android:label="Ma5Ter Absensi"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
