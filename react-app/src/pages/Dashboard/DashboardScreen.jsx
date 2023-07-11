@@ -159,7 +159,6 @@ export default function DashboardComponent() {
   // const months = ;
 
   useEffect(() => {
-    console.log(getDataset());
     setDatasetGraph(getDataset());
     setInterval(() => {
       setCurrentMonth([

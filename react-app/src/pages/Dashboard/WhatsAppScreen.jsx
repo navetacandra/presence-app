@@ -7,7 +7,9 @@ export default function WhatsAppScreen() {
   const [infoMe, setInfoMe] = useState({});
 
   useEffect(() => {
-    setInterval(async () => {
+    const getWhatsAppState = setInterval(async () => {
+      clearInterval(0);
+      if (!window.navigator.onLine) return;
       try {
         setIsLoading(true);
         const response = await fetch(`${secret.API_URL}/`, {
@@ -16,11 +18,15 @@ export default function WhatsAppScreen() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ key: "ma5terabsensi" }),
-          mode: "cors",
+          mode: "no-cors",
         });
         const jsonReponse = await response.json();
+        // Access-Control-Allow-Origin: * Access-Control-Allow-Methods: POST, PUT, OPTIONS Access-Control-Allow-Headers: Content-Type Access-Control-Max-Age: 300
+  
+        // reset state
         setQr("");
         setInfoMe({});
+  
         if (!jsonReponse.isReady) {
           const qrResponse = await fetch(`${secret.API_URL}/qr`, {
             method: "POST",
@@ -28,7 +34,7 @@ export default function WhatsAppScreen() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ key: "ma5terabsensi" }),
-            mode: "cors",
+            mode: "no-cors",
           });
           const jsonQrReponse = await qrResponse.json();
           console.log(jsonQrReponse.qrcode);
@@ -52,7 +58,8 @@ export default function WhatsAppScreen() {
         setIsLoading(false);
       }
     }, 10000);
-  }, []);
+  }, [])
+
 
   return (
     <div className="container d-flex justify-content-center">
@@ -89,7 +96,7 @@ export default function WhatsAppScreen() {
               </li>
               <li className="list-group-item">
                 <span className="fw-bolder">No. Tel: </span>
-                {infoMe.id ? infoMe.id.replace("@c.us", "") : "-"}
+                {infoMe.id ? infoMe.id : "-"}
               </li>
             </ul>
           ) : null}

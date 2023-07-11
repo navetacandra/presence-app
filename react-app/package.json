@@ -2,12 +2,20 @@
   "name": "react-app",
   "private": true,
   "version": "0.0.0",
+  "main": "./dist/main.cjs",
   "type": "module",
+  "config": {
+    "electronExecutableName": "Ma5Ter Absensi"
+  },
   "scripts": {
+    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "esbuild-cjs": "esbuild _electron.js --format=cjs --outfile=./dist/main.cjs && node _electron_build",
+    "electron:dev": "npm run esbuild-cjs && set IS_IN_DEVELOPMENT=true && electron .",
+    "electron:build": "npm run esbuild-cjs && electron-packager --overwrite --out=release --executableName=\"%npm_package_config_electronExecutableName%\" --ignore=\"node_modules*|public*|src*|_electron*|\\.eslint*|vite*|\\.gitignore\" . || electron-packager --overwrite --out=release --executableName=\"${npm_package_config_electronExecutableName}\" --ignore=\"node_modules*|public*|src*|_electron*|\\.eslint*|vite*|\\.gitignore\" .",
+    "electron:preview": "npm run esbuild-cjs && electron ."
   },
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
@@ -24,6 +32,9 @@
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "@vitejs/plugin-react": "^4.0.1",
+    "electron": "^25.2.0",
+    "electron-packager": "^17.1.1",
+    "esbuild": "^0.18.11",
     "eslint": "^8.44.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
