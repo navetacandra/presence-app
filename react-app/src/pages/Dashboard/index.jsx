@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SideNav from "./SideNav";
 import DashboardComponent from "./DashboardScreen";
+import WhatsAppScreen from "./WhatsAppScreen";
 
 
 export default function Dashboard() {
@@ -20,7 +21,11 @@ export default function Dashboard() {
     "bi bi-whatsapp",
   ];
   const screens = [
-    <DashboardComponent key={0} />
+    <DashboardComponent key={0} />,
+    null,
+    null,
+    null,
+    <WhatsAppScreen key={4} />
   ]
 
   return (

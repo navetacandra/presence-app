@@ -26,7 +26,6 @@ export default function SideNav({
             data-bs-toggle="offcanvas"
             data-bs-target="#sideNavOffCanvas"
             aria-controls="sideNavOffCanvas"
-            style={{ transition: "all" }}
           >
             <i className="bi bi-list"></i>
           </button>
@@ -60,7 +59,7 @@ export default function SideNav({
           ></button>
         </div>
         <div className="offcanvas-body">
-          <ul className="list-group">
+          <ul className="list-group sidenav-links">
             {sideNavMenuTitle.map((el, i) => (
               <li
                 key={i}
