@@ -29,20 +29,22 @@ FormControl.propTypes = {
   onChange: PropTypes.any,
 };
 
-export default function Login() {
+export default function Login({setLogin}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorEmail, setErrorEmail] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
   const [message, setMessage] = useState({});
-  const [isOnline, setIsOnline] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
     const checkIsOnline = setInterval(() => {
-      window.navigator.onLine != isOnline
-        ? setIsOnline(window.navigator.onLine ?? false)
-        : () => {};
+      setIsOnline(window.navigator.onLine);
     }, 100);
+
+    return () => {
+      clearInterval(checkIsOnline);
+    };
   }, []);
 
   async function signIn(e) {
@@ -163,7 +165,7 @@ export default function Login() {
               />
               <p className="fs-6 text-danger">{errorPassword}</p>
             </div>
-            <div className="mb-3 d-flex justify-content-center">
+            <div className="mb-1 d-flex justify-content-center">
               <button
                 type="submit"
                 className="btn btn-primary text-center text-white fw-bold"
@@ -172,9 +174,18 @@ export default function Login() {
                 Sign In
               </button>
             </div>
+            <hr />
+            <div className="mb-3 text-center">
+              <span className="text-muted">Belum punya akun? <a className="text-decoration-none" href="#" onClick={(e) => {
+                e.preventDefault();
+                setLogin(0);
+              }}>Daftar Disini</a></span>
+            </div>
           </form>
         </div>
       </div>
     </div>
   );
 }
+
+Login.propTypes = {setLogin: PropTypes.func}

@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
 import SideNav from "./SideNav";
-import DashboardComponent from "./DashboardScreen";
+import DashboardScreen from "./DashboardScreen";
 import WhatsAppScreen from "./WhatsAppScreen";
 
 export default function Dashboard() {
   const [activeItem, setActiveItem] = useState(0);
-  const [isOnline, setIsOnline] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
     const checkIsOnline = setInterval(() => {
-      window.navigator.onLine != isOnline
-        ? setIsOnline(window.navigator.onLine ?? false)
-        : () => {};
+      setIsOnline(window.navigator.onLine);
     }, 100);
+
+    return () => {
+      clearInterval(checkIsOnline);
+    };
   }, []);
 
   const sideNavMenuTitle = [
@@ -28,13 +30,6 @@ export default function Dashboard() {
     "bi bi-journal-text",
     "bi bi-calendar-week",
     "bi bi-whatsapp",
-  ];
-  const screens = [
-    <DashboardComponent key={0} />,
-    null,
-    null,
-    null,
-    <WhatsAppScreen key={4} />,
   ];
 
   return (
@@ -69,7 +64,11 @@ export default function Dashboard() {
         </div>
       ) : null}
 
-      {screens[activeItem]}
+      {activeItem == 0 ? <DashboardScreen /> : null}
+      {activeItem == 1 ? null : null}
+      {activeItem == 2 ? null : null}
+      {activeItem == 3 ? null : null}
+      {activeItem == 4 ? <WhatsAppScreen /> : null}
     </>
   );
 }

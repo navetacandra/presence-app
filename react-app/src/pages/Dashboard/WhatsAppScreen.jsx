@@ -5,11 +5,40 @@ export default function WhatsAppScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [qr, setQr] = useState("");
   const [infoMe, setInfoMe] = useState({});
+  const [message, setMessage] = useState({});
 
+  async function logout() {
+    setMessage({});
+    if (!window.navigator.onLine) return;
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`${secret.API_URL}/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ key: "ma5terabsensi" }),
+        mode: "cors",
+      });
+
+      if (response.status == 200) {
+        setMessage({ type: "success", message: "Berhasil Log Out!" });
+      } else {
+        setMessage({
+          type: "danger",
+          message: "Terjadi Kesalahan Saat Log Out!",
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+  
   useEffect(() => {
     const getWhatsAppState = setInterval(async () => {
-      clearInterval(0);
       if (!window.navigator.onLine) return;
+      console.log("tes");
       try {
         setIsLoading(true);
         const response = await fetch(`${secret.API_URL}/`, {
@@ -18,15 +47,14 @@ export default function WhatsAppScreen() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ key: "ma5terabsensi" }),
-          mode: "no-cors",
+          mode: "cors",
         });
         const jsonReponse = await response.json();
-        // Access-Control-Allow-Origin: * Access-Control-Allow-Methods: POST, PUT, OPTIONS Access-Control-Allow-Headers: Content-Type Access-Control-Max-Age: 300
-  
+
         // reset state
         setQr("");
         setInfoMe({});
-  
+
         if (!jsonReponse.isReady) {
           const qrResponse = await fetch(`${secret.API_URL}/qr`, {
             method: "POST",
@@ -34,10 +62,9 @@ export default function WhatsAppScreen() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ key: "ma5terabsensi" }),
-            mode: "no-cors",
+            mode: "cors",
           });
           const jsonQrReponse = await qrResponse.json();
-          console.log(jsonQrReponse.qrcode);
           setQr(jsonQrReponse.qrcode);
         } else {
           const profileData = jsonReponse.user;
@@ -57,51 +84,88 @@ export default function WhatsAppScreen() {
       } finally {
         setIsLoading(false);
       }
-    }, 10000);
-  }, [])
+    }, 15000);
 
+    return () => {clearInterval(getWhatsAppState)}
+  }, []);
 
   return (
-    <div className="container d-flex justify-content-center">
-      <div className="card shadow mt-5 wa-card">
-        <div className="card-body">
-          <div className="fs-4 fw-bolder text-center">
-            {isLoading ? "Loading..." : qr ? "Scan QR" : (infoMe.profilePicture && infoMe.name && infoMe.id) ? "Info Profil" : "Loading..."}
+    <>
+      <div className="container mt-3 d-flex justify-content-center">
+        {message.message ? (
+          <div
+            className={
+              "alert alert-dismissible fade show alert-" + message.type
+            }
+            role="alert"
+          >
+            {message.message}
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+              onClick={() => setMessage({})}
+            ></button>
           </div>
-          {qr ? (
-            <div
-              className="d-flex justify-content-center mx-auto my-auto"
-              style={{ width: "90%", height: "90%" }}
-            >
-              <img src={qr} alt="WhatsApp QR" />
+        ) : null}
+      </div>
+      <div className="container d-flex justify-content-center">
+        <div className="card shadow mt-3 wa-card">
+          <div className="card-body">
+            <div className="fs-4 fw-bolder text-center">
+              {isLoading
+                ? "Loading..."
+                : qr
+                ? "Scan QR"
+                : infoMe.profilePicture && infoMe.name && infoMe.id
+                ? "Info Profil"
+                : "Loading..."}
             </div>
-          ) : (infoMe.profilePicture && infoMe.name && infoMe.id) ? (
-            <ul className="list-group">
-              <li
-                className="list-group-item d-flex justify-content-center"
-                style={{ width: "100%" }}
+            {qr ? (
+              <div
+                className="d-flex justify-content-center mx-auto my-auto"
+                style={{ width: "90%", height: "90%" }}
               >
-                {infoMe.profilePicture ? (
-                  <img
-                    className="mx-auto rounded-circle"
-                    src={infoMe.profilePicture}
-                    alt="WhatsApp Profile Picture"
-                    width={200}
-                    height={200}
-                  />
-                ) : null}
-              </li>
-              <li className="list-group-item">
-                <span className="fw-bolder">Nama:</span> {infoMe.name ?? "-"}
-              </li>
-              <li className="list-group-item">
-                <span className="fw-bolder">No. Tel: </span>
-                {infoMe.id ? infoMe.id : "-"}
-              </li>
-            </ul>
-          ) : null}
+                <img src={qr} alt="WhatsApp QR" />
+              </div>
+            ) : infoMe.profilePicture && infoMe.name && infoMe.id ? (
+              <ul className="list-group">
+                <li
+                  className="list-group-item d-flex justify-content-center"
+                  style={{ width: "100%" }}
+                >
+                  {infoMe.profilePicture ? (
+                    <img
+                      className="mx-auto rounded-circle"
+                      src={infoMe.profilePicture}
+                      alt="WhatsApp Profile Picture"
+                      width={200}
+                      height={200}
+                    />
+                  ) : null}
+                </li>
+                <li className="list-group-item">
+                  <span className="fw-bolder">Nama:</span> {infoMe.name ?? "-"}
+                </li>
+                <li className="list-group-item">
+                  <span className="fw-bolder">No. Tel: </span>
+                  {infoMe.id ? infoMe.id : "-"}
+                </li>
+                <li className="list-group-item">
+                  <button
+                    onClick={() => logout()}
+                    className="btn btn-danger text-white"
+                    style={{ width: "100%" }}
+                  >
+                    Log Out
+                  </button>
+                </li>
+              </ul>
+            ) : null}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

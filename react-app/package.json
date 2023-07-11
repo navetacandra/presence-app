@@ -5,7 +5,8 @@
   "main": "./dist/main.cjs",
   "type": "module",
   "config": {
-    "electronExecutableName": "Ma5Ter Absensi"
+    "electronExecutableName": "Ma5Ter Absensi",
+    "electronIcon": "./src/assets/app_icon.ico"
   },
   "scripts": {
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
@@ -14,7 +15,7 @@
     "preview": "vite preview",
     "esbuild-cjs": "esbuild _electron.js --format=cjs --outfile=./dist/main.cjs && node _electron_build",
     "electron:dev": "npm run esbuild-cjs && set IS_IN_DEVELOPMENT=true && electron .",
-    "electron:build": "npm run esbuild-cjs && electron-packager --overwrite --out=release --executableName=\"%npm_package_config_electronExecutableName%\" --ignore=\"node_modules*|public*|src*|_electron*|\\.eslint*|vite*|\\.gitignore\" . || electron-packager --overwrite --out=release --executableName=\"${npm_package_config_electronExecutableName}\" --ignore=\"node_modules*|public*|src*|_electron*|\\.eslint*|vite*|\\.gitignore\" .",
+    "electron:build": "npm run esbuild-cjs && electron-packager --overwrite --out=release --icon=\"%npm_package_config_electronIcon%\" --executableName=\"%npm_package_config_electronExecutableName%\" --ignore=\"node_modules*|public*|src*|_electron*|\\.eslint*|vite*|\\.gitignore\" . || electron-packager --overwrite --out=release --icon=\"${npm_package_config_electronIcon}\" --executableName=\"${npm_package_config_electronExecutableName}\" --ignore=\"node_modules*|public*|src*|_electron*|\\.eslint*|vite*|\\.gitignore\" .",
     "electron:preview": "npm run esbuild-cjs && electron ."
   },
   "dependencies": {

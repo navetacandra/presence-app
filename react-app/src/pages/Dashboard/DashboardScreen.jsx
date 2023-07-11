@@ -68,24 +68,24 @@ const DataKehadiran = ({ month, dataset, show, setShow }) => {
         </div>
       </div>
       <div className="dashboard-graph-container mx-auto mb-5">
-      <Line
-        options={{
-          responsive: true,
-          plugins: {
-            legend: {
-              position: "top",
+        <Line
+          options={{
+            responsive: true,
+            plugins: {
+              legend: {
+                position: "top",
+              },
+              title: {
+                display: true,
+                text: `Data Kehadiran Bulan ${month}`,
+              },
             },
-            title: {
-              display: true,
-              text: `Data Kehadiran Bulan ${month}`,
-            },
-          },
-        }}
-        data={{
-          labels: tglLabels,
-          datasets: dataset.filter((l) => show.includes(l.label)),
-        }}
-      />
+          }}
+          data={{
+            labels: tglLabels,
+            datasets: dataset.filter((l) => show.includes(l.label)),
+          }}
+        />
       </div>
     </>
   );
@@ -146,7 +146,7 @@ function getDataset() {
   return dataset;
 }
 
-export default function DashboardComponent() {
+export default function DashboardScreen() {
   const [show, setShow] = useState([
     "Hadir Tepat",
     "Hadir Telat",
@@ -156,26 +156,31 @@ export default function DashboardComponent() {
   ]);
   const [datasetGraph, setDatasetGraph] = useState([]);
   const [currentMonth, setCurrentMonth] = useState("");
-  // const months = ;
 
   useEffect(() => {
     setDatasetGraph(getDataset());
-    setInterval(() => {
-      setCurrentMonth([
-        "Januari",
-        "Februari",
-        "Maret",
-        "April",
-        "Mei",
-        "Juni",
-        "Juli",
-        "Agustus",
-        "September",
-        "Oktober",
-        "November",
-        "Desember",
-      ][new Date().getMonth()]);
+    const getCurrentMonth = setInterval(() => {
+      setCurrentMonth(
+        [
+          "Januari",
+          "Februari",
+          "Maret",
+          "April",
+          "Mei",
+          "Juni",
+          "Juli",
+          "Agustus",
+          "September",
+          "Oktober",
+          "November",
+          "Desember",
+        ][new Date().getMonth()]
+      );
     }, 10);
+
+    return () => {
+      clearInterval(getCurrentMonth);
+    };
   }, []);
 
   ChartJS.register(
@@ -211,10 +216,10 @@ export default function DashboardComponent() {
         </div>
       </div>
       <DataKehadiran
-      dataset={datasetGraph}
-      month={currentMonth}
-      show={show}
-      setShow={setShow}
+        dataset={datasetGraph}
+        month={currentMonth}
+        show={show}
+        setShow={setShow}
       />
     </div>
   );

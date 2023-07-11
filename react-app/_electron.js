@@ -29,7 +29,7 @@ function createWindow() {
   if (IS_DEV) {
     // If we are in development mode we load content from localhost server - vite
     // and open the developer tools
-    win.loadURL("http://localhost:5713");
+    win.loadURL("http://localhost:5173");
     win.webContents.openDevTools();
   } else {
     win.conte;

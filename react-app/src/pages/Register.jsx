@@ -29,7 +29,7 @@ FormControl.propTypes = {
   onChange: PropTypes.any,
 };
 
-export default function Register() {
+export default function Register({setLogin}) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,17 +39,19 @@ export default function Register() {
   const [errorPassword, setErrorPassword] = useState("");
   const [errorConfirmPassword, setErrorConfirmPassword] = useState("");
   const [message, setMessage] = useState({});
-  const [isOnline, setIsOnline] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
     const checkIsOnline = setInterval(() => {
-      window.navigator.onLine != isOnline
-        ? setIsOnline(window.navigator.onLine ?? false)
-        : () => {};
+      setIsOnline(window.navigator.onLine);
     }, 100);
+
+    return () => {
+      clearInterval(checkIsOnline);
+    };
   }, []);
 
-  async function signIn(e) {
+  async function signUp(e) {
     e.preventDefault();
     if (!isOnline) return;
 
@@ -169,7 +171,7 @@ export default function Register() {
           ) : null}
 
           {/* Register Form */}
-          <form action="#" onSubmit={signIn}>
+          <form action="#" onSubmit={signUp}>
             <div className="mb-3">
               <FormControl
                 id="name"
@@ -210,7 +212,7 @@ export default function Register() {
               />
               <p className="fs-6 text-danger">{errorConfirmPassword}</p>
             </div>
-            <div className="mb-3 d-flex justify-content-center">
+            <div className="mb-1 d-flex justify-content-center">
               <button
                 type="submit"
                 className="btn btn-primary text-center text-white fw-bold"
@@ -219,9 +221,18 @@ export default function Register() {
                 Sign Up
               </button>
             </div>
+            <hr />
+            <div className="mb-3 text-center">
+              <span className="text-muted">Sudah punya akun? <a className="text-decoration-none" href="#" onClick={(e) => {
+                e.preventDefault();
+                setLogin(1);
+              }}>Masuk Disini</a></span>
+            </div>
           </form>
         </div>
       </div>
     </div>
   );
 }
+
+Register.propTypes = {setLogin: PropTypes.func}
