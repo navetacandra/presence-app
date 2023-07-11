@@ -19,7 +19,9 @@ const app = express();
 //     "firebase_password": "FIREBASE_CONTROL_PASSWORD"
 //   },
 // ]
-const states = JSON.parse(readFileSync(resolve(join(cwd(), "states.json")), "utf-8")).map((e) => ({
+const states = JSON.parse(
+  readFileSync(resolve(join(cwd(), "states.json")), "utf-8")
+).map((e) => ({
   key: e.key,
   controller: new Controller(
     e.wa,
@@ -32,6 +34,12 @@ const states = JSON.parse(readFileSync(resolve(join(cwd(), "states.json")), "utf
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 
 app.post("/", async (req, res) => {
   const key = req.body.key || req.query.key;

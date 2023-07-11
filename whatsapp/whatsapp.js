@@ -1,16 +1,18 @@
+const { readdirSync, unlinkSync } = require("fs");
+const { resolve, join } = require("path");
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const Qrcode = require("qrcode");
 const qrt = require("qrcode-terminal");
 require("dotenv").config();
 
 class WhatsApp {
-  constructor(sessionName = "wa-session", name ="wa") {
+  constructor(sessionName = "wa-session", name = "wa") {
     this.name = name;
+    this.session = sessionName;
     this.qrcode = "";
-    this.socket = null;
     this.isReady = false;
     this.client = new Client({
-      authStrategy: new LocalAuth({ clientId: sessionName }),
+      authStrategy: new LocalAuth({ clientId: this.session }),
       restartOnAuthFail: true,
       puppeteer: {
         waitForInitialPage: false,
@@ -23,10 +25,10 @@ class WhatsApp {
           "--disable-setuid-sandbox",
           "--disable-dev-shm-usage",
           "--disable-accelerated-2d-canvas",
-          "--no-first-run", // <- this one doesn't works in Windows
-          "--no-zygote", // <- this one doesn't works in Windows
+          // "--no-first-run",
+          // "--no-zygote",
           "--disable-gpu",
-          "--single-process",
+          // "--single-process",
           "--hide-crash-restore-bubble",
         ],
       },
@@ -42,21 +44,30 @@ class WhatsApp {
       console.log(`[${this.name}] WhatsApp is ready.`);
       for (const q of this.queue) {
         let cmd = q.shift();
-        await this[cmd.func](...cmd.args)
+        await this[cmd.func](...cmd.args);
       }
     });
     this.client.on("disconnected", async (reason) => {
       this.isReady = false;
       console.log(`[${this.name}] WhatsApp disconnected: ${reason}`);
       this.client.destroy();
-      this.client.initialize();
+      initializeClient();
     });
     this.client.on("qr", (qr) => {
       this.qrcode = qr;
-      console.log(`[${this.name}] QR: ${qr}`);
-      // qrt.generate(qr, { small: true });
+      console.log(`[${this.name}] QR: `);
+      qrt.generate(qr, { small: true });
     });
-    this.client.initialize();
+    initializeClient();
+  }
+
+  async initializeClien() {
+    const sessionDir = resolve(
+      join(__dirname, ".wwebjs_auth", `session-${this.session}`)
+    );
+    if (readdirSync(sessionDir).includes("SingletonLock")) {
+      unlinkSync(resolve(join(sessionDir, "SingletonLock")));
+    }
   }
 
   // ---------------------------------- logout current session ----------------------------------- //
@@ -93,7 +104,6 @@ class WhatsApp {
       try {
         await this.client.logout();
         this.isReady = false;
-        // await this.client.initialize();
         return { code: 200, data: {} };
       } catch (error) {
         return { code: 500, data: {} };
@@ -127,7 +137,10 @@ class WhatsApp {
   async sendMessage(number = "0", message = "") {
     try {
       if (!this.isReady) {
-        return this.queue.push({ func: "sendMessage", args: [number, message] });
+        return this.queue.push({
+          func: "sendMessage",
+          args: [number, message],
+        });
       }
       const num = this.prettifyNumber(number);
       const isOnWhatsApp = await this.client.isRegisteredUser(num);
