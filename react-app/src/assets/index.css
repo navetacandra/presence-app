@@ -34,6 +34,37 @@
   background-color: #0d6efd;
 }
 
+.list-pgw-prnt h4 {
+  cursor: pointer;
+}
+
+.list-pgw-prnt i {
+  display: block;
+  transition: all .5s;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.list-pgw-prnt.show-table i {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+@keyframes rotate-90 {
+  0% {
+    transform: rotate(90deg);
+  }
+  100% {
+    transform: rotate(90deg);
+  }
+}
+
 #jumlah-pegawai-terdaftar-card-content,
 #jumlah-pegawai-hadir-card-content {
   position: relative;

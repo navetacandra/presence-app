@@ -21,15 +21,17 @@ assets.forEach((assetFileName) => {
       let _content = assetContent.substring(searchIndex);
       if (_content.charAt(0) == ".") return;
       else {
-        if (assetFileName.endsWith("css")) _content = _content.replace('/assets/', './');
-        if (assetFileName.endsWith("js")) _content = _content.replace('/assets/', './assets/');
+        if (assetFileName.endsWith("css"))
+          _content = _content.replace("/assets/", "./");
+        if (assetFileName.endsWith("js"))
+          _content = _content.replace("/assets/", "./assets/");
       }
 
       assetContent = assetContent.substring(0, searchIndex) + _content;
     });
   }
 
-  writeFileSync(assetPath, assetContent)
+  writeFileSync(assetPath, assetContent);
 });
 
 const htmlPath = getPath("dist/index.html");

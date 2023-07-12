@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import SideNav from "./SideNav";
 import DashboardScreen from "./DashboardScreen";
 import WhatsAppScreen from "./WhatsAppScreen";
+import DaftarPegawaiScreen from "./DaftarPegawaiScreen";
 
 export default function Dashboard() {
   const [activeItem, setActiveItem] = useState(0);
@@ -65,7 +66,7 @@ export default function Dashboard() {
       ) : null}
 
       {activeItem == 0 ? <DashboardScreen /> : null}
-      {activeItem == 1 ? null : null}
+      {activeItem == 1 ? <DaftarPegawaiScreen /> : null}
       {activeItem == 2 ? null : null}
       {activeItem == 3 ? null : null}
       {activeItem == 4 ? <WhatsAppScreen /> : null}

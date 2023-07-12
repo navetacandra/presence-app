@@ -6,7 +6,7 @@
   "type": "module",
   "config": {
     "electronExecutableName": "Ma5Ter Absensi",
-    "electronIcon": "./src/assets/app_icon.ico"
+    "electronIcon": "./src/assets/app_icon"
   },
   "scripts": {
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
