@@ -3,9 +3,10 @@ import path from "path";
 
 // eslint-disable-next-line no-undef
 const IS_DEV = process.env.IS_IN_DEVELOPMENT || false;
+let win;
 
 function createWindow() {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -16,7 +17,6 @@ function createWindow() {
   });
 
   win.setMenu(null);
-  win.maximize();
 
   globalShortcut.register("f5", function () {
     win.reload();
@@ -46,5 +46,6 @@ app.on("window-all-closed", () => {
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
+    win.maximize();
   }
 });

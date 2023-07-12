@@ -44,11 +44,21 @@ export default function Register({setLogin}) {
   useEffect(() => {
     const checkIsOnline = setInterval(() => {
       setIsOnline(window.navigator.onLine);
+      if (isOnline) {
+        fetch("https://www.example.com", { method: "HEAD", mode: "no-cors" })
+        .then(() => {
+            setIsOnline(true);
+          })
+          .catch(() => {
+            setIsOnline(false);
+          });
+      }
     }, 100);
 
     return () => {
       clearInterval(checkIsOnline);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function signUp(e) {

@@ -140,7 +140,7 @@ function getDataset() {
   dataset.forEach(
     (el) =>
       (el.data = tglLabels.map(() =>
-        faker.datatype.number({ min: 0, max: 2000 })
+        faker.number.int({ min: 0, max: 2000 })
       ))
   );
   return dataset;

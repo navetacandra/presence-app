@@ -29,7 +29,7 @@ FormControl.propTypes = {
   onChange: PropTypes.any,
 };
 
-export default function Login({setLogin}) {
+export default function Login({ setLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorEmail, setErrorEmail] = useState("");
@@ -40,11 +40,21 @@ export default function Login({setLogin}) {
   useEffect(() => {
     const checkIsOnline = setInterval(() => {
       setIsOnline(window.navigator.onLine);
+      if (isOnline) {
+        fetch("https://www.example.com", { method: "HEAD", mode: "no-cors" })
+          .then(() => {
+            setIsOnline(true);
+          })
+          .catch(() => {
+            setIsOnline(false);
+          });
+      }
     }, 100);
 
     return () => {
       clearInterval(checkIsOnline);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function signIn(e) {
@@ -176,10 +186,19 @@ export default function Login({setLogin}) {
             </div>
             <hr />
             <div className="mb-3 text-center">
-              <span className="text-muted">Belum punya akun? <a className="text-decoration-none" href="#" onClick={(e) => {
-                e.preventDefault();
-                setLogin(0);
-              }}>Daftar Disini</a></span>
+              <span className="text-muted">
+                Belum punya akun?{" "}
+                <a
+                  className="text-decoration-none"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setLogin(0);
+                  }}
+                >
+                  Daftar Disini
+                </a>
+              </span>
             </div>
           </form>
         </div>
@@ -188,4 +207,4 @@ export default function Login({setLogin}) {
   );
 }
 
-Login.propTypes = {setLogin: PropTypes.func}
+Login.propTypes = { setLogin: PropTypes.func };

@@ -1,0 +1,39 @@
+{
+  "directories": {
+    "output": "release"
+  },
+  "productName": "Ma5Ter Absensi",
+  "asar": true,
+  "win": {
+    "icon": "./src/assets/app_icon.ico",
+    "executableName": "Ma5Ter Absensi",
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64", "ia32"]
+      }
+    ]
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "artifactName": "${productName}-setup.${ext}",
+    "uninstallDisplayName": "Ma5Ter Absensi",
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "deleteAppDataOnUninstall": true
+  },
+  "files": [
+    {
+      "from": ".",
+      "filter": [
+        "**/*",
+        "!node_modules",
+        "!public",
+        "!src",
+        "!./*.*js",
+        "!**/*.gitignore"
+      ]
+    }
+  ]
+}

@@ -38,9 +38,9 @@
   cursor: pointer;
 }
 
-.list-pgw-prnt i {
+.list-pgw-prnt > h4 > i {
   display: block;
-  transition: all .5s;
+  transition: all 0.5s;
   -webkit-transform: rotate(0deg);
   -moz-transform: rotate(0deg);
   -ms-transform: rotate(0deg);
@@ -48,12 +48,36 @@
   transform: rotate(0deg);
 }
 
-.list-pgw-prnt.show-table i {
+.list-pgw-prnt .l-content {
+  opacity: 0;
+  height: 0;
+  transition: all 0.3s;
+}
+
+.list-pgw-prnt.show-table .l-content {
+  opacity: 1;
+  height: auto;
+}
+
+.list-pgw-prnt.show-table > h4 > i {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   -o-transform: rotate(90deg);
   transform: rotate(90deg);
+}
+.list-pgw-prnt.show-table .table-icon {
+  cursor: pointer;
+}
+
+.list-length-input::-webkit-outer-spin-button,
+.list-length-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.list-length-input[type=number] {
+  -moz-appearance: textfield;
 }
 
 @keyframes rotate-90 {

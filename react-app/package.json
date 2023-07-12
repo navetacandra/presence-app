@@ -1,12 +1,17 @@
 {
-  "name": "react-app",
+  "name": "ma5terabsensi",
   "private": true,
   "version": "0.0.0",
   "main": "./dist/main.cjs",
   "type": "module",
-  "config": {
-    "electronExecutableName": "Ma5Ter Absensi",
-    "electronIcon": "./src/assets/app_icon"
+  "author": {
+    "name": "navetacandra",
+    "email": "naveta.cand@gmail.com",
+    "url": "https://github.com/navetacandra"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/navetacandra/presence-app.git"
   },
   "scripts": {
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
@@ -15,7 +20,7 @@
     "preview": "vite preview",
     "esbuild-cjs": "esbuild _electron.js --format=cjs --outfile=./dist/main.cjs && node _electron_build",
     "electron:dev": "npm run esbuild-cjs && set IS_IN_DEVELOPMENT=true && electron .",
-    "electron:build": "npm run esbuild-cjs && electron-packager --overwrite --out=release --icon=\"%npm_package_config_electronIcon%\" --executableName=\"%npm_package_config_electronExecutableName%\" --ignore=\"node_modules*|public*|src*|_electron*|\\.eslint*|vite*|\\.gitignore\" . || electron-packager --overwrite --out=release --icon=\"${npm_package_config_electronIcon}\" --executableName=\"${npm_package_config_electronExecutableName}\" --ignore=\"node_modules*|public*|src*|_electron*|\\.eslint*|vite*|\\.gitignore\" .",
+    "electron:build": "npm run esbuild-cjs && electron-builder",
     "electron:preview": "npm run esbuild-cjs && electron ."
   },
   "dependencies": {
@@ -34,6 +39,7 @@
     "@types/react-dom": "^18.2.6",
     "@vitejs/plugin-react": "^4.0.1",
     "electron": "^25.2.0",
+    "electron-builder": "^24.4.0",
     "electron-packager": "^17.1.1",
     "esbuild": "^0.18.11",
     "eslint": "^8.44.0",
