@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./pages/Authentication/Login";
+import Register from "./pages/Authentication/Register";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db, nestBTOA } from "./firebase";
+import { auth, db, nestBTOA, setCredential } from "./firebase";
 import { onValue, ref } from "firebase/database";
 
 function App() {
@@ -11,13 +11,11 @@ function App() {
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
+    window.onstorage = (e) => console.log(e);
     onAuthStateChanged(auth, (user) => {
       if (user) {
         onValue(ref(db, `users/${user.uid}`), (snap) => {
-          localStorage.setItem(
-            nestBTOA(3, "user-credential"),
-            nestBTOA(5, JSON.stringify(snap.val()))
-          );
+          setCredential(nestBTOA(5, JSON.stringify(snap.val())));
         });
         setAuthenticated(true);
       } else {

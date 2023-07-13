@@ -12,7 +12,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { onValue, ref } from "firebase/database";
-import { db } from "../../firebase";
+import { db } from "../../../firebase";
 
 const tglLabels = Array(31)
   .fill(0)
@@ -81,6 +81,15 @@ const DataKehadiran = ({ month, dataset, show, setShow }) => {
                 text: `Data Kehadiran Bulan ${month}`,
               },
             },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  precision: 0,
+                  callback: (value) => Math.round(value)
+                }
+              }
+            }
           }}
           data={{
             labels: tglLabels,

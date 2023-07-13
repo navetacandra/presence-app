@@ -4,21 +4,20 @@ import PropTypes from "prop-types";
 import { auth, getUserData, nestBTOA } from "../../firebase";
 import { signOut } from "firebase/auth";
 
-export default function SideNav({
-  activeItem,
-  setActiveItem,
-  sideNavMenuTitle,
-  sideNavMenuIcon,
-}) {
+export default function SideNav({ activeItem, setActiveItem, sideNavMenu }) {
   const [profile, setProfile] = useState({});
-  const [_refresh, _refreshState] = useState({});
   useEffect(() => {
-    let prf = getUserData();
-    setProfile(prf);
-    if (!prf.email) {
-      _refreshState({});
-    }
-  }, [_refresh]);
+    if (!profile.email) setProfile(getUserData());
+    window.addEventListener("credential", (ev) => {
+      setProfile(getUserData(ev.credential));
+    });
+
+    return () => {
+      window.removeEventListener("credential", (ev) => {
+        setProfile(getUserData(ev.credential));
+      });
+    };
+  }, [profile]);
 
   return (
     <>
@@ -78,22 +77,24 @@ export default function SideNav({
           >
             <div>
               <ul className="list-group sidenav-links">
-                {sideNavMenuTitle.map((el, i) => (
-                  <li
-                    key={i}
-                    onClick={() => setActiveItem(i)}
-                    className={
-                      "list-group-item" +
-                      (activeItem == i ? " active-item" : "")
-                    }
-                  >
-                    <i
-                      style={{ fontSize: "1.15rem" }}
-                      className={sideNavMenuIcon[i]}
-                    ></i>
-                    <span className="ms-2">{el}</span>
-                  </li>
-                ))}
+                {sideNavMenu
+                  .filter((f) => !f.hide)
+                  .map((el, i) => (
+                    <li
+                      key={i}
+                      onClick={() => setActiveItem(i)}
+                      className={
+                        "list-group-item" +
+                        (activeItem == i ? " active-item" : "")
+                      }
+                    >
+                      <i
+                        style={{ fontSize: "1.15rem" }}
+                        className={el.icon ?? ""}
+                      ></i>
+                      <span className="ms-2">{el.title ?? ""}</span>
+                    </li>
+                  ))}
               </ul>
             </div>
             <div className="dropdown">
@@ -120,6 +121,45 @@ export default function SideNav({
                 </div>
               </div>
               <ul className="dropdown-menu" aria-labelledby="dropdownProfile">
+                <li
+                  onClick={() => setActiveItem(sideNavMenu.length - 1)}
+                  onMouseEnter={(e) => {
+                    if (e.target.outerHTML.startsWith("<a")) {
+                      e.target.classList.remove("text-primary");
+                      e.target.classList.remove("bg-light");
+                      e.target.classList.add("text-light");
+                      e.target.classList.add("bg-primary");
+                    } else {
+                      e.target
+                        .querySelector("a")
+                        .classList.remove("text-primary");
+                      e.target.querySelector("a").classList.remove("bg-light");
+                      e.target.querySelector("a").classList.add("text-light");
+                      e.target.querySelector("a").classList.add("bg-primary");
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (e.target.outerHTML.startsWith("<a")) {
+                      e.target.classList.add("text-primary");
+                      e.target.classList.add("bg-light");
+                      e.target.classList.remove("text-light");
+                      e.target.classList.remove("bg-primary");
+                    } else {
+                      e.target.querySelector("a").classList.add("text-primary");
+                      e.target.querySelector("a").classList.add("bg-light");
+                      e.target
+                        .querySelector("a")
+                        .classList.remove("text-light");
+                      e.target
+                        .querySelector("a")
+                        .classList.remove("bg-primary");
+                    }
+                  }}
+                >
+                  <a className="dropdown-item text-primary" href="#">
+                    Profile
+                  </a>
+                </li>
                 <li
                   onClick={() => {
                     document
@@ -175,6 +215,5 @@ export default function SideNav({
 SideNav.propTypes = {
   activeItem: PropTypes.number.isRequired,
   setActiveItem: PropTypes.func.isRequired,
-  sideNavMenuTitle: PropTypes.array.isRequired,
-  sideNavMenuIcon: PropTypes.array.isRequired,
+  sideNavMenu: PropTypes.array.isRequired,
 };

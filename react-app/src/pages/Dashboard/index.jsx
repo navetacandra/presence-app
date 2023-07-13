@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
 import SideNav from "./SideNav";
-import DashboardScreen from "./DashboardScreen";
-import WhatsAppScreen from "./WhatsAppScreen";
-import DaftarPegawaiScreen from "./DaftarPegawaiScreen";
+import DashboardScreen from "./Admin/Dashboard";
+import WhatsAppScreen from "./Admin/WhatsApp";
+import DaftarPegawaiScreen from "./Admin/DaftarPegawai";
+import { auth, db, getUserData } from "../../firebase";
+import { onValue, ref } from "firebase/database";
+import ProfileScreen from "./Profile";
 
 export default function Dashboard() {
   const [activeItem, setActiveItem] = useState(0);
   const [isOnline, setIsOnline] = useState(true);
+  const [currentMenu, setCurrentMenu] = useState([]);
 
   useEffect(() => {
     const checkIsOnline = setInterval(() => {
       setIsOnline(window.navigator.onLine);
       if (isOnline) {
         fetch("https://www.example.com", { method: "HEAD", mode: "no-cors" })
-        .then(() => {
+          .then(() => {
             setIsOnline(true);
           })
           .catch(() => {
@@ -22,34 +26,84 @@ export default function Dashboard() {
       }
     }, 100);
 
+    if (!currentMenu.length) {
+      setCurrentMenu(getUserData().role == 0 ? navMenu.admin : navMenu.user);
+    }
+
+    window.addEventListener("credential", (ev) => {
+      setCurrentMenu(
+        getUserData(ev.credential).role == 0 ? navMenu.admin : navMenu.user
+      );
+    });
+
     return () => {
       clearInterval(checkIsOnline);
+      window.removeEventListener("credential", (ev) => {
+        setCurrentMenu(
+          getUserData(ev.credential).role == 0 ? navMenu.admin : navMenu.user
+        );
+      });
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentMenu]);
 
-  const sideNavMenuTitle = [
-    "Dashboard",
-    "Daftar Pegawai",
-    "Laporan Absensi",
-    "Jadwal Absensi",
-    "WhatsApp",
-  ];
-  const sideNavMenuIcon = [
-    "bi bi-speedometer2",
-    "bi bi-people-fill",
-    "bi bi-journal-text",
-    "bi bi-calendar-week",
-    "bi bi-whatsapp",
-  ];
+  const navMenu = {
+    admin: [
+      {
+        icon: "bi bi-speedometer2",
+        title: "Dashboard",
+        element: <DashboardScreen />,
+      },
+      {
+        icon: "bi bi-people-fill",
+        title: "Daftar Pegawai",
+        element: <DaftarPegawaiScreen />,
+      },
+      {
+        icon: "bi bi-journal-text",
+        title: "Laporan Absensi",
+        element: null,
+      },
+      {
+        icon: "bi bi-calendar-week",
+        title: "Jadwal Absensi",
+        element: null,
+      },
+      {
+        icon: "bi bi-whatsapp",
+        title: "WhatsApp",
+        element: <WhatsAppScreen />,
+      },
+      {
+        icon: "bi bi-person-fill",
+        title: "Profile",
+        element: <ProfileScreen />,
+        hide: true,
+      },
+    ],
+    user: [
+      {
+        icon: "bi bi-speedometer2",
+        title: "Dashboard",
+        element: <DashboardScreen />,
+      },
+      {
+        icon: "bi bi-person-fill",
+        title: "Profile",
+        element: <ProfileScreen />,
+        hide: true,
+      },
+    ],
+  };
 
   return (
     <>
       <SideNav
         activeItem={activeItem}
         setActiveItem={setActiveItem}
-        sideNavMenuTitle={sideNavMenuTitle}
-        sideNavMenuIcon={sideNavMenuIcon}
+        sideNavMenu={
+          (getUserData()?.role ?? 3) == 0 ? navMenu.admin : navMenu.user
+        }
       />
 
       {!isOnline ? (
@@ -75,11 +129,7 @@ export default function Dashboard() {
         </div>
       ) : null}
 
-      {activeItem == 0 ? <DashboardScreen /> : null}
-      {activeItem == 1 ? <DaftarPegawaiScreen /> : null}
-      {activeItem == 2 ? null : null}
-      {activeItem == 3 ? null : null}
-      {activeItem == 4 ? <WhatsAppScreen /> : null}
+      {currentMenu.filter((f, i) => i == activeItem)[0]?.element ?? null}
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import secret from "../../secret.json";
+import secret from "../../../secret.json";
 
 export default function WhatsAppScreen() {
   const [isLoading, setIsLoading] = useState(false);

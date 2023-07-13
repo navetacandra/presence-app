@@ -4,7 +4,7 @@ import {
 } from "firebase/auth";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { auth, db, nestBTOA } from "../firebase";
+import { auth, db, nestBTOA } from "../../firebase";
 import { ref, update } from "firebase/database";
 
 function FormControl({ id, label, type, className, placeholder, onChange }) {

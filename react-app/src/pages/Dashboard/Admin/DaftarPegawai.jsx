@@ -1,6 +1,6 @@
 import { get, onValue, ref } from "firebase/database";
 import { useEffect, useState } from "react";
-import { db } from "../../firebase";
+import { db } from "../../../firebase";
 
 export default function DaftarPegawaiScreen() {
   const [listLength, setListLength] = useState(10);
@@ -15,8 +15,8 @@ export default function DaftarPegawaiScreen() {
   const [currentMonth, setCurrentMonth] = useState("januari");
 
   const sortName = (n1, n2) => {
-    if (n1 < n2) return -1;
-    if (n1 > n2) return 1;
+    if (n1.toLowerCase() < n2.toLowerCase()) return -1;
+    if (n1.toLowerCase() > n2.toLowerCase()) return 1;
     return 0;
   };
 
@@ -48,8 +48,22 @@ export default function DaftarPegawaiScreen() {
   useEffect(() => {
     onValue(ref(db, `pegawai`), async (snap) => {
       const _p = Object.values(snap.val());
+      let cm;
       if(!currentMonth.length) {
-        _triggerRefresh(!_refresh);
+        cm = [
+          "januari",
+          "februari",
+          "maret",
+          "april",
+          "mei",
+          "juni",
+          "juli",
+          "agustus",
+          "september",
+          "oktober",
+          "november",
+          "desember",
+        ][new Date().getMonth()]
       }
       const list = await Promise.all(
         _p.map(async (e) => ({
@@ -60,7 +74,7 @@ export default function DaftarPegawaiScreen() {
               .map((_, i) => i + 1)
               .map(async (dy) => {
                 let _d = await get(
-                  ref(db, `absensi/${currentMonth}/${dy}/pegawai/${e.id}`)
+                  ref(db, `absensi/${currentMonth.length ? currentMonth : cm}/${dy}/pegawai/${e.id}`)
                 );
                 if (_d.exists()) return { tanggal: dy, ..._d.val() };
                 else
@@ -72,8 +86,10 @@ export default function DaftarPegawaiScreen() {
           ),
         }))
       );
+      console.log(list.sort((a,b) => a.absensi.filter((f) => f.status == "tepat").length > b.absensi.filter((f) => f.status == "tepat").length ? -1 : 1));
       setAllPegawaiData(list);
     });
+
     if (!allPegawaiData.length) {
       _triggerRefresh(!_refresh);
     }
@@ -87,24 +103,25 @@ export default function DaftarPegawaiScreen() {
           sortLogic == "nama"
             ? sortName(a.name, b.name)
             : sortLogic == "tepat"
-            ? b.absensi.filter((f) => f.status == "tepat").length -
-              a.absensi.filter((f) => f.status == "tepat").length
+            ? ((b.absensi.filter((f) => f.status == "tepat").length <
+              a.absensi.filter((f) => f.status == "tepat").length) ? -1 : 1)
             : sortLogic == "telat"
-            ? b.absensi.filter((f) => f.status == "telat").length -
-              a.absensi.filter((f) => f.status == "telat").length
+            ? ((b.absensi.filter((f) => f.status == "telat").length <
+              a.absensi.filter((f) => f.status == "telat").length) ? -1 : 1)
             : sortLogic == "izin"
-            ? b.absensi.filter((f) => f.status == "izin").length -
-              a.absensi.filter((f) => f.status == "izin").length
+            ? ((b.absensi.filter((f) => f.status == "izin").length <
+              a.absensi.filter((f) => f.status == "izin").length) ? -1 : 1)
             : sortLogic == "sakit"
-            ? b.absensi.filter((f) => f.status == "sakit").length -
-              a.absensi.filter((f) => f.status == "sakit").length
+            ? ((b.absensi.filter((f) => f.status == "sakit").length <
+              a.absensi.filter((f) => f.status == "sakit").length) ? -1 : 1)
             : sortLogic == "alpha"
-            ? b.absensi.filter((f) => f.status == "alpha").length -
-              a.absensi.filter((f) => f.status == "alpha").length
+            ? ((b.absensi.filter((f) => f.status == "alpha").length <
+              a.absensi.filter((f) => f.status == "alpha").length) ? -1 : 1)
             : sortName(a.name, b.name)
         )
         .slice(listLength * (paginate - 1), listLength * paginate)
     );
+    // console.log(pegawaisData);
 
     let _maxPaginate = Math.ceil(
       allPegawaiData.filter((f) =>
@@ -191,8 +208,9 @@ export default function DaftarPegawaiScreen() {
                     className="form-select form-select mb-3"
                     id="sort-order"
                     onChange={(e) => setSortLogic(e.target.value)}
+                    defaultValue={"nama"}
                   >
-                    <option value="nama" selected>
+                    <option value="nama">
                       Nama
                     </option>
                     <option value="tepat">Jumlah Hadir Tepat</option>
