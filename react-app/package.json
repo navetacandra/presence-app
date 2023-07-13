@@ -18,10 +18,10 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "esbuild-cjs": "esbuild _electron.js --format=cjs --outfile=./dist/main.cjs && node _electron_build",
+    "esbuild-cjs": "esbuild _electron.js --format=cjs --outfile=./dist/main.cjs",
     "electron:dev": "npm run esbuild-cjs && set IS_IN_DEVELOPMENT=true && electron .",
-    "electron:build": "npm run esbuild-cjs && electron-builder",
-    "electron:preview": "npm run esbuild-cjs && electron ."
+    "electron:build": "npm run esbuild-cjs && node _electron_build && electron-builder",
+    "electron:preview": "npm run esbuild-cjs && node _electron_build && electron ."
   },
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
@@ -29,6 +29,7 @@
     "bootstrap": "^5.3.0",
     "bootstrap-icons": "^1.10.5",
     "chart.js": "^4.3.0",
+    "firebase": "^10.0.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",

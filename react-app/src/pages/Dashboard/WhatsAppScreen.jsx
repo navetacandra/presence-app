@@ -38,7 +38,7 @@ export default function WhatsAppScreen() {
   useEffect(() => {
     const getWhatsAppState = setInterval(async () => {
       if (!window.navigator.onLine) return;
-      console.log("tes");
+      
       try {
         setIsLoading(true);
         const response = await fetch(`${secret.API_URL}/`, {

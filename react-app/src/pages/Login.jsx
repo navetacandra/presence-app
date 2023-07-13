@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 function FormControl({ id, label, type, className, placeholder, onChange }) {
   return (
@@ -36,6 +38,7 @@ export default function Login({ setLogin }) {
   const [errorPassword, setErrorPassword] = useState("");
   const [message, setMessage] = useState({});
   const [isOnline, setIsOnline] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const checkIsOnline = setInterval(() => {
@@ -54,23 +57,52 @@ export default function Login({ setLogin }) {
     return () => {
       clearInterval(checkIsOnline);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function signIn(e) {
     e.preventDefault();
     if (!isOnline) return;
 
+    setIsLoading(true);
     setMessage({});
     let isValid = validateForm();
 
     if (isValid) {
-      setMessage({
-        message: "Success cuy",
-        type: "success",
-      });
       // Login
+      try {
+        await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+      } catch (err) {
+        if (err.code == "auth/user-not-found") {
+          setMessage({
+            type: "danger",
+            message: "Akun tidak ditemukan.",
+          });
+        }
+        if (err.code == "auth/too-many-requests") {
+          setMessage({
+            type: "danger",
+            message: "Terlalu banyak percobaan! coba lagi nanti.",
+          });
+        }
+        if (err.code == "auth/network-error") {
+          setMessage({
+            type: "danger",
+            message: "Terjadi kesalahan jaringan.",
+          });
+        }
+
+        if (err.code == "auth/wrong-password") {
+          setErrorPassword("Password salah");
+        }
+      }
     }
+
+    setIsLoading(false);
   }
 
   function validateForm() {
@@ -181,7 +213,13 @@ export default function Login({ setLogin }) {
                 className="btn btn-primary text-center text-white fw-bold"
                 style={{ width: "80%" }}
               >
-                Sign In
+                {!isLoading ? (
+                  "Sign In"
+                ) : (
+                  <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                )}
               </button>
             </div>
             <hr />

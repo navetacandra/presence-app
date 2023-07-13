@@ -11,7 +11,8 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { faker } from "@faker-js/faker";
+import { onValue, ref } from "firebase/database";
+import { db } from "../../firebase";
 
 const tglLabels = Array(31)
   .fill(0)
@@ -137,12 +138,6 @@ function getDataset() {
     },
   ];
 
-  dataset.forEach(
-    (el) =>
-      (el.data = tglLabels.map(() =>
-        faker.number.int({ min: 0, max: 2000 })
-      ))
-  );
   return dataset;
 }
 
@@ -156,6 +151,9 @@ export default function DashboardScreen() {
   ]);
   const [datasetGraph, setDatasetGraph] = useState([]);
   const [currentMonth, setCurrentMonth] = useState("");
+  const [jumlahPegawai, setJumlahPegawai] = useState(0);
+  const [jumlahPegawaiHadir, setJumlahPegawaiHadir] = useState(0);
+  const [_refresh, _refreshState] = useState(true);
 
   useEffect(() => {
     setDatasetGraph(getDataset());
@@ -183,6 +181,78 @@ export default function DashboardScreen() {
     };
   }, []);
 
+  useEffect(() => {
+    // Get Pegawai Length
+    onValue(ref(db, "pegawai"), (snap) =>
+      setJumlahPegawai(snap.exists() ? Object.values(snap.val()).length : 0)
+    );
+
+    if (!currentMonth) {
+      _refreshState(true);
+    }
+    // Get absensi data
+    const _cm = [
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ][new Date().getMonth()].toLowerCase();
+    onValue(
+      ref(
+        db,
+        `absensi/${currentMonth.length ? currentMonth.toLowerCase() : _cm}`
+      ),
+      (snap) => {
+        if (snap.exists()) {
+          const keys = Object.values(snap.val());
+          let _dataset = getDataset();
+
+          
+          setJumlahPegawaiHadir(Object.values(keys.filter((f, i) => (new Date()).getDate() == i)[0].pegawai ?? {}).length ?? 0)
+          const setDataset = (label, filter) => {
+            _dataset = _dataset.map((e) =>
+              e.label == label
+                ? {
+                    ...e,
+                    data: keys.map(
+                      (_, tgl) =>
+                        (
+                          Object.values(
+                            Object.values(snap.val())[tgl]?.pegawai ?? {}
+                          )?.filter((f) =>
+                            filter.split("|").includes(f.status)
+                          ) ?? []
+                        ).length
+                    ),
+                  }
+                : e
+            );
+          };
+          setDataset("Hadir Tepat", "tepat");
+          setDataset("Hadir Telat", "telat");
+          setDataset("Izin", "izin");
+          setDataset("Sakit", "sakit");
+          setDataset("Tanpa Keterangan", "|alpha");
+
+          setDatasetGraph(_dataset);
+        }
+      }
+    );
+
+    if (!datasetGraph.length || !currentMonth || !jumlahPegawai || !jumlahPegawaiHadir) {
+      _refreshState(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentMonth, _refresh, jumlahPegawai, jumlahPegawaiHadir]);
+
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -202,7 +272,7 @@ export default function DashboardScreen() {
               <i className="bi bi-people-fill me-2 fs-5 my-auto"></i>
               <span className="fs-5 fw-normal">Pegawai Terdaftar</span>
             </div>
-            <div className="text-center fs-5 fw-bolder">2000</div>
+            <div className="text-center fs-5 fw-bolder">{jumlahPegawai}</div>
           </div>
         </div>
         <div className="card shadow" id="jumlah-pegawai-hadir-card">
@@ -211,7 +281,9 @@ export default function DashboardScreen() {
               <i className="bi bi-people-fill me-2 fs-5 my-auto"></i>
               <span className="fs-5 fw-normal">Pegawai Hadir</span>
             </div>
-            <div className="text-center fs-5 fw-bolder">1500</div>
+            <div className="text-center fs-5 fw-bolder">
+              {jumlahPegawaiHadir}
+            </div>
           </div>
         </div>
       </div>

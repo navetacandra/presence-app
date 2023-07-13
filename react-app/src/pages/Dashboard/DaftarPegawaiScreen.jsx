@@ -1,5 +1,6 @@
-import { faker } from "@faker-js/faker";
+import { get, onValue, ref } from "firebase/database";
 import { useEffect, useState } from "react";
+import { db } from "../../firebase";
 
 export default function DaftarPegawaiScreen() {
   const [listLength, setListLength] = useState(10);
@@ -11,6 +12,7 @@ export default function DaftarPegawaiScreen() {
   const [sortLogic, setSortLogic] = useState("nama");
   const [searchQuery, setSearchQuery] = useState("");
   const [_refresh, _triggerRefresh] = useState(true);
+  const [currentMonth, setCurrentMonth] = useState("januari");
 
   const sortName = (n1, n2) => {
     if (n1 < n2) return -1;
@@ -19,37 +21,68 @@ export default function DaftarPegawaiScreen() {
   };
 
   useEffect(() => {
-    setAllPegawaiData(
-      Array(100)
-        .fill(0)
-        .map((_, i) => ({
-          index: i,
-          id: faker.string.uuid(),
-          name: faker.person.fullName({ sex: faker.person.sex() }),
-          email: faker.internet.email({ provider: "gmail.com" }),
-          card: faker.phone.number("-##-##-##-##"),
-          telAtasan: faker.phone.number("0895########"),
-          telPegawai: faker.phone.number("0895########"),
-          telPenanggungJawab: faker.phone.number("0895########"),
-          absensi: Array(31)
-            .fill(0)
-            .map((_, i) => i + 1)
-            .map((_) => ({
-              tanggal: _,
-              status:
-                ["tepat", "telat", "izin", "sakit", null][
-                  Math.floor(Math.random() * 5)
-                ] ?? "alpha",
-            })),
-        }))
-    );
-    _triggerRefresh(!_refresh);
+    const getCurrentMonth = setInterval(() => {
+      setCurrentMonth(
+        [
+          "januari",
+          "februari",
+          "maret",
+          "april",
+          "mei",
+          "juni",
+          "juli",
+          "agustus",
+          "september",
+          "oktober",
+          "november",
+          "desember",
+        ][new Date().getMonth()]
+      );
+    }, 10);
+
+    return () => {
+      clearInterval(getCurrentMonth);
+    };
   }, []);
+
+  useEffect(() => {
+    onValue(ref(db, `pegawai`), async (snap) => {
+      const _p = Object.values(snap.val());
+      if(!currentMonth.length) {
+        _triggerRefresh(!_refresh);
+      }
+      const list = await Promise.all(
+        _p.map(async (e) => ({
+          ...e,
+          absensi: await Promise.all(
+            Array(31)
+              .fill(0)
+              .map((_, i) => i + 1)
+              .map(async (dy) => {
+                let _d = await get(
+                  ref(db, `absensi/${currentMonth}/${dy}/pegawai/${e.id}`)
+                );
+                if (_d.exists()) return { tanggal: dy, ..._d.val() };
+                else
+                  return {
+                    tanggal: dy,
+                    status: dy >= new Date().getDate() ? "-" : "",
+                  };
+              })
+          ),
+        }))
+      );
+      setAllPegawaiData(list);
+    });
+    if (!allPegawaiData.length) {
+      _triggerRefresh(!_refresh);
+    }
+  }, [currentMonth, _refresh, allPegawaiData.length]);
 
   useEffect(() => {
     setPegawaisData(
       allPegawaiData
-        .filter((f) => f.name.includes(searchQuery))
+        .filter((f) => f.name.toLowerCase().includes(searchQuery.toLowerCase()))
         .sort((a, b) =>
           sortLogic == "nama"
             ? sortName(a.name, b.name)
@@ -74,10 +107,11 @@ export default function DaftarPegawaiScreen() {
     );
 
     let _maxPaginate = Math.ceil(
-      allPegawaiData.filter((f) => f.name.includes(searchQuery)).length /
-        listLength
+      allPegawaiData.filter((f) =>
+        f.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ).length / listLength
     );
-    // console.log(Array().fill(1));
+    
     const pgnMenu = Array(_maxPaginate > 5 ? 5 : _maxPaginate).fill(0);
     const _mid = Math.floor((_maxPaginate > 5 ? 5 : _maxPaginate) / 2);
 
@@ -189,9 +223,13 @@ export default function DaftarPegawaiScreen() {
                     <input
                       type="number"
                       min="1"
-                      max={allPegawaiData.filter((f) =>
-                        f.name.includes(searchQuery)
-                      ).length}
+                      max={
+                        allPegawaiData.filter((f) =>
+                          f.name
+                            .toLowerCase()
+                            .includes(searchQuery.toLowerCase())
+                        ).length
+                      }
                       className="form-control list-length-input"
                       placeholder="Data"
                       onInput={(e) => {
@@ -201,15 +239,21 @@ export default function DaftarPegawaiScreen() {
                         } else if (
                           e.target.value >
                           allPegawaiData.filter((f) =>
-                            f.name.includes(searchQuery)
+                            f.name
+                              .toLowerCase()
+                              .includes(searchQuery.toLowerCase())
                           ).length
                         ) {
                           e.target.value = allPegawaiData.filter((f) =>
-                            f.name.includes(searchQuery)
+                            f.name
+                              .toLowerCase()
+                              .includes(searchQuery.toLowerCase())
                           ).length;
                           setListLength(
                             allPegawaiData.filter((f) =>
-                              f.name.includes(searchQuery)
+                              f.name
+                                .toLowerCase()
+                                .includes(searchQuery.toLowerCase())
                             ).length
                           );
                         } else {
@@ -224,7 +268,9 @@ export default function DaftarPegawaiScreen() {
                       onClick={() =>
                         listLength + 1 >
                         allPegawaiData.filter((f) =>
-                          f.name.includes(searchQuery)
+                          f.name
+                            .toLowerCase()
+                            .includes(searchQuery.toLowerCase())
                         ).length
                           ? setListLength(listLength)
                           : setListLength(listLength + 1)
@@ -259,8 +305,12 @@ export default function DaftarPegawaiScreen() {
                 {pegawaisData
                   .filter(
                     (f) =>
-                      f.name.split(" ").filter((fe) => fe.includes(searchQuery))
-                        .length
+                      f.name
+                        .split(" ")
+                        .filter((fe) =>
+                          fe.toLowerCase().includes(searchQuery.toLowerCase())
+                        )
+                        .filter((fe) => fe).length
                   )
                   .map((el, i) => (
                     <tr key={i}>

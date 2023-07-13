@@ -1,5 +1,11 @@
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import { auth, db, nestBTOA } from "../firebase";
+import { ref, update } from "firebase/database";
 
 function FormControl({ id, label, type, className, placeholder, onChange }) {
   return (
@@ -29,7 +35,7 @@ FormControl.propTypes = {
   onChange: PropTypes.any,
 };
 
-export default function Register({setLogin}) {
+export default function Register({ setLogin }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,13 +46,14 @@ export default function Register({setLogin}) {
   const [errorConfirmPassword, setErrorConfirmPassword] = useState("");
   const [message, setMessage] = useState({});
   const [isOnline, setIsOnline] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const checkIsOnline = setInterval(() => {
       setIsOnline(window.navigator.onLine);
       if (isOnline) {
         fetch("https://www.example.com", { method: "HEAD", mode: "no-cors" })
-        .then(() => {
+          .then(() => {
             setIsOnline(true);
           })
           .catch(() => {
@@ -58,23 +65,71 @@ export default function Register({setLogin}) {
     return () => {
       clearInterval(checkIsOnline);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function signUp(e) {
     e.preventDefault();
     if (!isOnline) return;
 
+    setIsLoading(true);
     setMessage({});
     let isValid = validateForm();
 
     if (isValid) {
-      setMessage({
-        message: "Success cuy",
-        type: "success",
-      });
       // Register
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const { user } = userCredential;
+          
+          update(ref(db, `users/${user.uid}`), {
+            email,
+            name,
+            role: 3,
+            uid: user.uid,
+            photoURL:
+              "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+              password: nestBTOA(5, password),
+            })
+            .then(() => {
+            updateProfile(user, {
+              displayName: name,
+              photoURL:
+              "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+            })
+              .catch((err) => console.log(err));
+          })
+          .catch((err) => console.log(err));
+      } catch (err) {
+        if (err.code == "auth/email-already-in-use") {
+          setMessage({
+            type: "danger",
+            message: "Akun sudah terdaftar.",
+          });
+        }
+        if (err.code == "auth/too-many-requests") {
+          setMessage({
+            type: "danger",
+            message: "Terlalu banyak percobaan! coba lagi nanti.",
+          });
+        }
+        if (err.code == "auth/network-error") {
+          setMessage({
+            type: "danger",
+            message: "Terjadi kesalahan jaringan.",
+          });
+        }
+
+        if (err.code == "auth/weak-password") {
+          setErrorPassword("Password lemah");
+        }
+      }
     }
+    setIsLoading(false);
   }
 
   function validateForm() {
@@ -228,15 +283,30 @@ export default function Register({setLogin}) {
                 className="btn btn-primary text-center text-white fw-bold"
                 style={{ width: "80%" }}
               >
-                Sign Up
+                {!isLoading ? (
+                  "Sign Up"
+                ) : (
+                  <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                )}
               </button>
             </div>
             <hr />
             <div className="mb-3 text-center">
-              <span className="text-muted">Sudah punya akun? <a className="text-decoration-none" href="#" onClick={(e) => {
-                e.preventDefault();
-                setLogin(1);
-              }}>Masuk Disini</a></span>
+              <span className="text-muted">
+                Sudah punya akun?{" "}
+                <a
+                  className="text-decoration-none"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setLogin(1);
+                  }}
+                >
+                  Masuk Disini
+                </a>
+              </span>
             </div>
           </form>
         </div>
@@ -245,4 +315,4 @@ export default function Register({setLogin}) {
   );
 }
 
-Register.propTypes = {setLogin: PropTypes.func}
+Register.propTypes = { setLogin: PropTypes.func };

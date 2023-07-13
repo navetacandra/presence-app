@@ -17,7 +17,7 @@
   "nsis": {
     "oneClick": false,
     "allowToChangeInstallationDirectory": true,
-    "artifactName": "${productName}-setup.${ext}",
+    "artifactName": "${productName} setup.${ext}",
     "uninstallDisplayName": "Ma5Ter Absensi",
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
