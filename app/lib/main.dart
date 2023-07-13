@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:presence/app/controllers/auth_controller.dart';
 import 'package:presence/app/controllers/db_controller.dart';
+import 'package:presence/app/controllers/location_controller.dart';
 import 'package:presence/app/data/colors.dart';
 import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';
@@ -14,6 +15,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(
     MyApp(),
   );
@@ -24,14 +26,15 @@ class MyApp extends StatelessWidget {
     super.key,
   });
 
+  final locationController = Get.put(LocationController(), permanent: true);
   final authC = Get.put<AuthController>(AuthController(), permanent: true);
   final dbC = Get.put<DbController>(DbController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.delayed(const Duration(seconds: 3)),
-      // future: Future.delayed(Duration.zero),
+      // future: Future.delayed(const Duration(seconds: 3)),
+      future: Future.delayed(Duration.zero),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return StreamBuilder<User?>(

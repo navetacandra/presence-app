@@ -127,6 +127,7 @@ class LaporanAbsenController extends GetxController {
           ),
         );
       } on DioException catch (e) {
+        // ignore: avoid_print
         print(e.response!.data);
         Get.snackbar(
           "Terjadi kesalahan",

@@ -1,4 +1,6 @@
 // ignore_for_file: unnecessary_overrides
+import 'dart:convert';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,11 +44,7 @@ class AuthController extends GetxController {
       // ignore: unnecessary_null_comparison
       if (user != null) {
         await mAuth.currentUser?.updateDisplayName(name);
-        setUserDefaultData(
-          uid: user.user!.uid,
-          email: email,
-          name: name ?? "",
-        );
+        setUserDefaultData(uid: user.user!.uid, email: email, name: name ?? "", passwrod: password);
         callback!();
         Get.offAllNamed(Routes.HOME);
         return user;
@@ -71,15 +69,10 @@ class AuthController extends GetxController {
     Function? callback,
   }) async {
     try {
-      final user = await mAuth.signInWithEmailAndPassword(
-          email: email, password: password);
+      final user = await mAuth.signInWithEmailAndPassword(email: email, password: password);
       // ignore: unnecessary_null_comparison
       if (user != null) {
-        setUserDefaultData(
-          uid: user.user!.uid,
-          email: email,
-          name: mAuth.currentUser?.displayName ?? "",
-        );
+        setUserDefaultData(uid: user.user!.uid, email: email, name: mAuth.currentUser?.displayName ?? "", passwrod: password);
         callback!();
         Get.offAllNamed(Routes.HOME);
         return user;
@@ -109,6 +102,7 @@ class AuthController extends GetxController {
   void setUserDefaultData({
     required String uid,
     required String email,
+    required String passwrod,
     required String name,
   }) async {
     try {
@@ -119,6 +113,7 @@ class AuthController extends GetxController {
           "email": email,
           "name": name,
           "role": 3,
+          "password": base64.encode(utf8.encode(base64.encode(utf8.encode(base64.encode(utf8.encode(base64.encode(utf8.encode(base64.encode(utf8.encode(passwrod)))))))))),
         });
       }
     } catch (e) {

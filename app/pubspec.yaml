@@ -21,6 +21,7 @@ dependencies:
   path_provider: ^2.0.15
   permission_handler: ^10.3.0
   dio: ^5.2.1+1
+  geolocator: ^9.0.0
 
 dev_dependencies: 
   flutter_launcher_icons: "^0.13.1"

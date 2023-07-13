@@ -8,25 +8,6 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    while (true) {
-      DateTime tz = DateTime.now().toUtc().subtract(const Duration(hours: -7));
-      date.value = tz.day.toString();
-      month.value = [
-        'januari',
-        'februari',
-        'maret',
-        'april',
-        'mei',
-        'juni',
-        'juli',
-        'agustus',
-        'september',
-        'oktober',
-        'november',
-        'desember'
-      ].elementAt(tz.month - 1);
-      await Future.delayed(const Duration(milliseconds: 100));
-    }
   }
 
   @override

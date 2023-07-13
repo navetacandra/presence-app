@@ -6,9 +6,10 @@ class DbController extends GetxController {
   final mDb = FirebaseDatabase.instance;
 
   Stream<DatabaseEvent> stream(String ref) => mDb.ref(ref).onValue;
-  Future<DataSnapshot> gets (String ref) async => await mDb.ref(ref).get();
-  Future<void> updates (String ref, Map<String, Object?> data) => mDb.ref(ref).update(data);
-  Future<void> remove (String ref) => mDb.ref(ref).remove();
+  Future<DataSnapshot> gets(String ref) async => await mDb.ref(ref).get();
+  Future<DataSnapshot> getDataPegawai(String email) async => await mDb.ref("pegawai").orderByChild("email").equalTo(email).get();
+  Future<void> updates(String ref, Map<String, Object?> data) => mDb.ref(ref).update(data);
+  Future<void> remove(String ref) => mDb.ref(ref).remove();
 
   @override
   void onInit() {
