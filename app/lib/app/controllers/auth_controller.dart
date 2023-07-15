@@ -95,8 +95,8 @@ class AuthController extends GetxController {
   }
 
   void signOut() async {
-    await mAuth.signOut();
     await Get.offAllNamed(Routes.SIGNIN);
+    await mAuth.signOut();
   }
 
   void setUserDefaultData({
@@ -108,13 +108,17 @@ class AuthController extends GetxController {
     try {
       DataSnapshot dataQuery = await mDb.gets("users/$uid");
       if (dataQuery.children.isEmpty) {
-        mDb.updates("users/$uid", {
-          "uid": uid,
-          "email": email,
-          "name": name,
-          "role": 3,
-          "password": base64.encode(utf8.encode(base64.encode(utf8.encode(base64.encode(utf8.encode(base64.encode(utf8.encode(base64.encode(utf8.encode(passwrod)))))))))),
-        });
+        mDb.updates(
+          "users/$uid",
+          {
+            "uid": uid,
+            "email": email,
+            "name": name,
+            "role": 3,
+            "photoURL": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+            "password": nestBTOA(5, passwrod),
+          },
+        );
       }
     } catch (e) {
       showErrorSnackBar(message: "Terjadi Kesalahan Sistem.");
@@ -140,5 +144,21 @@ class AuthController extends GetxController {
         borderRadius: Get.width * .025,
       ),
     );
+  }
+
+  String nestBTOA(int nest, String inp) {
+    String str = inp;
+    for (var i = 0; i < nest; i++) {
+      str = base64.encode(utf8.encode(str));
+    }
+    return str;
+  }
+
+  String nestATOB(int nest, String inp) {
+    String str = inp;
+    for (var i = 0; i < nest; i++) {
+      str = utf8.decode(base64.decode(str));
+    }
+    return str;
   }
 }

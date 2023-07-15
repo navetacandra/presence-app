@@ -103,8 +103,7 @@ class TambahKartuProsesController extends GetxController {
   String? validateEmail(String? emailValue) {
     if (emailValue!.isEmpty) return "Email wajib di-isi!";
     if (!EmailValidator.validate(emailValue)) return "Email tidak valid!";
-    if (EmailValidator.validate(emailValue) &&
-        !emailValue.endsWith("@gmail.com")) {
+    if (EmailValidator.validate(emailValue) && !emailValue.endsWith("@gmail.com")) {
       return "Email harus beralamat gmail.com!";
     }
     return null;
@@ -120,8 +119,7 @@ class TambahKartuProsesController extends GetxController {
       } else if (number.isNotEmpty && number.length < 10) {
         validationErrors[i] = "${textFieldName[i]} minimal berisi 10 karakter!";
       } else if (number.length > 13) {
-        validationErrors[i] =
-            "${textFieldName[i]} maksimal berisi 13 karakter!";
+        validationErrors[i] = "${textFieldName[i]} maksimal berisi 13 karakter!";
       } else {
         final resp = await waController.checkIsOnWhatsApp(number);
 
@@ -209,6 +207,28 @@ class TambahKartuProsesController extends GetxController {
         }
       } else {
         try {
+          // ignore: invalid_use_of_protected_member
+          if (selectedPegawai.value["id"] == null) {
+            Get.showSnackbar(
+              GetSnackBar(
+                backgroundColor: const Color.fromRGBO(255, 0, 0, .8),
+                duration: const Duration(milliseconds: 1500),
+                snackPosition: SnackPosition.BOTTOM,
+                snackStyle: SnackStyle.FLOATING,
+                messageText: Text(
+                  "Pegawai belum dipilih!",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.roboto(
+                    color: Colors.white,
+                    fontSize: Get.width * .05,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                borderRadius: Get.width * .025,
+              ),
+            );
+            return;
+          }
           await dbC.updates(
             // ignore: invalid_use_of_protected_member
             "pegawai/${selectedPegawai.value["id"]}",

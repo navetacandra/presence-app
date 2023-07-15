@@ -1,7 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:presence/app/data/colors.dart';
+import 'package:presence/app/routes/app_pages.dart';
 
 import '../controllers/signin_controller.dart';
 
@@ -69,7 +71,7 @@ class SigninView extends GetView<SigninController> {
                       validator: (value) => selfC.validatePassword(value),
                     ),
                   ),
-                  const SizedBox(height: 60),
+                  const SizedBox(height: 30),
                   Obx(
                     () => InkWell(
                       onTap: () => selfC.isLoading.isTrue ? null : selfC.validateForm(),
@@ -99,6 +101,27 @@ class SigninView extends GetView<SigninController> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  Text.rich(
+                    TextSpan(
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: "Belum punya akun? ",
+                          style: GoogleFonts.poppins(
+                            color: Colors.black,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "Daftar disini.",
+                          style: GoogleFonts.poppins(
+                            color: Colors.blue.shade600,
+                          ),
+                          recognizer: TapGestureRecognizer()..onTap = () => Get.toNamed(Routes.SIGNUP),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),

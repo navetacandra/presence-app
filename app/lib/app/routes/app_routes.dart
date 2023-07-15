@@ -18,6 +18,7 @@ abstract class Routes {
   static const EDIT_PEGAWAI = _Paths.EDIT_PEGAWAI;
   static const KONEKSI_ESP = _Paths.KONEKSI_ESP;
   static const LAPORAN_ABSEN = _Paths.LAPORAN_ABSEN;
+  static const PROFILE = _Paths.PROFILE;
 }
 
 abstract class _Paths {
@@ -35,4 +36,5 @@ abstract class _Paths {
   static const EDIT_PEGAWAI = '/edit-pegawai';
   static const KONEKSI_ESP = '/koneksi-esp';
   static const LAPORAN_ABSEN = '/laporan-absen';
+  static const PROFILE = '/profile';
 }

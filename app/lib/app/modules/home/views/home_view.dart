@@ -42,29 +42,47 @@ class HomeView extends GetView<HomeController> {
                           margin: EdgeInsets.symmetric(
                             vertical: Get.height * .025,
                           ),
-                          child: StreamBuilder<DatabaseEvent>(
-                              stream: dbC.stream(
-                                  "users/${authC.mAuth.currentUser!.uid}"),
-                              builder: (context, snapshot) {
-                                String name = "...";
-                                if (snapshot.connectionState ==
-                                    ConnectionState.active) {
-                                  name = snapshot.data!.snapshot
-                                      .child("name")
-                                      .value as String;
-                                }
-
-                                return Text(
-                                  "Hai, $name",
+                          child: Obx(
+                            () => Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Hai,",
                                   style: GoogleFonts.poppins(
                                     color: Colors.white,
                                     fontSize: 22,
                                     fontWeight: FontWeight.w500,
                                   ),
-                                  textAlign: TextAlign.start,
-                                  overflow: TextOverflow.ellipsis,
-                                );
-                              }),
+                                  // overflow: TextOverflow.ellipsis,
+                                ),
+                                TextButton(
+                                  onPressed: () => Get.toNamed(Routes.PROFILE),
+                                  child: Container(
+                                    padding: const EdgeInsets.only(
+                                      bottom: .25,
+                                    ),
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Colors.white,
+                                          width: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      selfC.name.value,
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
 
                         // Sign Out Button
@@ -115,8 +133,7 @@ class HomeView extends GetView<HomeController> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
                                       Image.asset(
                                         'assets/users.png',
@@ -128,9 +145,7 @@ class HomeView extends GetView<HomeController> {
                                         alignment: Alignment.topRight,
                                         child: Text(
                                           "Pegawai Terdaftar",
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500),
+                                          style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
                                           textAlign: TextAlign.end,
                                           softWrap: true,
                                           overflow: TextOverflow.clip,
@@ -141,14 +156,11 @@ class HomeView extends GetView<HomeController> {
                                   StreamBuilder<DatabaseEvent>(
                                     stream: dbC.stream("pegawai"),
                                     builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                              ConnectionState.active &&
-                                          snapshot.data!.snapshot.exists) {}
+                                      if (snapshot.connectionState == ConnectionState.active && snapshot.data!.snapshot.exists) {}
                                       return Container(
                                         margin: const EdgeInsets.only(top: 10),
                                         child: Text(
-                                          snapshot.connectionState ==
-                                                  ConnectionState.active
+                                          snapshot.connectionState == ConnectionState.active
                                               ? snapshot.data!.snapshot.exists
                                                   ? "${snapshot.data!.snapshot.children.length}"
                                                   : "0"
@@ -172,8 +184,7 @@ class HomeView extends GetView<HomeController> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: <Widget>[
                                       Image.asset(
                                         'assets/users-check.png',
@@ -185,9 +196,7 @@ class HomeView extends GetView<HomeController> {
                                         alignment: Alignment.topRight,
                                         child: Text(
                                           "Pegawai Hadir",
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500),
+                                          style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
                                           textAlign: TextAlign.end,
                                           softWrap: true,
                                           overflow: TextOverflow.clip,
@@ -196,17 +205,13 @@ class HomeView extends GetView<HomeController> {
                                     ],
                                   ),
                                   StreamBuilder<DatabaseEvent>(
-                                    stream: dbC.stream(
-                                        "absensi/${selfC.month}/${selfC.date}/pegawai"),
+                                    stream: dbC.stream("absensi/${selfC.month}/${selfC.date}/pegawai"),
                                     builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                              ConnectionState.active &&
-                                          snapshot.data!.snapshot.exists) {}
+                                      if (snapshot.connectionState == ConnectionState.active && snapshot.data!.snapshot.exists) {}
                                       return Container(
                                         margin: const EdgeInsets.only(top: 10),
                                         child: Text(
-                                          snapshot.connectionState ==
-                                                  ConnectionState.active
+                                          snapshot.connectionState == ConnectionState.active
                                               ? snapshot.data!.snapshot.exists
                                                   ? "${snapshot.data!.snapshot.children.length}"
                                                   : "0"
@@ -231,60 +236,34 @@ class HomeView extends GetView<HomeController> {
                     // End Detail Info Card
 
                     // Menu Section
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          menuItem(
-                            image: "assets/users.png",
-                            label: "Daftar Pegawai",
-                            navigation: Routes.DAFTAR_PEGAWAI,
-                          ),
-                          menuItem(
-                            image: "assets/user-plus.png",
-                            label: "Tambah Pegawai",
-                            navigation: Routes.TAMBAH_PEGAWAI,
-                          ),
-                          menuItem(
-                            image: "assets/card-plus.png",
-                            label: "Tambah Kartu",
-                            navigation: Routes.TAMBAH_KARTU,
-                          ),
-                          menuItem(
-                            image: "assets/report.png",
-                            label: "Buat Laporan",
-                            navigation: Routes.LAPORAN_ABSEN,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          menuItem(
-                            image: "assets/calendar.png",
-                            label: "Jadwal Absen",
-                            navigation: Routes.JADWAL_ABSEN,
-                          ),
-                          menuItem(
-                            image: "assets/switch.png",
-                            label: "Ganti Mode",
-                            navigation: Routes.KONTROL_MODE,
-                          ),
-                          menuItem(
-                            image: "assets/esp-hotspot.png",
-                            label: "Koneksi ESP8266",
-                            navigation: Routes.KONEKSI_ESP,
-                          ),
-                          menuItem(
-                            image: "assets/whatsapp.png",
-                            label: "Koneksi WhatsApp",
-                            navigation: Routes.KONEKSI_WHATSAPP,
-                          ),
-                        ],
+                    Obx(
+                      () => Column(
+                        children: selfC.currentMenu.isNotEmpty
+                            // ignore: unnecessary_cast
+                            ? <Widget>[
+                                ...selfC.currentMenu
+                                    .map(
+                                      (menuList) => Container(
+                                        margin: const EdgeInsets.only(bottom: 20),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          children: <Widget>[
+                                            ...menuList
+                                                .map(
+                                                  (menu) => menuItem(
+                                                    image: menu["image"] ?? "assets/avatar.jpg",
+                                                    label: menu["label"] ?? "",
+                                                    navigation: menu["navigation"] ?? "",
+                                                  ),
+                                                )
+                                                .toList(),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                              ]
+                            : [],
                       ),
                     ),
                     // End Menu Section
@@ -298,10 +277,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  SizedBox menuItem(
-      {required String image,
-      required String label,
-      String? navigation = Routes.HOME}) {
+  SizedBox menuItem({required String image, required String label, String? navigation = Routes.HOME}) {
     return SizedBox(
       width: Get.width / 5,
       child: Column(
@@ -317,12 +293,7 @@ class HomeView extends GetView<HomeController> {
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 245, 245, 245),
                 borderRadius: BorderRadius.circular(10),
-                boxShadow: const <BoxShadow>[
-                  BoxShadow(
-                      color: Color.fromARGB(50, 0, 0, 0),
-                      blurRadius: 2,
-                      offset: Offset(1, 2))
-                ],
+                boxShadow: const <BoxShadow>[BoxShadow(color: Color.fromARGB(50, 0, 0, 0), blurRadius: 2, offset: Offset(1, 2))],
               ),
               child: Image.asset(
                 image,
@@ -332,11 +303,7 @@ class HomeView extends GetView<HomeController> {
           ),
           Text(
             label,
-            style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 15,
-                fontWeight: FontWeight.w400,
-                height: 1.15),
+            style: GoogleFonts.poppins(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w400, height: 1.15),
             textAlign: TextAlign.center,
           ),
         ],

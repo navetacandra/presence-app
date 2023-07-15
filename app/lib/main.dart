@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.active) {
                 return GetMaterialApp(
-                  title: "Ma5ter Absensi",
+                  title: "Ma5Ter Absensi",
                   theme: ThemeData(
                     scaffoldBackgroundColor: mBackgroundColor,
                   ),
@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      "Ma5ter Absensi",
+                      "Ma5Ter Absensi",
                       style: GoogleFonts.poppins(
                         color: Colors.black,
                         fontSize: Get.width / 10,

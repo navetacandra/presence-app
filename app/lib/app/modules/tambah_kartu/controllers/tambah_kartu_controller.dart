@@ -108,10 +108,7 @@ class TambahKartuController extends GetxController {
               },
               child: Text(
                 "Tambah Pegawai",
-                style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: const Color.fromARGB(255, 83, 83, 238)),
+                style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w400, color: const Color.fromARGB(255, 83, 83, 238)),
               ),
             ),
             Obx(
@@ -130,9 +127,7 @@ class TambahKartuController extends GetxController {
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
-                    color: canUseSelect.isTrue
-                        ? const Color.fromARGB(255, 83, 83, 238)
-                        : const Color.fromARGB(255, 110, 110, 131),
+                    color: canUseSelect.isTrue ? const Color.fromARGB(255, 83, 83, 238) : const Color.fromARGB(255, 110, 110, 131),
                   ),
                 ),
               ),
