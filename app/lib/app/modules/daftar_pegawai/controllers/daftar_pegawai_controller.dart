@@ -22,11 +22,17 @@ class DaftarPegawaiController extends GetxController {
 
   List<Widget> buildWidgetList(String searchQuery) {
     List<Widget> widgetsList = pegawai.isNotEmpty ? [searchForm()] : [];
+    List pgwSort = pegawai;
+    if (pegawai.isNotEmpty) {
+      pgwSort.sort(
+        (m1, m2) => m1["name"].toLowerCase().compareTo(
+              m2["name"].toLowerCase(),
+            ),
+      );
+    }
 
-    for (var elem in pegawai) {
-      if (elem["name"].contains(searchQuery) ||
-          elem["email"].contains(searchQuery) ||
-          elem["tel"].contains(searchQuery)) {
+    for (var elem in pgwSort) {
+      if (elem["name"].toLowerCase().contains(searchQuery) || elem["email"].toLowerCase().contains(searchQuery) || elem["tel"].toLowerCase().contains(searchQuery)) {
         widgetsList.add(
           pegawaiCard(
             id: elem["id"],
@@ -115,10 +121,7 @@ class DaftarPegawaiController extends GetxController {
               onPressed: () => Get.back(),
               child: Text(
                 "Batal",
-                style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: const Color.fromARGB(255, 238, 83, 83)),
+                style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w400, color: const Color.fromARGB(255, 238, 83, 83)),
               ),
             ),
             TextButton(
