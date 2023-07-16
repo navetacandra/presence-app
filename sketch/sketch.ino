@@ -116,6 +116,10 @@ void loop() {
   server.handleClient();
   if (connected) {
     if (!welcomeMessagePrinted && (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial())) {
+      if(ESP.getFreeHeap() < 9000) {
+        fbdo.clear();
+      }
+      Serial.println("Free Heap: " + String(ESP.getFreeHeap()));
       lcd.clear();
       lcd.setCursor(3, 0);
       lcd.print("Tap Kartu!");
@@ -139,11 +143,12 @@ void loop() {
     }
     content.toUpperCase();
     Serial.println(content);
-    
+
     processingDb(content);
+    // BEEP(2, 100);
 
     welcomeMessagePrinted = false;
-    delay(1000);
+    delay(250);
   }
 }
 
@@ -157,17 +162,21 @@ void BEEP(int count, int duration) {
 }
 
 void processingDb(String tag) {
+  // WDT
   timeClient.update();
   time_t epochTime = timeClient.getEpochTime();
   struct tm *ptm = gmtime((time_t *)&epochTime);
   int currentMonth = ptm->tm_mon;
   int monthDay = ptm->tm_mday;
+  int currentHour = timeClient.getHours();
+  int currentMinute = timeClient.getMinutes();
 
   String ref = "/absensi/" + months[currentMonth] + "/" + String(monthDay) + "/details";
-  Serial.println(ref);
   if (Firebase.getJSON(fbdo, ref)) {
     FirebaseJson &json = fbdo.to<FirebaseJson>();
     FirebaseJsonData data;
+
+    Serial.println("[Details] Free Heap: " + String(ESP.getFreeHeap()));
 
     bool mode;
     bool active;
@@ -209,7 +218,8 @@ void processingDb(String tag) {
     if (!mode) {
       addCard(tag);
     } else {
-      presentPegawai(tag, active, startPresent, endPresent, startHome, endHome);
+      presentPegawai(tag, active, startPresent, endPresent, startHome, endHome, currentMonth, monthDay, currentHour, currentMinute);
+      Serial.println("[Present] Free Heap: " + String(ESP.getFreeHeap()));
     }
   } else {
     Serial.println(fbdo.errorReason());
@@ -224,7 +234,7 @@ void addCard(String content) {
     lcd.print("Kesalahan Saat");
     lcd.setCursor(1, 1);
     lcd.print("Menambah Kartu");
-    delay(1500);
+    delay(800);
   }
   if (status == 406) {
     lcd.clear();
@@ -232,7 +242,7 @@ void addCard(String content) {
     lcd.print("Kartu Sudah");
     lcd.setCursor(2, 1);
     lcd.print("Ditambahkan");
-    delay(1500);
+    delay(800);
   }
   if (status == 304) {
     lcd.clear();
@@ -240,7 +250,7 @@ void addCard(String content) {
     lcd.print("Kartu Sudah");
     lcd.setCursor(3, 1);
     lcd.print("Terdaftar");
-    delay(1500);
+    delay(800);
   }
   if (status == 200) {
     lcd.clear();
@@ -248,19 +258,19 @@ void addCard(String content) {
     lcd.print("Kartu Berhasil");
     lcd.setCursor(2, 1);
     lcd.print("Didaftarkan");
-    delay(1500);
+    delay(800);
   }
 }
 
-void presentPegawai(String content, bool active, int startPresent[2], int endPresent[2], int startHome[2], int endHome[2]) {
-  int status = presentTag(content, active, startPresent, endPresent, startHome, endHome);
+void presentPegawai(String content, bool active, int startPresent[2], int endPresent[2], int startHome[2], int endHome[2], int currentMonth, int monthDay, int currentHour, int currentMinute) {
+  int status = presentTag(content, active, startPresent, endPresent, startHome, endHome, currentMonth, monthDay, currentHour, currentMinute);
   if (status == 500) {
     lcd.clear();
     lcd.setCursor(1, 0);
     lcd.print("Kesalahan Saat");
     lcd.setCursor(0, 1);
     lcd.print("Melakukan Absen");
-    delay(1500);
+    delay(800);
   }
   if (status == 404) {
     lcd.clear();
@@ -268,7 +278,7 @@ void presentPegawai(String content, bool active, int startPresent[2], int endPre
     lcd.print("Kartu Belum");
     lcd.setCursor(3, 1);
     lcd.print("Terdaftar");
-    delay(1500);
+    delay(800);
   }
   if (status == 400) {
     lcd.clear();
@@ -276,7 +286,7 @@ void presentPegawai(String content, bool active, int startPresent[2], int endPre
     lcd.print("Absensi Sedang");
     lcd.setCursor(2, 1);
     lcd.print("Tidak Aktif");
-    delay(1500);
+    delay(800);
   }
   if (status == 3041) {
     lcd.clear();
@@ -284,7 +294,7 @@ void presentPegawai(String content, bool active, int startPresent[2], int endPre
     lcd.print("Sudah Melakukan");
     lcd.setCursor(1, 1);
     lcd.print("Absensi Hadir");
-    delay(1500);
+    delay(800);
   }
   if (status == 3042) {
     lcd.clear();
@@ -292,7 +302,7 @@ void presentPegawai(String content, bool active, int startPresent[2], int endPre
     lcd.print("Sudah Melakukan");
     lcd.setCursor(1, 1);
     lcd.print("Absensi Pulang");
-    delay(1500);
+    delay(800);
   }
   if (status == 3) {
     lcd.clear();
@@ -300,7 +310,7 @@ void presentPegawai(String content, bool active, int startPresent[2], int endPre
     lcd.print("Absensi Berhaseil");
     lcd.setCursor(1, 1);
     lcd.print("Status: TELAT");
-    delay(1500);
+    delay(800);
   }
   if (status == 2) {
     lcd.clear();
@@ -308,7 +318,7 @@ void presentPegawai(String content, bool active, int startPresent[2], int endPre
     lcd.print("Absensi Berhaseil");
     lcd.setCursor(1, 1);
     lcd.print("Status: PULANG");
-    delay(1500);
+    delay(800);
   }
   if (status == 1) {
     lcd.clear();
@@ -316,7 +326,7 @@ void presentPegawai(String content, bool active, int startPresent[2], int endPre
     lcd.print("Absensi Berhaseil");
     lcd.setCursor(1, 1);
     lcd.print("Status: TEPAT");
-    delay(1500);
+    delay(800);
   }
   if (status == 0) {
     lcd.clear();
@@ -324,6 +334,6 @@ void presentPegawai(String content, bool active, int startPresent[2], int endPre
     lcd.print("Absensi Gagal");
     lcd.setCursor(0, 1);
     lcd.print("Bukan Waktu Absen");
-    delay(1500);
+    delay(800);
   }
 }

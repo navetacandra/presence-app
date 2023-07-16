@@ -22,7 +22,9 @@ int addTag(String tag) {
   ref += tag;
   ref += "/card";
 
-  Firebase.getJSON(fbdo, "/pegawai", query);
+  if (!Firebase.getJSON(fbdo, "/pegawai", query)) {
+    Serial.println(fbdo.errorReason());
+  }
 
   if (fbdo.jsonString().length() <= 2) {
     Firebase.getString(fbdo, ref);
@@ -50,17 +52,7 @@ int addTag(String tag) {
 // 400 => Not active date
 // 404 => No pegawai
 // 500 => Error query
-int presentTag(String tag, bool active, int startPresent[2], int endPresent[2], int startHome[2], int endHome[2]) {
-
-  // Get current time
-  timeClient.update();
-  time_t epochTime = timeClient.getEpochTime();
-  struct tm *ptm = gmtime((time_t *)&epochTime);
-  int currentMonth = ptm->tm_mon;
-  int monthDay = ptm->tm_mday;
-  int currentHour = timeClient.getHours();
-  int currentMinute = timeClient.getMinutes();
-
+int presentTag(String tag, bool active, int startPresent[2], int endPresent[2], int startHome[2], int endHome[2], int currentMonth, int monthDay, int currentHour, int currentMinute) {
   // Get pegawai data
   QueryFilter query;
   query.orderBy("card");
@@ -71,7 +63,10 @@ int presentTag(String tag, bool active, int startPresent[2], int endPresent[2], 
   // Get isActive
   if (active) {
     // Check is card tag registered
-    Firebase.getJSON(fbdo, "/pegawai", query);
+    if (!Firebase.getJSON(fbdo, "/pegawai", query)) {
+      Serial.println(fbdo.errorReason());
+    }
+
 
     if (fbdo.jsonString().length() <= 2) {
       return 404;
@@ -91,6 +86,8 @@ int presentTag(String tag, bool active, int startPresent[2], int endPresent[2], 
     }
     tempPegawai.iteratorEnd();
 
+    Serial.println("[Pegawai ID] Free Heap: " + String(ESP.getFreeHeap()));
+
     if (Firebase.getJSON(fbdo, pegawaiRef + id)) {
       FirebaseJson &fdata = fbdo.to<FirebaseJson>();
       data = fdata;
@@ -100,6 +97,8 @@ int presentTag(String tag, bool active, int startPresent[2], int endPresent[2], 
         return 500;
       }
     }
+
+    Serial.println("[Pegawai] Free Heap: " + String(ESP.getFreeHeap()));
 
     // current time to string
     String time = (String(currentHour).length() < 2 ? "0" + String(currentHour) : String(currentHour)) + ":" + (String(currentMinute).length() < 2 ? "0" + String(currentMinute) : String(currentMinute));
@@ -119,7 +118,10 @@ int presentTag(String tag, bool active, int startPresent[2], int endPresent[2], 
       else if (currentHour == startPresent[0] && currentMinute >= startPresent[1]) {
         data.set("status", "tepat");
         data.set("masuk", time);
+
+        Serial.println("[Processing] Firebase setJSON");
         if (Firebase.setJSON(fbdo, pegawaiRef + id, data)) {
+          Serial.println("[Done] Firebase setJSON.");
           // if (true) {
           return 1;
         } else {
@@ -131,7 +133,10 @@ int presentTag(String tag, bool active, int startPresent[2], int endPresent[2], 
       else if (currentHour == endPresent[0] && currentMinute <= endPresent[1]) {
         data.set("status", "tepat");
         data.set("masuk", time);
+
+        Serial.println("[Processing] Firebase setJSON");
         if (Firebase.setJSON(fbdo, pegawaiRef + id, data)) {
+          Serial.println("[Done] Firebase setJSON.");
           // if (true) {
           return 1;
         } else {
@@ -140,10 +145,13 @@ int presentTag(String tag, bool active, int startPresent[2], int endPresent[2], 
         }
       }
       // If hour equal endPresent hour and minutes above endPresent minutes
-      else if (currentHour == endPresent[0] && currentMinute > endPresent[1]) {
+      else if (currentHour == endPresent[0] && currentMinute > endPresent[1] && currentMinute <= (endPresent[1] + 15)) {
         data.set("status", "telat");
         data.set("masuk", time);
+
+        Serial.println("[Processing] Firebase setJSON");
         if (Firebase.setJSON(fbdo, pegawaiRef + id, data)) {
+          Serial.println("[Done] Firebase setJSON.");
           // if (true) {
           return 3;
         } else {
@@ -153,7 +161,10 @@ int presentTag(String tag, bool active, int startPresent[2], int endPresent[2], 
       } else {
         data.set("status", "tepat");
         data.set("masuk", time);
+
+        Serial.println("[Processing] Firebase setJSON");
         if (Firebase.setJSON(fbdo, pegawaiRef + id, data)) {
+          Serial.println("[Done] Firebase setJSON.");
           // if (true) {
           return 1;
         } else {
@@ -164,24 +175,18 @@ int presentTag(String tag, bool active, int startPresent[2], int endPresent[2], 
     }
 
     // Between endPresent and startHome
-    if (currentHour > endPresent[0] && currentHour < startHome[0]) {
+    if (currentHour > (endPresent[0] + 15) && currentHour < startHome[0]) {
       data.get(tempData, "masuk");
       if (tempData.to<String>().length() > 3) {
         return 3041;
       }
-      data.set("status", "telat");
-      data.set("masuk", time);
-      if (Firebase.setJSON(fbdo, pegawaiRef + id, data)) {
-        // if (true) {
-        return 3;
-      } else {
-        Serial.println(fbdo.errorReason());
-        return 500;
-      }
+      return 0;
     }
 
     // Equal/above startHome hour and equal/below endHome hour
     if (currentHour >= startHome[0] && currentHour <= endHome[0]) {
+      data.get(tempData, "masuk");
+      if (tempData.to<String>().length() < 3) return 500;
       data.get(tempData, "pulang");
       // If hour equal startHome hour and minutes below startHome minutes OR hour equal endHome hour and minutes above endHome minutes
       if ((currentHour == startHome[0] && currentMinute < startHome[1]) || (currentHour == endHome[0] && currentMinute > endHome[1])) {
@@ -190,8 +195,10 @@ int presentTag(String tag, bool active, int startPresent[2], int endPresent[2], 
         return 3042;
       } else {
         data.set("pulang", time);
+
+        Serial.println("[Processing] Firebase setJSON");
         if (Firebase.setJSON(fbdo, pegawaiRef + id, data)) {
-          // if (true) {
+          Serial.println("[Done] Firebase setJSON.");
           return 2;
         } else {
           Serial.println(fbdo.errorReason());
