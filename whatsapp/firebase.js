@@ -57,6 +57,8 @@ class Firebase {
     this.MOBJ = {};
     this.WA = WA;
     this.firstRun = true;
+    this.mode = false;
+    this.schedule = {};
 
     const tgl_obj = {};
     Array(31)
@@ -169,6 +171,7 @@ class Firebase {
   streamSchedule() {
     onValue(ref(this.dbApp, "schedule"), (snap) => {
       console.log(`[${this.name}] Schedule changed`);
+      this.schedule = snap.val();
       months.forEach((mth) => {
         Array(31)
           .fill(0)
@@ -183,6 +186,7 @@ class Firebase {
   streamMode() {
     onValue(ref(this.dbApp, "mode"), (snap) => {
       console.log(`[${this.name}] Mode changed`);
+      this.mode = snap.val();
       months.forEach((mth) => {
         Array(31)
           .fill(0)

@@ -17,15 +17,15 @@ class WhatsApp {
       puppeteer: {
         waitForInitialPage: false,
         timeout: 0,
-        executablePath: process.env.CHROME_PATH,
-        // headless: false,
+        // executablePath: process.env.CHROME_PATH,
+        headless: false,
         args: [
           "--no-sandbox",
-          "--headless=new",
+          // "--headless=new",
           "--disable-setuid-sandbox",
           "--disable-dev-shm-usage",
           "--disable-accelerated-2d-canvas",
-          // "--no-first-run",
+          "--no-first-run",
           // "--no-zygote",
           "--disable-gpu",
           // "--single-process",
@@ -43,7 +43,7 @@ class WhatsApp {
       this.isReady = true;
       console.log(`[${this.name}] WhatsApp is ready.`);
       for (const q of this.queue) {
-        let cmd = q.shift();
+        let cmd = q;
         await this[cmd.func](...cmd.args);
       }
     });
@@ -51,23 +51,24 @@ class WhatsApp {
       this.isReady = false;
       console.log(`[${this.name}] WhatsApp disconnected: ${reason}`);
       this.client.destroy();
-      initializeClient();
+      this.initializeClient();
     });
     this.client.on("qr", (qr) => {
       this.qrcode = qr;
       console.log(`[${this.name}] QR: `);
       qrt.generate(qr, { small: true });
     });
-    initializeClient();
+    this.initializeClient();
   }
 
-  async initializeClien() {
-    const sessionDir = resolve(
-      join(__dirname, ".wwebjs_auth", `session-${this.session}`)
-    );
-    if (readdirSync(sessionDir).includes("SingletonLock")) {
-      unlinkSync(resolve(join(sessionDir, "SingletonLock")));
-    }
+  async initializeClient() {
+    // const sessionDir = resolve(
+    //   join(__dirname, ".wwebjs_auth", `session-${this.session}`)
+    // );
+    // if (readdirSync(sessionDir).includes("SingletonLock")) {
+    //   unlinkSync(resolve(join(sessionDir, "SingletonLock")));
+    // }
+    this.client.initialize();
   }
 
   // ---------------------------------- logout current session ----------------------------------- //

@@ -4,6 +4,14 @@ const { readFileSync, writeFileSync, unlinkSync } = require("fs");
 const { cwd } = require("process");
 const { join, resolve } = require("path");
 const Controller = require("./controller");
+const {
+  get,
+  ref,
+  query,
+  orderByChild,
+  equalTo,
+  update,
+} = require("firebase/database");
 require("dotenv").config();
 
 const app = express();
@@ -163,6 +171,296 @@ app.get("/export-csv", async (req, res) => {
     unlinkSync(filePath);
   } catch (err) {
     res.status(500).json({ message: "Failed get info.", error: err });
+  }
+});
+
+app.post("/esp-handling", async (req, res) => {
+  const key = req.body.key || req.query.key;
+  if (!key) {
+    return res.status(400).json({ message: "KEY not stored." });
+  }
+
+  const firebase = await states.filter((f) => f.key == key)[0].controller
+    .firebase;
+
+  const month = req.body.month || req.query.month;
+  const date = req.body.date || req.query.date;
+  const time = req.body.time || req.query.time;
+  const tag = req.body.tag || req.query.tag;
+
+  try {
+    if (firebase.mode) {
+      const isActive = await get(
+        ref(firebase.dbApp, `/absensi/${month}/${date}/details/active`)
+      );
+      if (!isActive) {
+        return res.status(400).json({
+          mode: "absen",
+          error: "date-not-active",
+        });
+      } else {
+        const currentPegawai = await get(
+          query(
+            ref(firebase.dbApp, `/pegawai`),
+            orderByChild(`card`),
+            equalTo(tag)
+          )
+        );
+        if (!currentPegawai.exists()) {
+          return res
+            .status(404)
+            .json({ mode: "absen", error: "card-not-found" });
+        } else {
+          const pegawaiId = Object.values(currentPegawai.val())[0].id;
+          const _absenPegawai = await get(
+            ref(
+              firebase.dbApp,
+              `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+            )
+          );
+          const jamMasukStart = firebase.schedule.jam_hadir_start
+            .split(":")
+            .map((e) => Number(e));
+          const jamMasukEnd = firebase.schedule.jam_hadir_end
+            .split(":")
+            .map((e) => Number(e));
+          const jamPulangStart = firebase.schedule.jam_pulang_start
+            .split(":")
+            .map((e) => Number(e));
+          const jamPulangEnd = firebase.schedule.jam_pulang_end
+            .split(":")
+            .map((e) => Number(e));
+          const currTime = time.split(":").map((e) => Number(e));
+
+          if (
+            currTime[0] >= jamMasukStart[0] &&
+            currTime[0] <= jamMasukEnd[0]
+          ) {
+            if (
+              _absenPegawai.exists() &&
+              _absenPegawai.child("masuk").exists()
+            ) {
+              return res
+                .status(400)
+                .json({ mode: "absen", error: "already-absen-hadir" });
+            }
+
+            // kurang dari menit awal
+            if (
+              currTime[0] == jamMasukStart[0] &&
+              currTime[1] < jamMasukStart[1]
+            ) {
+              return res
+                .status(400)
+                .json({ mode: "absen", error: "no-schedule" });
+            }
+
+            // antara jam awal hadir s/d jam akhir hadir
+            if (
+              currTime[0] > jamMasukStart[0] &&
+              currTime[0] < jamMasukEnd[0]
+            ) {
+              await update(
+                ref(
+                  firebase.dbApp,
+                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                ),
+                {
+                  status: "tepat",
+                  masuk: time,
+                  id: pegawaiId,
+                }
+              );
+              return res
+                .status(200)
+                .json({ mode: "absen", status: "absen-tepat" });
+            }
+
+            // lebih dari/sama dengan menit awal
+            if (
+              currTime[0] == jamMasukStart[0] &&
+              currTime[1] >= jamMasukStart[1]
+            ) {
+              await update(
+                ref(
+                  firebase.dbApp,
+                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                ),
+                {
+                  status: "tepat",
+                  masuk: time,
+                  id: pegawaiId,
+                }
+              );
+              return res
+                .status(200)
+                .json({ mode: "absen", status: "absen-tepat" });
+            }
+
+            // kurang dari/sama dengan menit akhir
+            if (
+              currTime[0] == jamMasukEnd[0] &&
+              currTime[1] <= jamMasukEnd[1]
+            ) {
+              await update(
+                ref(
+                  firebase.dbApp,
+                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                ),
+                {
+                  status: "tepat",
+                  masuk: time,
+                  id: pegawaiId,
+                }
+              );
+              return res
+                .status(200)
+                .json({ mode: "absen", status: "absen-tepat" });
+            }
+
+            // kurang dari/sama dengan 15 menit akhir jam hadir
+            if (
+              currTime[0] == jamMasukEnd[0] &&
+              currTime[1] > jamMasukEnd[1] &&
+              currTime[1] <= jamMasukEnd[1] + 15
+            ) {
+              await update(
+                ref(
+                  firebase.dbApp,
+                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                ),
+                {
+                  status: "telat",
+                  masuk: time,
+                  id: pegawaiId,
+                }
+              );
+              return res
+                .status(200)
+                .json({ mode: "absen", status: "absen-telat" });
+            }
+
+            // lebih dari 15 menit akhir jam hadir
+            if (
+              currTime[0] == jamMasukEnd[0] &&
+              currTime[1] > jamMasukEnd[1] + 15
+            ) {
+              return res
+                .status(400)
+                .json({ mode: "absen", error: "no-schedule" });
+            }
+          }
+
+          if (
+            currTime[0] > jamMasukEnd[0] + 15 &&
+            currTime[0] < jamPulangStart[0]
+          ) {
+            return res
+              .status(400)
+              .json({ mode: "absen", error: "no-schedule" });
+          }
+
+          if (
+            currTime[0] >= jamPulangStart[0] &&
+            currTime[0] <= jamPulangEnd[0]
+          ) {
+            if (
+              _absenPegawai.exists() &&
+              _absenPegawai.child("pulang").exists()
+            ) {
+              return res
+                .status(400)
+                .json({ mode: "absen", error: "already-absen-pulang" });
+            }
+
+            // lebih dari/sama dengan menit awal pulang
+            if (
+              currTime[0] == jamPulangStart[0] &&
+              currTime[1] >= jamPulangStart[1]
+            ) {
+              await update(
+                ref(
+                  firebase.dbApp,
+                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                ),
+                {
+                  masuk: time,
+                  id: pegawaiId,
+                }
+              );
+              return res
+                .status(200)
+                .json({ mode: "absen", status: "absen-pulang" });
+            }
+
+            // antara jam awal pulang s/d jam akhir pulang
+            if (
+              currTime[0] > jamPulangStart[0] &&
+              currTime[0] < jamPulangEnd[0]
+            ) {
+              await update(
+                ref(
+                  firebase.dbApp,
+                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                ),
+                {
+                  masuk: time,
+                  id: pegawaiId,
+                }
+              );
+              return res
+                .status(200)
+                .json({ mode: "absen", status: "absen-pulang" });
+            }
+
+            // kurang dari/sama dengan menit akhir pulang
+            if (
+              currTime[0] == jamPulangEnd[0] &&
+              currTime[1] <= jamPulangEnd[1]
+            ) {
+              await update(
+                ref(
+                  firebase.dbApp,
+                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                ),
+                {
+                  masuk: time,
+                  id: pegawaiId,
+                }
+              );
+              return res
+                .status(200)
+                .json({ mode: "absen", status: "absen-pulang" });
+            }
+          }
+        }
+      }
+    } else {
+      const card = await get(ref(firebase.dbApp, `/cards/${tag}/card`));
+      const cardInPegawai = await get(
+        query(
+          ref(firebase.dbApp, `/pegawai`),
+          orderByChild(`card`),
+          equalTo(tag)
+        )
+      );
+
+      if (card.exists()) {
+        return res.status(400).json({ mode: "add", error: "already-add" });
+      }
+      if (cardInPegawai.exists()) {
+        return res
+          .status(400)
+          .json({ mode: "add", error: "already-registered" });
+      }
+
+      if (!(card.exists() && cardInPegawai.exists())) {
+        await update(ref(firebase.dbApp, `/cards/${tag}`), { card: tag });
+        return res.status(200).json({ mode: "add", status: "registered" });
+      }
+    }
+  } catch (err) {
+    console.log(err);
   }
 });
 
