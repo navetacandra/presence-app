@@ -133,32 +133,15 @@ class KoneksiEspView extends GetView<KoneksiEspController> {
                         ),
                       ),
                     ),
+                    
                     const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
-                      controller: selfC.fhost,
-                      keyboardType: TextInputType.url,
-                      decoration: InputDecoration(
-                        labelText: "Firebase Host",
-                        border: const OutlineInputBorder(),
-                        prefixIcon: const Icon(Icons.web),
-                        errorStyle: GoogleFonts.poppins(
-                          color: Colors.red,
-                          fontSize: 15,
-                        ),
-                      ),
-                      validator: (value) =>
-                          value!.isEmpty ? "Firebase Host wajib di-isi!" : null,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      controller: selfC.fkey,
+                      controller: selfC.apikey,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
-                        labelText: "Firebase APIKEY",
+                        labelText: "APIKEY",
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.key),
                         errorStyle: GoogleFonts.poppins(
@@ -167,58 +150,8 @@ class KoneksiEspView extends GetView<KoneksiEspController> {
                         ),
                       ),
                       validator: (value) => value!.isEmpty
-                          ? "Firebase APIKEY wajib di-isi!"
+                          ? "APIKEY wajib di-isi!"
                           : null,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      controller: selfC.fauthEmail,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        labelText: "Firebase Auth Email",
-                        border: const OutlineInputBorder(),
-                        prefixIcon: const Icon(Icons.email),
-                        errorStyle: GoogleFonts.poppins(
-                          color: Colors.red,
-                          fontSize: 15,
-                        ),
-                      ),
-                      validator: (value) => selfC.validateEmail(value),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Obx(
-                      () => TextFormField(
-                        controller: selfC.fauthPass,
-                        keyboardType: TextInputType.visiblePassword,
-                        obscureText: !selfC.showFauthPass.value,
-                        decoration: InputDecoration(
-                          labelText: "Firebase Auth Password",
-                          border: const OutlineInputBorder(),
-                          prefixIcon: const Icon(Icons.lock),
-                          suffixIcon: InkWell(
-                            onTap: () => selfC.showFauthPass.value =
-                                !selfC.showFauthPass.value,
-                            child: Icon(
-                              selfC.showFauthPass.value
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                            ),
-                          ),
-                          errorStyle: GoogleFonts.poppins(
-                            color: Colors.red,
-                            fontSize: 15,
-                          ),
-                        ),
-                        validator: (value) => value!.isEmpty
-                            ? "Auth Password wajib di-isi!"
-                            : value.length < 6
-                                ? "Auth Password minimal berisi 6 karakter"
-                                : null,
-                      ),
                     ),
                     const SizedBox(
                       height: 30,

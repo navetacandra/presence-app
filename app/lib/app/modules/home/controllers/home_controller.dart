@@ -12,6 +12,8 @@ class HomeController extends GetxController {
   RxString date = ''.obs;
   RxString month = ''.obs;
   RxString name = '...'.obs;
+  RxInt present = 0.obs;
+  RxInt role = 1.obs;
   Map<String, List<List<Map>>> allMenus = {
     "admin": [
       [
@@ -60,6 +62,20 @@ class HomeController extends GetxController {
       ],
     ],
   };
+  List<String> months = [
+    "januari",
+    "februari",
+    "maret",
+    "april",
+    "mei",
+    "juni",
+    "juli",
+    "agustus",
+    "september",
+    "oktober",
+    "november",
+    "desember",
+  ];
 
   RxList currentMenu = [].obs;
 
@@ -74,7 +90,8 @@ class HomeController extends GetxController {
             DataSnapshot snap = ev.snapshot;
             if (!snap.exists) return;
             name.value = snap.child("name").value as String;
-            if ((snap.child("role").value as int) == 0) currentMenu.value = allMenus["admin"]!;
+            role.value = (snap.child("role").value as int);
+            if (role.value == 0) currentMenu.value = allMenus["admin"]!;
           },
         );
       },
@@ -82,8 +99,19 @@ class HomeController extends GetxController {
   }
 
   @override
-  void onReady() {
+  void onReady() async {
     super.onReady();
+    while (true) {
+      date.value = (DateTime.now().toUtc().add(const Duration(hours: 7))).day.toString();
+      month.value = months[(DateTime.now().toUtc().add(const Duration(hours: 7))).month - 1];
+      DataSnapshot snap = await dbController.gets("/absensi/${month.value}/${date.value}/pegawai");
+      if (!snap.exists) {
+        present.value = 0;
+      } else {
+        present.value = snap.children.length;
+      }
+      await Future.delayed(const Duration(seconds: 1));
+    }
   }
 
   @override

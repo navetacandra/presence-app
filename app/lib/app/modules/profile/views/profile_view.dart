@@ -131,7 +131,7 @@ class ProfileView extends GetView<ProfileController> {
                         const SizedBox(
                           width: 8,
                         ),
-                        Container(
+                        SizedBox(
                           height: 30,
                           width: Get.width * .8 * .6,
                           child: TextField(

@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_overrides
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +60,7 @@ class LocationController extends GetxController {
     authController.streamCredential.listen(
       (User? user) {
         if (user == null) return;
-        Geolocator.getPositionStream(locationSettings: LocationSettings(accuracy: LocationAccuracy.high)).listen(
+        Geolocator.getPositionStream(locationSettings: const LocationSettings(accuracy: LocationAccuracy.best)).listen(
           (Position pos) async {
             try {
               DateTime tz = DateTime.now().toUtc().subtract(const Duration(hours: -7));

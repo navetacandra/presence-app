@@ -20,10 +20,7 @@ class KoneksiEspController extends GetxController {
 
   TextEditingController ssid = TextEditingController();
   TextEditingController pass = TextEditingController();
-  TextEditingController fhost = TextEditingController();
-  TextEditingController fkey = TextEditingController();
-  TextEditingController fauthEmail = TextEditingController();
-  TextEditingController fauthPass = TextEditingController();
+  TextEditingController apikey = TextEditingController();
 
   bool messageShown = false;
   int messageCounter = 0;
@@ -91,14 +88,7 @@ class KoneksiEspController extends GetxController {
               if (!setted) {
                 ssid.text = jsonDecode(resFileState.body)['ssid'] ?? "";
                 pass.text = jsonDecode(resFileState.body)['password'] ?? "";
-                fhost.text =
-                    jsonDecode(resFileState.body)['firebase-host'] ?? "";
-                fkey.text =
-                    jsonDecode(resFileState.body)['firebase-apikey'] ?? "";
-                fauthEmail.text =
-                    jsonDecode(resFileState.body)['auth-email'] ?? "";
-                fauthPass.text =
-                    jsonDecode(resFileState.body)['auth-pass'] ?? "";
+                apikey.text = jsonDecode(resFileState.body)['apikey'] ?? "";
                 setted = true;
               }
             } catch (e) {
@@ -183,8 +173,7 @@ class KoneksiEspController extends GetxController {
     isLoading.value = true;
     if (formField.currentState!.validate()) {
       try {
-        http.Response submitData = await http.get(Uri.parse(
-            "http://192.168.250.250/connect?ssid=${ssid.text}&password=${pass.text}&firebaseHost=${fhost.text}&firebaseKey=${fkey.text}&firebaseEmail=${fauthEmail.text}&firebasePass=${fauthPass.text}"));
+        http.Response submitData = await http.get(Uri.parse("http://192.168.250.250/connect?ssid=${ssid.text}&password=${pass.text}&apikey=${apikey.text}"));
         if (jsonDecode(submitData.body)['status'] == 'sent') {
           Get.snackbar(
             "Data Terkirim",

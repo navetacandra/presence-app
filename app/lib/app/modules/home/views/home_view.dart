@@ -204,27 +204,19 @@ class HomeView extends GetView<HomeController> {
                                       )
                                     ],
                                   ),
-                                  StreamBuilder<DatabaseEvent>(
-                                    stream: dbC.stream("absensi/${selfC.month}/${selfC.date}/pegawai"),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.active && snapshot.data!.snapshot.exists) {}
-                                      return Container(
-                                        margin: const EdgeInsets.only(top: 10),
-                                        child: Text(
-                                          snapshot.connectionState == ConnectionState.active
-                                              ? snapshot.data!.snapshot.exists
-                                                  ? "${snapshot.data!.snapshot.children.length}"
-                                                  : "0"
-                                              : "-",
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                          softWrap: true,
+                                  Obx(
+                                    () => Container(
+                                      margin: const EdgeInsets.only(top: 10),
+                                      child: Text(
+                                        selfC.present.value.toString(),
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w600,
                                         ),
-                                      );
-                                    },
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: true,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
