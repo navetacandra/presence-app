@@ -43,9 +43,6 @@ bool initWiFi() {
     timeClient.begin();
     timeClient.setTimeOffset(25200);
 
-
-    firebaseConnect();
-
     return true;
   }
 
@@ -74,21 +71,9 @@ void handleNetworkConnecting() {
       content += "</li>";
     }
     content += "</ul><hr><form action=\"/connect\" method=\"get\"><label for=\"ssid\">SSID</label><input type=\"text\" id=\"ssid\" name=\"ssid\" placeholder=\"SSID\" required><label for=\"password\">Password</label><input type=\"password\" id=\"password\" name=\"password\" placeholder=\"Password\" required>";
-    content += "<label for=\"firebaseHost\">Firebase Host</label><input type=\"text\" id=\"firebaseHost\" name=\"firebaseHost\" placeholder=\"Firebase Host\" ";
+    content += "<label for=\"apikey\">APIKEY</label><input type=\"text\" id=\"apikey\" name=\"apikey\" placeholder=\"APIKEY\" ";
     content += "value=\"";
-    content += firebaseHost;
-    content += "\" required>";
-    content += "<label for=\"firebaseKey\">Firebase APIKEY</label><input type=\"text\" id=\"firebaseKey\" name=\"firebaseKey\" placeholder=\"Firebase APIKEY\" ";
-    content += "value=\"";
-    content += firebaseKey;
-    content += "\" required>";
-    content += "<label for=\"firebaseEmail\">Firebase Auth Email</label><input type=\"text\" id=\"firebaseEmail\" name=\"firebaseEmail\" placeholder=\"Firebase Auth Email\" ";
-    content += "value=\"";
-    content += firebaseAuthEmail;
-    content += "\" required>";
-    content += "<label for=\"firebasePass\">Firebase Auth Password</label><input type=\"text\" id=\"firebasePass\" name=\"firebasePass\" placeholder=\"Firebase Auth Password\" ";
-    content += "value=\"";
-    content += firebaseAuthPassword;
+    content += apikey;
     content += "\" required>";
     content += "<div class=\"submit-container\"><button type=\"submit\" class=\"submit\">SUBMIT</button></div></form></div></body><script>document.querySelectorAll(\"li\").forEach((el) => {el.addEventListener(\"click\", (e) => {document.querySelector(\"#ssid\").value =el.querySelector(\"span\").innerText;});});document.querySelectorAll(\".unlock\").forEach((el) => {el.innerHTML ='<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"ionicon\" viewBox=\"0 0 512 512\"><path d=\"M368 192H192v-80a64 64 0 11128 0 16 16 0 0032 0 96 96 0 10-192 0v80h-16a64.07 64.07 0 00-64 64v176a64.07 64.07 0 0064 64h224a64.07 64.07 0 0064-64V256a64.07 64.07 0 00-64-64z\"/></svg>';});document.querySelectorAll(\".lock\").forEach((el) => {el.innerHTML ='<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"ionicon\" viewBox=\"0 0 512 512\"><path d=\"M368 192h-16v-80a96 96 0 10-192 0v80h-16a64.07 64.07 0 00-64 64v176a64.07 64.07 0 0064 64h224a64.07 64.07 0 0064-64V256a64.07 64.07 0 00-64-64zm-48 0H192v-80a64 64 0 11128 0z\"/></svg>';});</script></html>";
     server.send(200, "text/html", content);
@@ -116,18 +101,10 @@ void handleNetworkConnecting() {
       if (server.argName(i) == "password") {
         writeFile(LittleFS, "/pass.txt", server.arg(i).c_str());
       }
-      if (server.argName(i) == "firebaseHost") {
-        writeFile(LittleFS, "/host.txt", server.arg(i).c_str());
-      }
-      if (server.argName(i) == "firebaseKey") {
+      if (server.argName(i) == "apikey") {
         writeFile(LittleFS, "/apikey.txt", server.arg(i).c_str());
       }
-      if (server.argName(i) == "firebaseEmail") {
-        writeFile(LittleFS, "/auth-email.txt", server.arg(i).c_str());
-      }
-      if (server.argName(i) == "firebasePass") {
-        writeFile(LittleFS, "/auth-pass.txt", server.arg(i).c_str());
-      }
+      
     }
     server.send(200, "application/json", "{\"status\": \"sent\"}");
     lcd.clear();
