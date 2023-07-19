@@ -102,9 +102,11 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                             // ----
                                             // if show time picker value is not null
                                             if (stp != null) {
+                                              String picked = "${stp.hour}".length > 1 ? "${stp.hour}" : "0${stp.hour}";
+                                              picked += ":";
+                                              picked += "${stp.minute}".length > 1 ? "${stp.minute}" : "0${stp.minute}";
                                               // compare time picker value with previous data
-                                              if (stp.hour >= int.parse(jamHadirEnd.split(':')[0]) ||
-                                                  (stp.hour == int.parse(jamHadirEnd.split(':')[0]) && stp.minute >= int.parse(jamHadirEnd.split(':')[1]))) {
+                                              if (selfC.compareJamHadirStart(picked, jamHadirEnd)) {
                                                 Get.snackbar(
                                                   "Terjadi Kesalahan",
                                                   "",
@@ -190,16 +192,18 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                             // ---
                                             // if show time picker not null
                                             if (stp != null) {
+                                              String picked = "${stp.hour}".length > 1 ? "${stp.hour}" : "0${stp.hour}";
+                                              picked += ":";
+                                              picked += "${stp.minute}".length > 1 ? "${stp.minute}" : "0${stp.minute}";
                                               // Compare show time picker value with previous data
-                                              if (stp.hour <= int.parse(jamHadirStart.split(':')[0]) ||
-                                                  (stp.hour == int.parse(jamHadirStart.split(':')[0]) && stp.minute <= int.parse(jamHadirStart.split(':')[1]))) {
+                                              if (selfC.compareJamHadirEnd(picked, jamHadirStart, jamPulangStart)) {
                                                 Get.snackbar(
                                                   "Terjadi Kesalahan",
                                                   "",
                                                   backgroundColor: const Color.fromARGB(150, 255, 50, 50),
                                                   colorText: const Color.fromARGB(255, 15, 15, 15),
                                                   messageText: Text(
-                                                    "Jam Hadir Akhir Tidak Boleh Sama/Kurang dari Jam Hadir Mulai",
+                                                    "Jam hadir akhir tidak boleh sama/kurang dari jam hadir mulai dan tidak boleh sama/lebih dari jam pulang mulai",
                                                     style: GoogleFonts.poppins(
                                                       fontWeight: FontWeight.w500,
                                                       color: const Color.fromARGB(255, 15, 15, 15),
@@ -207,23 +211,6 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                                   ),
                                                 );
                                                 // Compare show time picker value with previous data
-                                              }
-                                              // Compare show time picker value with previous data
-                                              else if (stp.hour >= int.parse(jamPulangStart.split(':')[0]) ||
-                                                  (stp.hour == int.parse(jamPulangStart.split(':')[0]) && stp.minute >= int.parse(jamPulangStart.split(':')[1]))) {
-                                                Get.snackbar(
-                                                  "Terjadi Kesalahan",
-                                                  "",
-                                                  backgroundColor: const Color.fromARGB(150, 255, 50, 50),
-                                                  colorText: const Color.fromARGB(255, 15, 15, 15),
-                                                  messageText: Text(
-                                                    "Jam Hadir Akhir Tidak Boleh Sama/Lebih dari Jam Pulang",
-                                                    style: GoogleFonts.poppins(
-                                                      fontWeight: FontWeight.w500,
-                                                      color: const Color.fromARGB(255, 15, 15, 15),
-                                                    ),
-                                                  ),
-                                                );
                                               } else {
                                                 // Convert time picker value to string
                                                 var hour = stp.hour.toString().length < 2 ? "0${stp.hour.toString()}" : stp.hour.toString();
@@ -339,16 +326,18 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                             // ---
                                             // if show time picker value not null
                                             if (stp != null) {
+                                              String picked = "${stp.hour}".length > 1 ? "${stp.hour}" : "0${stp.hour}";
+                                              picked += ":";
+                                              picked += "${stp.minute}".length > 1 ? "${stp.minute}" : "0${stp.minute}";
                                               // Compare show time picker value with previous data
-                                              if (stp.hour <= int.parse(jamHadirEnd.split(":")[0]) ||
-                                                  (stp.hour == int.parse(jamHadirEnd.split(":")[0]) && stp.minute <= int.parse(jamHadirEnd.split(":")[1]))) {
+                                              if (selfC.compareJamPulangStart(picked, jamHadirEnd, jamPulangEnd)) {
                                                 Get.snackbar(
                                                   "Terjadi Kesalahan",
                                                   "",
                                                   backgroundColor: const Color.fromARGB(150, 255, 50, 50),
                                                   colorText: const Color.fromARGB(255, 15, 15, 15),
                                                   messageText: Text(
-                                                    "Jam Pulang Mulai Tidak Boleh Sama/Kurang dari Jam Hadir Akhir",
+                                                    "Jam pulang mulai tidak boleh sama/kurang dari jam hadir akhir dan tidak boleh sama/lebih dari jam pulang akhir",
                                                     style: GoogleFonts.poppins(
                                                       fontWeight: FontWeight.w500,
                                                       color: const Color.fromARGB(255, 15, 15, 15),
@@ -356,23 +345,6 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                                   ),
                                                 );
                                                 // Compare show time picker value with previous data
-                                              }
-                                              // Compare show time picker value with previous data
-                                              else if (stp.hour >= int.parse(jamPulangEnd.split(":")[0]) ||
-                                                  (stp.hour == int.parse(jamPulangEnd.split(":")[0]) && stp.minute >= int.parse(jamPulangEnd.split(":")[1]))) {
-                                                Get.snackbar(
-                                                  "Terjadi Kesalahan",
-                                                  "",
-                                                  backgroundColor: const Color.fromARGB(150, 255, 50, 50),
-                                                  colorText: const Color.fromARGB(255, 15, 15, 15),
-                                                  messageText: Text(
-                                                    "Jam Pulang Mulai Tidak Boleh Sama/Lebih dari Jam Pulang Akhir",
-                                                    style: GoogleFonts.poppins(
-                                                      fontWeight: FontWeight.w500,
-                                                      color: const Color.fromARGB(255, 15, 15, 15),
-                                                    ),
-                                                  ),
-                                                );
                                               } else {
                                                 // Convert time picker value to string
                                                 var hour = stp.hour.toString().length < 2 ? "0${stp.hour.toString()}" : stp.hour.toString();
@@ -448,9 +420,11 @@ class JadwalAbsenView extends GetView<JadwalAbsenController> {
                                             // ---
                                             // if show time picker value not null
                                             if (stp != null) {
+                                              String picked = "${stp.hour}".length > 1 ? "${stp.hour}" : "0${stp.hour}";
+                                              picked += ":";
+                                              picked += "${stp.minute}".length > 1 ? "${stp.minute}" : "0${stp.minute}";
                                               // Compare time picker value with previous data
-                                              if (stp.hour <= int.parse(jamPulangStart.split(":")[0]) ||
-                                                  (stp.hour == int.parse(jamPulangStart.split(":")[0]) && stp.minute <= int.parse(jamPulangStart.split(":")[1]))) {
+                                              if (selfC.compareJamPulangend(picked, jamPulangStart)) {
                                                 Get.snackbar(
                                                   "Terjadi Kesalahan",
                                                   "",
