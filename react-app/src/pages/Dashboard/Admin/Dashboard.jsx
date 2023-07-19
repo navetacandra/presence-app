@@ -86,10 +86,10 @@ const DataKehadiran = ({ month, dataset, show, setShow }) => {
                 beginAtZero: true,
                 ticks: {
                   precision: 0,
-                  callback: (value) => Math.round(value)
-                }
-              }
-            }
+                  callback: (value) => Math.round(value),
+                },
+              },
+            },
           }}
           data={{
             labels: tglLabels,
@@ -224,8 +224,12 @@ export default function DashboardScreen() {
           const keys = Object.values(snap.val());
           let _dataset = getDataset();
 
-          
-          setJumlahPegawaiHadir(Object.values(keys.filter((f, i) => (new Date()).getDate() == i)[0].pegawai ?? {}).length ?? 0)
+          const pegawaiPath = snap
+            .child(new Date().getDate().toString())
+            .child("pegawai");
+          setJumlahPegawaiHadir(
+            pegawaiPath.exists() ? Object.keys(pegawaiPath.val()).length : 0
+          );
           const setDataset = (label, filter) => {
             _dataset = _dataset.map((e) =>
               e.label == label
@@ -256,7 +260,12 @@ export default function DashboardScreen() {
       }
     );
 
-    if (!datasetGraph.length || !currentMonth || !jumlahPegawai || !jumlahPegawaiHadir) {
+    if (
+      !datasetGraph.length ||
+      !currentMonth ||
+      !jumlahPegawai ||
+      !jumlahPegawaiHadir
+    ) {
       _refreshState(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
