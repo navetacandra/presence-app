@@ -1,4 +1,5 @@
-// ignore_for_file: unnecessary_overrides
+// ignore_for_file: unnecessary_overridesimport 'dart:io';
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
@@ -79,8 +80,10 @@ class HomeController extends GetxController {
 
   RxList currentMenu = [].obs;
 
+  
+
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     authController.streamCredential.listen(
       (User? user) {
@@ -91,7 +94,17 @@ class HomeController extends GetxController {
             if (!snap.exists) return;
             name.value = snap.child("name").value as String;
             role.value = (snap.child("role").value as int);
-            if (role.value == 0) currentMenu.value = allMenus["admin"]!;
+            if (role.value == 0) {
+              currentMenu.value = allMenus["admin"] ?? [];
+            } else if (role.value == 1) {
+              currentMenu.value = allMenus["moderator"] ?? [];
+            } else if (role.value == 2) {
+              currentMenu.value = allMenus["support"] ?? [];
+            } else if (role.value == 3) {
+              currentMenu.value = allMenus["user"] ?? [];
+            } else {
+              currentMenu.value = [];
+            }
           },
         );
       },

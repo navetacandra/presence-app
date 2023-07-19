@@ -10,6 +10,8 @@ import 'package:presence/app/data/colors.dart';
 import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';
 
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
