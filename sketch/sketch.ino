@@ -94,6 +94,31 @@ void setup() {
     server.send(200, "application/json", connected ? "{\"isConnected\": true}" : "{\"isConnected\": false}");
   });
 
+  if(connected) {
+    server.on("/reset-esp", []() {
+      server.send(200, "application/json", "{\"reset\": true}");
+      lcd.clear();
+      lcd.setCursor(3, 0);
+      lcd.print("RESET ESP");
+      delay(1000);
+      lcd.clear();
+      ESP.reset();
+    });
+
+    server.on("/delete-config", []() {
+      server.send(200, "application/json", "{\"delete\": true}");
+      lcd.clear();
+      lcd.setCursor(2, 0);
+      lcd.print("DELETE CONFIG");
+      writeFile(LittleFS, "/ssid.txt", String("").c_str());
+      writeFile(LittleFS, "/pass.txt", String("").c_str());
+      writeFile(LittleFS, "/apikey.txt", String("").c_str());
+      delay(1000);
+      lcd.clear();
+      ESP.reset();
+    });
+  }
+
   server.begin();
 }
 
@@ -101,9 +126,6 @@ void loop() {
   server.handleClient();
   if (connected) {
     if (!welcomeMessagePrinted && (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial())) {
-      // if (ESP.getFreeHeap() < 9000) {
-      // fbdo.clear();
-      // }
       Serial.println("Free Heap: " + String(ESP.getFreeHeap()));
       lcd.clear();
       lcd.setCursor(3, 0);
@@ -116,7 +138,7 @@ void loop() {
     }
 
     lcd.clear();
-    // BEEP(1, 200);
+    BEEP(1, 80);
     lcd.setCursor(2, 0);
     lcd.print("Memproses...");
     String content = "";
@@ -130,7 +152,8 @@ void loop() {
     Serial.println(content);
 
     httpRequest(content);
-    // BEEP(2, 100);
+    BEEP(2, 80);
+    delay(510);
 
     welcomeMessagePrinted = false;
     delay(250);
@@ -138,11 +161,14 @@ void loop() {
 }
 
 void BEEP(int count, int duration) {
-  for (int i = 0; i < count; i++) {
+  int i = 0;
+  for (i = 0; i < count; i++) {
     digitalWrite(buzzerPin, HIGH);
     delay(duration);
     digitalWrite(buzzerPin, LOW);
-    delay(duration);
+    if(i+1 < count) {
+      delay(duration);
+    }
   }
 }
 
@@ -283,5 +309,4 @@ void httpRequest(String tag) {
   }
   // Free resources
   http.end();
-  delay(1000);
 }
