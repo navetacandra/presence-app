@@ -77,115 +77,143 @@ class ProfileController extends GetxController {
       builder: (context) => AlertDialog(
         elevation: 3,
         content: SizedBox(
-          height: 250,
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  "Ganti Password",
-                  style: GoogleFonts.poppins(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
+          height: 350,
+          child: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  const SizedBox(
+                    height: 20,
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  height: 50,
-                  child: Obx(
-                    () => TextFormField(
-                      obscureText: showOldPass.isFalse,
-                      style: GoogleFonts.poppins(),
-                      onChanged: (value) => oldPass.value = value,
-                      decoration: InputDecoration(
-                        labelText: "Password Lama",
-                        border: const OutlineInputBorder(),
-                        suffixIcon: InkWell(
-                          onTap: () => showOldPass.value = showOldPass.isFalse,
-                          child: Icon(
-                            showOldPass.isTrue ? Icons.visibility : Icons.visibility_off,
-                          ),
-                        ),
-                      ),
+                  Text(
+                    "Ganti Password",
+                    style: GoogleFonts.poppins(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  height: 50,
-                  child: Obx(
-                    () => TextFormField(
-                      obscureText: showNewPass.isFalse,
-                      style: GoogleFonts.poppins(),
-                      onChanged: (value) => newPass.value = value,
-                      decoration: InputDecoration(
-                        labelText: "Password Baru",
-                        border: const OutlineInputBorder(),
-                        suffixIcon: InkWell(
-                          onTap: () => showNewPass.value = showNewPass.isFalse,
-                          child: Icon(
-                            showNewPass.isTrue ? Icons.visibility : Icons.visibility_off,
-                          ),
-                        ),
-                      ),
-                    ),
+                  const SizedBox(
+                    height: 50,
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Obx(
-                  () => InkWell(
-                    onTap: () => ((oldPass.value.length >= 6 && newPass.value.length >= 6) && (oldPass.value == authController.nestATOB(5, profileDetail["password"] as String)))
-                        ? changePassword(
-                            isLoading,
-                            oldPass.value,
-                            newPass.value,
-                          )
-                        : null,
-                    child: Container(
-                      height: 50,
-                      decoration: ((oldPass.value.length >= 6 && newPass.value.length >= 6) && (oldPass.value == authController.nestATOB(5, profileDetail["password"] as String)))
-                          ? BoxDecoration(
-                              gradient: mPrimaryGradientColor,
-                              borderRadius: BorderRadius.circular(10),
-                            )
-                          : BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.blue, width: 2),
+                  SizedBox(
+                    height: 50,
+                    child: Obx(
+                      () => TextFormField(
+                        obscureText: showOldPass.isFalse,
+                        style: GoogleFonts.poppins(),
+                        onChanged: (value) => oldPass.value = value,
+                        decoration: InputDecoration(
+                          labelText: "Password Lama",
+                          border: const OutlineInputBorder(),
+                          suffixIcon: InkWell(
+                            onTap: () =>
+                                showOldPass.value = showOldPass.isFalse,
+                            child: Icon(
+                              showOldPass.isTrue
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                             ),
-                      child: Center(
-                        child: isLoading.isFalse
-                            ? Obx(() {
-                                print(((oldPass.value.length >= 6 && newPass.value.length >= 6) && (oldPass.value == authController.nestATOB(5, profileDetail["password"] as String))));
-                                return Text(
-                                  "Ganti Password",
-                                  style: GoogleFonts.poppins(
-                                    color: ((oldPass.value.length >= 6 && newPass.value.length >= 6) && (oldPass.value == authController.nestATOB(5, profileDetail["password"] as String)))
-                                        ? Colors.white
-                                        : Colors.blue,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                );
-                              })
-                            : const Padding(
-                                padding: EdgeInsets.all(5),
-                                child: CircularProgressIndicator(
-                                  color: Color(0xFFFFFFFF),
-                                ),
-                              ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                )
-              ],
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  SizedBox(
+                    height: 50,
+                    child: Obx(
+                      () => TextFormField(
+                        obscureText: showNewPass.isFalse,
+                        style: GoogleFonts.poppins(),
+                        onChanged: (value) => newPass.value = value,
+                        decoration: InputDecoration(
+                          labelText: "Password Baru",
+                          border: const OutlineInputBorder(),
+                          suffixIcon: InkWell(
+                            onTap: () =>
+                                showNewPass.value = showNewPass.isFalse,
+                            child: Icon(
+                              showNewPass.isTrue
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Obx(
+                    () => InkWell(
+                      onTap: () => ((oldPass.value.length >= 6 &&
+                                  newPass.value.length >= 6) &&
+                              (oldPass.value ==
+                                  authController.nestATOB(
+                                      5, profileDetail["password"] as String)))
+                          ? changePassword(
+                              isLoading,
+                              oldPass.value,
+                              newPass.value,
+                            )
+                          : null,
+                      child: Container(
+                        height: 50,
+                        decoration: ((oldPass.value.length >= 6 &&
+                                    newPass.value.length >= 6) &&
+                                (oldPass.value ==
+                                    authController.nestATOB(5,
+                                        profileDetail["password"] as String)))
+                            ? BoxDecoration(
+                                gradient: mPrimaryGradientColor,
+                                borderRadius: BorderRadius.circular(10),
+                              )
+                            : BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(10),
+                                border:
+                                    Border.all(color: Colors.blue, width: 2),
+                              ),
+                        child: Center(
+                          child: isLoading.isFalse
+                              ? Obx(
+                                  () => Text(
+                                    "Ganti Password",
+                                    style: GoogleFonts.poppins(
+                                      color: ((oldPass.value.length >= 6 &&
+                                                  newPass.value.length >= 6) &&
+                                              (oldPass.value ==
+                                                  authController.nestATOB(
+                                                      5,
+                                                      profileDetail["password"]
+                                                          as String)))
+                                          ? Colors.white
+                                          : Colors.blue,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                )
+                              : const Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child: CircularProgressIndicator(
+                                    color: Color(0xFFFFFFFF),
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -200,8 +228,10 @@ class ProfileController extends GetxController {
   ) async {
     isLoad.value = true;
     try {
-      AuthCredential credential = EmailAuthProvider.credential(email: profileDetail["email"] as String, password: oldPassword);
-      await authController.mAuth.currentUser!.reauthenticateWithCredential(credential);
+      AuthCredential credential = EmailAuthProvider.credential(
+          email: profileDetail["email"] as String, password: oldPassword);
+      await authController.mAuth.currentUser!
+          .reauthenticateWithCredential(credential);
       await authController.mAuth.currentUser!.updatePassword(newPassword);
       await dbController.updates(
         "users/${authController.mAuth.currentUser!.uid}",
@@ -211,6 +241,7 @@ class ProfileController extends GetxController {
       );
       Get.back(closeOverlays: true);
     } on FirebaseAuthException catch (e) {
+      // ignore: avoid_print
       print(e);
     }
     isLoad.value = false;
@@ -218,8 +249,13 @@ class ProfileController extends GetxController {
 
   void updateProfile() async {
     if ((profileDetail["uid"] as String).isNotEmpty) {
-      final pgwData = await dbController.mDb.ref("pegawai").orderByChild("email").equalTo(profileDetail["email"]).get();
-      await dbController.updates("users/${profileDetail["uid"]}", {"name": nameText.value});
+      final pgwData = await dbController.mDb
+          .ref("pegawai")
+          .orderByChild("email")
+          .equalTo(profileDetail["email"])
+          .get();
+      await dbController
+          .updates("users/${profileDetail["uid"]}", {"name": nameText.value});
       if (pgwData.exists) {
         final pgwId = pgwData.children.first.child("id").value as String;
         await dbController.updates("pegawai/$pgwId", {"name": nameText.value});

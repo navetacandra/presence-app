@@ -64,6 +64,7 @@ class LocationController extends GetxController {
           if (!_isLocationInconsistent(pos)) {
             _checkLocation(pos, authController.mAuth.currentUser);
           } else {
+            // ignore: avoid_print
             print("Fake GPS!");
           }
         }
@@ -196,6 +197,7 @@ class LocationController extends GetxController {
         }
       }
     } catch (e) {
+      // ignore: avoid_print
       print(e);
     }
   }

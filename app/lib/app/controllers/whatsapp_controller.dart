@@ -56,7 +56,9 @@ class WhatsappController extends GetxController {
         final parsedData = jsonDecode(response.body);
         final base64 = parsedData["qrcode"].toString();
 
-        return base64.isEmpty ? null : base64.replaceFirst(RegExp(r'data:(.*);base64,'), "");
+        return base64.isEmpty
+            ? null
+            : base64.replaceFirst(RegExp(r'data:(.*);base64,'), "");
       }
     } catch (e) {
       return null;

@@ -17,14 +17,25 @@ class ProfileView extends GetView<ProfileController> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
           child: Center(
-            child: Card(
-              elevation: 1,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5),
+                boxShadow: const <BoxShadow>[
+                  BoxShadow(
+                    color: Colors.black38,
+                    blurRadius: 2,
+                    spreadRadius: 2,
+                    offset: Offset(1, 1),
+                  ),
+                ],
+              ),
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   vertical: 8,
                   horizontal: 8,
                 ),
-                width: Get.width * .8,
+                width: Get.width * .9,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,7 +62,8 @@ class ProfileView extends GetView<ProfileController> {
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(Get.width * .25),
+                                    borderRadius:
+                                        BorderRadius.circular(Get.width * .25),
                                     boxShadow: <BoxShadow>[
                                       BoxShadow(
                                         color: Colors.black87.withAlpha(20),
@@ -62,9 +74,11 @@ class ProfileView extends GetView<ProfileController> {
                                     ],
                                   ),
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(Get.width * .25),
+                                    borderRadius:
+                                        BorderRadius.circular(Get.width * .25),
                                     child: Image.network(
-                                      (selfC.profileDetail["photoURL"] as String),
+                                      (selfC.profileDetail["photoURL"]
+                                          as String),
                                       width: Get.width * .3,
                                       height: Get.width * .3,
                                     ),
@@ -77,19 +91,22 @@ class ProfileView extends GetView<ProfileController> {
                       height: 30,
                     ),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Nama: ",
-                          style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 40,
+                          child: Text(
+                            "Nama: ",
+                            style: GoogleFonts.poppins(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                         SizedBox(
-                          height: 30,
-                          width: Get.width * .8 * .6,
+                          height: 50,
+                          width: Get.width * .6,
                           child: TextField(
                             controller: selfC.nameContorller,
                             textAlign: TextAlign.start,
@@ -118,22 +135,22 @@ class ProfileView extends GetView<ProfileController> {
                       height: 20,
                     ),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Email: ",
-                          style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 40,
+                          child: Text(
+                            "Email: ",
+                            style: GoogleFonts.poppins(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
-                        const SizedBox(
-                          width: 8,
-                        ),
                         SizedBox(
-                          height: 30,
-                          width: Get.width * .8 * .6,
+                          height: 50,
+                          width: Get.width * .6,
                           child: TextField(
                             controller: selfC.emailContorller,
                             textAlign: TextAlign.start,
@@ -162,42 +179,73 @@ class ProfileView extends GetView<ProfileController> {
                       padding: const EdgeInsets.symmetric(
                         vertical: 10,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          ElevatedButton(
-                            onPressed: () => selfC.changePasswordForm(context),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Colors.red.shade600),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Ganti Password",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
+                          InkWell(
+                            onTap: () => selfC.changePasswordForm(context),
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              height: 50,
+                              width: Get.width * .75,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.red.shade700),
+                              child: Center(
+                                child: Text(
+                                  "Ganti Password",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                           Obx(
-                            () => ElevatedButton(
-                              onPressed: () => (selfC.nameText.value == (selfC.profileDetail["name"] as String) || selfC.nameText.isEmpty) ? null : selfC.updateProfile(),
-                              style: ElevatedButton.styleFrom(
-                                elevation: (selfC.nameText.value == (selfC.profileDetail["name"] as String) || selfC.nameText.isEmpty) ? 0 : 1,
-                                backgroundColor: (selfC.nameText.value == (selfC.profileDetail["name"] as String) || selfC.nameText.isEmpty) ? Colors.white : Colors.yellow.shade700,
-                                side: (selfC.nameText.value == (selfC.profileDetail["name"] as String) || selfC.nameText.isEmpty)
-                                    ? BorderSide(width: 1, color: Colors.yellow.shade700)
-                                    : const BorderSide(width: 0, color: Colors.transparent),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Edit Profile",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: (selfC.nameText.value == (selfC.profileDetail["name"] as String) || selfC.nameText.isEmpty) ? Colors.yellow.shade700 : Colors.white,
+                            () => InkWell(
+                              onTap: () => (selfC.nameText.value ==
+                                          (selfC.profileDetail["name"]
+                                              as String) ||
+                                      selfC.nameText.isEmpty)
+                                  ? null
+                                  : selfC.updateProfile(),
+                              child: Container(
+                                width: Get.width * .75,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: (selfC.nameText.value ==
+                                                (selfC.profileDetail["name"]
+                                                    as String) ||
+                                            selfC.nameText.isEmpty)
+                                        ? Colors.yellow.shade700
+                                        : Colors.transparent,
+                                    width: 2,
+                                  ),
+                                  color: (selfC.nameText.value ==
+                                              (selfC.profileDetail["name"]
+                                                  as String) ||
+                                          selfC.nameText.isEmpty)
+                                      ? Colors.transparent
+                                      : Colors.yellow.shade700,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Edit Profile",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: (selfC.nameText.value ==
+                                                  (selfC.profileDetail["name"]
+                                                      as String) ||
+                                              selfC.nameText.isEmpty)
+                                          ? Colors.yellow.shade700
+                                          : Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),

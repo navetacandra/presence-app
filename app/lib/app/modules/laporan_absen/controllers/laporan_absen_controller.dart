@@ -26,7 +26,8 @@ class LaporanAbsenController extends GetxController {
     "november",
     "desember",
   ];
-  int currentMonth = (DateTime.now().toUtc().add(const Duration(hours: 7))).month - 1;
+  int currentMonth =
+      (DateTime.now().toUtc().add(const Duration(hours: 7))).month - 1;
   RxBool isLoading = false.obs;
   RxList<Map> tgl = [{}].obs;
   RxString selectedMonth = "januari".obs;
@@ -103,9 +104,14 @@ class LaporanAbsenController extends GetxController {
     if (_permissionReady) {
       await _prepareSaveDir();
       try {
-        List tgls = tgl.where((val) => (val['active'] as bool) == true).toList().map((val) => val["key"]).toList();
+        List tgls = tgl
+            .where((val) => (val['active'] as bool) == true)
+            .toList()
+            .map((val) => val["key"])
+            .toList();
         tgls.sort((a, b) => (a).compareTo(b));
-        DateTime currentTime = DateTime.now().toUtc().add(const Duration(hours: 7));
+        DateTime currentTime =
+            DateTime.now().toUtc().add(const Duration(hours: 7));
         String filePath =
             "${_localPath}PresentData-${currentTime.day.toString()}-${currentTime.month.toString()}-${currentTime.year.toString()}-${currentTime.hour.toString()}${currentTime.minute.toString()}${currentTime.second.toString()}${currentTime.millisecond.toString()}.csv";
 

@@ -50,7 +50,7 @@ class KoneksiEspController extends GetxController {
     Get.snackbar(
       "ESP",
       "",
-      backgroundColor: Color.fromARGB(126, 17, 0, 150),
+      backgroundColor: const Color.fromARGB(126, 17, 0, 150),
       duration: const Duration(milliseconds: 1000),
       colorText: const Color.fromARGB(255, 255, 255, 255),
       messageText: Text(
@@ -71,7 +71,8 @@ class KoneksiEspController extends GetxController {
 
       try {
         final url = Uri.parse('http://$ip$targetPath');
-        final response = await http.get(url).timeout(const Duration(milliseconds: 150));
+        final response =
+            await http.get(url).timeout(const Duration(milliseconds: 150));
 
         if (response.statusCode == 200) {
           bool isEsp = jsonDecode(response.body)["isEsp"] as bool;
@@ -83,7 +84,10 @@ class KoneksiEspController extends GetxController {
             devices.removeAt(devices.indexOf(ip));
           }
         }
-      } catch (e) {}
+      } catch (e) {
+        // ignore: avoid_print
+        print(e);
+      }
     }
   }
 
@@ -92,7 +96,10 @@ class KoneksiEspController extends GetxController {
     final wifiInfo = await networkInfo.getWifiName();
     final wifiIP = await networkInfo.getWifiGatewayIP();
 
-    if (wifiInfo != null && wifiInfo.isNotEmpty && wifiIP != null && wifiIP.isNotEmpty) {
+    if (wifiInfo != null &&
+        wifiInfo.isNotEmpty &&
+        wifiIP != null &&
+        wifiIP.isNotEmpty) {
       return wifiIP;
     }
 
@@ -102,8 +109,11 @@ class KoneksiEspController extends GetxController {
   void resetEsp(String ip) async {
     Get.back();
     try {
-      final response = await http.get(Uri.parse("http://$ip/reset-esp")).timeout(const Duration(milliseconds: 500));
+      final response = await http
+          .get(Uri.parse("http://$ip/reset-esp"))
+          .timeout(const Duration(milliseconds: 500));
       if (response.statusCode == 200) {
+        devices.removeAt(devices.indexOf(ip));
         Get.snackbar(
           "ESP",
           "",
@@ -149,16 +159,17 @@ class KoneksiEspController extends GetxController {
           ),
         ),
       );
-    } finally {
-      await discoverDevices();
     }
   }
 
   void deleteConfigEsp(String ip) async {
     Get.back();
     try {
-      final response = await http.get(Uri.parse("http://$ip/delete-config")).timeout(const Duration(milliseconds: 500));
+      final response = await http
+          .get(Uri.parse("http://$ip/delete-config"))
+          .timeout(const Duration(milliseconds: 500));
       if (response.statusCode == 200) {
+        devices.removeAt(devices.indexOf(ip));
         Get.snackbar(
           "ESP",
           "",
@@ -204,8 +215,6 @@ class KoneksiEspController extends GetxController {
           ),
         ),
       );
-    } finally {
-      await discoverDevices();
     }
   }
 
@@ -346,7 +355,8 @@ class KoneksiEspController extends GetxController {
     isLoading.value = true;
     if (formField.currentState!.validate()) {
       try {
-        http.Response submitData = await http.get(Uri.parse("http://192.168.250.250/connect?ssid=${ssid.text}&password=${pass.text}&apikey=${apikey.text}"));
+        http.Response submitData = await http.get(Uri.parse(
+            "http://192.168.250.250/connect?ssid=${ssid.text}&password=${pass.text}&apikey=${apikey.text}"));
         if (jsonDecode(submitData.body)['status'] == 'sent') {
           Get.snackbar(
             "Data Terkirim",
