@@ -1,7 +1,11 @@
-import { get, onValue, ref, remove } from "firebase/database";
+import { get, onValue, ref } from "firebase/database";
 import { useEffect, useState } from "react";
-import { Modal } from "bootstrap";
 import { db } from "../../../firebase";
+import DeleteModal from "./Components/DaftarPegawai/Modal/DeleteModal";
+import DetailModal from "./Components/DaftarPegawai/Modal/DetailModal";
+import EditModal from "./Components/DaftarPegawai/Modal/EditModal";
+import AddPegawai from "./Components/DaftarPegawai/AddPegawai";
+import ImportPegawai from "./Components/DaftarPegawai/ImportPegawai";
 
 export default function DaftarPegawaiScreen() {
   const [listLength, setListLength] = useState(10);
@@ -14,8 +18,9 @@ export default function DaftarPegawaiScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [_refresh, _triggerRefresh] = useState(true);
   const [currentMonth, setCurrentMonth] = useState("");
-  const [detailId, setDetailId] = useState("");
+  const [editId, setEditId] = useState("");
   const [deleteId, setDeleteId] = useState("");
+  const [detailId, setDetailId] = useState("");
 
   const sortName = (n1, n2) => {
     if (n1.toLowerCase() < n2.toLowerCase()) return -1;
@@ -86,13 +91,6 @@ export default function DaftarPegawaiScreen() {
                   )
                 );
 
-                console.log(
-                  `absensi/${
-                    currentMonth.length ? currentMonth : cm
-                  }/${dy}/pegawai/${e.id} =>`,
-                  _d.val()
-                );
-
                 if (_d.exists()) {
                   return { tanggal: dy, ..._d.val() };
                 } else {
@@ -106,7 +104,7 @@ export default function DaftarPegawaiScreen() {
           ),
         }))
       );
-      // console.log(list.sort((a, b) => ));
+
       setAllPegawaiData(list);
     });
 
@@ -191,187 +189,40 @@ export default function DaftarPegawaiScreen() {
 
   useEffect(() => {
     document
+      .querySelector("#editModal")
+      .addEventListener("hidden.bs.modal", () => {
+        setEditId("");
+      });
+    document
       .querySelector("#detailModal")
       .addEventListener("hidden.bs.modal", () => {
         setDetailId("");
-      });
-    document
-      .querySelector("#deleteModal")
-      .addEventListener("hidden.bs.modal", () => {
-        setDeleteId("");
-        _triggerRefresh(true);
       });
   }, []);
 
   return (
     <>
-      {/* Delete Modal */}
-      <div
-        className="modal fade"
-        id="deleteModal"
-        tabIndex="-1"
-        aria-labelledby="deleteModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="deleteModalLabel">
-                Delete
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              {deleteId.length &&
-              allPegawaiData.filter((f) => f.id == deleteId).length ? (
-                <>
-                  <ul className="list-group">
-                    <li className="list-group-item border-0">
-                      <b>ID: </b>{" "}
-                      {allPegawaiData.filter((f) => f.id == deleteId)[0].id}
-                    </li>
-                    <li className="list-group-item border-0">
-                      <b>Nama: </b>{" "}
-                      {allPegawaiData.filter((f) => f.id == deleteId)[0].name}
-                    </li>
-                    <li className="list-group-item border-0">
-                      <b>Email: </b>{" "}
-                      {allPegawaiData.filter((f) => f.id == deleteId)[0].email}
-                    </li>
-                    <li className="list-group-item border-0">
-                      <b>ID Card: </b>{" "}
-                      {allPegawaiData.filter((f) => f.id == deleteId)[0].card}
-                    </li>
-                    <li className="list-group-item border-0">
-                      <b>WhatsApp Pegawai: </b>{" "}
-                      {
-                        allPegawaiData.filter((f) => f.id == deleteId)[0]
-                          .telPegawai
-                      }
-                    </li>
-                    <li className="list-group-item border-0">
-                      <b>WhatsApp Atasan: </b>{" "}
-                      {
-                        allPegawaiData.filter((f) => f.id == deleteId)[0]
-                          .telAtasan
-                      }
-                    </li>
-                    <li className="list-group-item border-0">
-                      <b>WhatsApp Penanggung Jawab: </b>{" "}
-                      {
-                        allPegawaiData.filter((f) => f.id == deleteId)[0]
-                          .telPenanggungJawab
-                      }
-                    </li>
-                  </ul>
-                </>
-              ) : null}
-            </div>
-            {deleteId.length &&
-            allPegawaiData.filter((f) => f.id == deleteId).length ? (
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={async () => {
-                    await remove(ref(db, `/pegawai/${deleteId}`));
-                    document
-                      .querySelector('#deleteModal [data-bs-dismiss="modal"]')
-                      .click();
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            ) : null}
-          </div>
-        </div>
-      </div>
-
-      {/* Detail Modal */}
-      <div
-        className="modal fade"
-        id="detailModal"
-        tabIndex="-1"
-        aria-labelledby="detailModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="detailModalLabel">
-                Detail
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              {detailId.length &&
-              allPegawaiData.filter((f) => f.id == detailId).length ? (
-                <>
-                  <ul className="list-group">
-                    <li className="list-group-item border-0">
-                      <b>ID: </b>{" "}
-                      {allPegawaiData.filter((f) => f.id == detailId)[0].id}
-                    </li>
-                    <li className="list-group-item border-0">
-                      <b>Nama: </b>{" "}
-                      {allPegawaiData.filter((f) => f.id == detailId)[0].name}
-                    </li>
-                    <li className="list-group-item border-0">
-                      <b>Email: </b>{" "}
-                      {allPegawaiData.filter((f) => f.id == detailId)[0].email}
-                    </li>
-                    <li className="list-group-item border-0">
-                      <b>ID Card: </b>{" "}
-                      {allPegawaiData.filter((f) => f.id == detailId)[0].card}
-                    </li>
-                    <li className="list-group-item border-0">
-                      <b>WhatsApp Pegawai: </b>{" "}
-                      {
-                        allPegawaiData.filter((f) => f.id == detailId)[0]
-                          .telPegawai
-                      }
-                    </li>
-                    <li className="list-group-item border-0">
-                      <b>WhatsApp Atasan: </b>{" "}
-                      {
-                        allPegawaiData.filter((f) => f.id == detailId)[0]
-                          .telAtasan
-                      }
-                    </li>
-                    <li className="list-group-item border-0">
-                      <b>WhatsApp Penanggung Jawab: </b>{" "}
-                      {
-                        allPegawaiData.filter((f) => f.id == detailId)[0]
-                          .telPenanggungJawab
-                      }
-                    </li>
-                  </ul>
-                </>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      </div>
+      <EditModal
+        editId={editId}
+        setEditId={setEditId}
+        allPegawaiData={allPegawaiData}
+        triggerRefresh={_triggerRefresh}
+        refresh={_refresh}
+      />
+      <DeleteModal
+        deleteId={deleteId}
+        setDeleteId={setDeleteId}
+        allPegawaiData={allPegawaiData}
+        triggerRefresh={_triggerRefresh}
+        refresh={_refresh}
+      />
+      <DetailModal detailId={detailId} allPegawaiData={allPegawaiData} />
 
       <div className="container d-flex justify-content-start flex-column mt-5">
+        <ImportPegawai allPegawaiData={allPegawaiData} triggerRefresh={_triggerRefresh} />
+        <AddPegawai triggerRefresh={_triggerRefresh} />
+
+        {/* Daftar Pegawai */}
         <section id="daftar-all-0" className="list-pgw-prnt">
           <h4
             className="d-flex align-items-center"
@@ -407,7 +258,7 @@ export default function DaftarPegawaiScreen() {
               <div className="d-flex flex-column my-auto">
                 <div className="d-flex justify-content-end">
                   <label htmlFor="sort-order" className="fs-5 me-3">
-                    Urutkan Berdasarkan:{" "}
+                    Urutkan Berdasarkan:
                   </label>
                   <div>
                     <select
@@ -427,7 +278,7 @@ export default function DaftarPegawaiScreen() {
                 </div>
                 <div className="d-flex justify-content-end my-auto">
                   <label htmlFor="sort-order" className="fs-5 me-3">
-                    Tampilkan {listLength} Data:{" "}
+                    Tampilkan {listLength} Data:
                   </label>
                   <div>
                     <div className="input-group mb-3">
@@ -560,7 +411,12 @@ export default function DaftarPegawaiScreen() {
                           }
                         </td>
                         <td className="text-center">
-                          <i className="bi bi-pencil-square text-warning fs-5 table-icon"></i>
+                          <i
+                            className="bi bi-pencil-square text-warning fs-5 table-icon"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editModal"
+                            onClick={() => setEditId(el.id)}
+                          ></i>
                         </td>
                         <td className="text-center">
                           <i

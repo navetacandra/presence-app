@@ -3,8 +3,7 @@ import SideNav from "./SideNav";
 import DashboardScreen from "./Admin/Dashboard";
 import WhatsAppScreen from "./Admin/WhatsApp";
 import DaftarPegawaiScreen from "./Admin/DaftarPegawai";
-import { auth, db, getUserData } from "../../firebase";
-import { onValue, ref } from "firebase/database";
+import { getUserData } from "../../firebase";
 import ProfileScreen from "./Profile";
 
 export default function Dashboard() {
@@ -16,13 +15,13 @@ export default function Dashboard() {
     const checkIsOnline = setInterval(() => {
       setIsOnline(window.navigator.onLine);
       if (isOnline) {
-        fetch("https://www.example.com", { method: "HEAD", mode: "no-cors" })
-          .then(() => {
-            setIsOnline(true);
-          })
-          .catch(() => {
-            setIsOnline(false);
-          });
+        // fetch("https://www.example.com", { method: "HEAD", mode: "no-cors" })
+        //   .then(() => {
+        //     setIsOnline(true);
+        //   })
+        //   .catch(() => {
+        //     setIsOnline(false);
+        //   });
       }
     }, 100);
 

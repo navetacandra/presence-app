@@ -12,6 +12,14 @@ export default function SideNav({ activeItem, setActiveItem, sideNavMenu }) {
       setProfile(getUserData(ev.credential));
     });
 
+    document
+      .querySelector(".offcanvas")
+      .addEventListener("hidden.bs.collapse", () => {
+        document.querySelectorAll(".offcanvas-backdrop").forEach((el) => {
+          el.remove();
+        });
+      });
+
     return () => {
       window.removeEventListener("credential", (ev) => {
         setProfile(getUserData(ev.credential));

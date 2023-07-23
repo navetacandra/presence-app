@@ -78,6 +78,8 @@
 
 .list-length-input[type=number] {
   -moz-appearance: textfield;
+  -webkit-appearance: textfield;
+  appearance: textfield;
 }
 
 @keyframes rotate-90 {
