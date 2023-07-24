@@ -98,7 +98,9 @@ export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
               }
             }
           } else if (fileExtension == "csv") {
-            const rows = fileData.split("\n").filter(f => f.length > 0 && f.split(',').length >= 7);
+            const rows = fileData
+              .split("\n")
+              .filter((f) => f.length > 0 && f.split(",").length >= 7);
 
             const keys = rows.shift().split(",");
             const allowKeys = [
@@ -147,9 +149,27 @@ export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
                 return tempData;
               });
               let dataAsOBJ = {};
-              data.forEach(({id, card, nama, email, telPegawai, telAtasan, telPenanggungJawab}) => {
-                dataAsOBJ[id] = {id, card, email, telPegawai, telAtasan, telPenanggungJawab, name: nama};
-              })
+              data.forEach(
+                ({
+                  id,
+                  card,
+                  nama,
+                  email,
+                  telPegawai,
+                  telAtasan,
+                  telPenanggungJawab,
+                }) => {
+                  dataAsOBJ[id] = {
+                    id,
+                    card,
+                    email,
+                    telPegawai,
+                    telAtasan,
+                    telPenanggungJawab,
+                    name: nama,
+                  };
+                }
+              );
               try {
                 await update(ref(db, `/pegawai`), dataAsOBJ);
                 triggerRefresh();
@@ -195,8 +215,18 @@ export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
         className="a-content mx-auto d-flex justify-content-around"
         style={
           open
-            ? { opacity: "1", height: "auto", transition: "all .3s" }
-            : { opacity: "0", height: "0", transition: "all .3s" }
+            ? {
+                visibility: "visible",
+                opacity: "1",
+                height: "auto",
+                transition: "all .3s",
+              }
+            : {
+                visibility: "hidden",
+                opacity: "0",
+                height: "0",
+                transition: "all .3s",
+              }
         }
       >
         <ExportPegawai allPegawaiData={allPegawaiData} />

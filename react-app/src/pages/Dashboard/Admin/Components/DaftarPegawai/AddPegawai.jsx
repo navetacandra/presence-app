@@ -4,7 +4,7 @@ import { get, ref, update } from "firebase/database";
 import { useState } from "react";
 import { db } from "../../../../../firebase";
 
-export default function AddPegawai({triggerRefresh}) {
+export default function AddPegawai({ triggerRefresh }) {
   const [open, setOpen] = useState(false);
   const [load, setLoad] = useState(false);
   const [name, setName] = useState("");
@@ -126,8 +126,18 @@ export default function AddPegawai({triggerRefresh}) {
         className="a-content col-8 mx-auto"
         style={
           open
-            ? { opacity: "1", height: "auto", transition: "all .3s" }
-            : { opacity: "0", height: "0", transition: "all .3s" }
+            ? {
+                visibility: "visible",
+                opacity: "1",
+                height: "auto",
+                transition: "all .3s",
+              }
+            : {
+                visibility: "hidden",
+                opacity: "0",
+                height: "0",
+                transition: "all .3s",
+              }
         }
       >
         <div className="card shadow">
@@ -219,5 +229,5 @@ export default function AddPegawai({triggerRefresh}) {
 }
 
 AddPegawai.propTypes = {
-  triggerRefresh: PropTypes.func
-}
+  triggerRefresh: PropTypes.func,
+};
