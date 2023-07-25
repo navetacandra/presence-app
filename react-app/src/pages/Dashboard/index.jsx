@@ -6,6 +6,7 @@ import DaftarPegawaiScreen from "./Admin/DaftarPegawai";
 import { getUserData } from "../../firebase";
 import ProfileScreen from "./Profile";
 import LaporanAbsen from "./Admin/LaporanAbsen";
+import JadwalAbsen from "./Admin/JadwalAbsen";
 
 export default function Dashboard() {
   const [activeItem, setActiveItem] = useState(0);
@@ -67,7 +68,7 @@ export default function Dashboard() {
       {
         icon: "bi bi-calendar-week",
         title: "Jadwal Absensi",
-        element: null,
+        element: <JadwalAbsen />,
       },
       {
         icon: "bi bi-whatsapp",

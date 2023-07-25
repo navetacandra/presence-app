@@ -40,7 +40,6 @@ export default function LaporanAbsen() {
         return resultArray;
       }, []);
     setDates(chunkOfDates);
-    console.log(chunkOfDates);
   }, [month]);
 
   async function download() {
