@@ -160,8 +160,8 @@ export default function DashboardScreen() {
   ]);
   const [datasetGraph, setDatasetGraph] = useState([]);
   const [currentMonth, setCurrentMonth] = useState("");
-  const [jumlahPegawai, setJumlahPegawai] = useState(0);
-  const [jumlahPegawaiHadir, setJumlahPegawaiHadir] = useState(0);
+  const [jumlahSiswa, setJumlahSiswa] = useState(0);
+  const [jumlahSiswaHadir, setJumlahSiswaHadir] = useState(0);
   const [_refresh, _refreshState] = useState(true);
 
   useEffect(() => {
@@ -191,9 +191,9 @@ export default function DashboardScreen() {
   }, []);
 
   useEffect(() => {
-    // Get Pegawai Length
-    onValue(ref(db, "pegawai"), (snap) =>
-      setJumlahPegawai(snap.exists() ? Object.values(snap.val()).length : 0)
+    // Get Siswa Length
+    onValue(ref(db, "siswa"), (snap) =>
+      setJumlahSiswa(snap.exists() ? Object.values(snap.val()).length : 0)
     );
 
     if (!currentMonth) {
@@ -224,11 +224,11 @@ export default function DashboardScreen() {
           const keys = Object.values(snap.val());
           let _dataset = getDataset();
 
-          const pegawaiPath = snap
+          const siswaPath = snap
             .child(new Date().getDate().toString())
-            .child("pegawai");
-          setJumlahPegawaiHadir(
-            pegawaiPath.exists() ? Object.keys(pegawaiPath.val()).length : 0
+            .child("siswa");
+          setJumlahSiswaHadir(
+            siswaPath.exists() ? Object.keys(siswaPath.val()).length : 0
           );
           const setDataset = (label, filter) => {
             _dataset = _dataset.map((e) =>
@@ -239,7 +239,7 @@ export default function DashboardScreen() {
                       (_, tgl) =>
                         (
                           Object.values(
-                            Object.values(snap.val())[tgl]?.pegawai ?? {}
+                            Object.values(snap.val())[tgl]?.siswa ?? {}
                           )?.filter((f) =>
                             filter.split("|").includes(f.status)
                           ) ?? []
@@ -263,13 +263,13 @@ export default function DashboardScreen() {
     if (
       !datasetGraph.length ||
       !currentMonth ||
-      !jumlahPegawai ||
-      !jumlahPegawaiHadir
+      !jumlahSiswa ||
+      !jumlahSiswaHadir
     ) {
       _refreshState(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentMonth, _refresh, jumlahPegawai, jumlahPegawaiHadir]);
+  }, [currentMonth, _refresh, jumlahSiswa, jumlahSiswaHadir]);
 
   ChartJS.register(
     CategoryScale,
@@ -284,23 +284,23 @@ export default function DashboardScreen() {
   return (
     <div className="container mt-5">
       <div className="d-flex flex-wrap justify-content-center mb-5 pb-5">
-        <div className="card shadow" id="jumlah-pegawai-terdaftar-card">
-          <div className="card-body" id="jumlah-pegawai-terdaftar-card-content">
+        <div className="card shadow" id="jumlah-siswa-terdaftar-card">
+          <div className="card-body" id="jumlah-siswa-terdaftar-card-content">
             <div className="d-flex align-items-center mb-2">
               <i className="bi bi-people-fill me-2 fs-5 my-auto"></i>
-              <span className="fs-5 fw-normal">Pegawai Terdaftar</span>
+              <span className="fs-5 fw-normal">Siswa Terdaftar</span>
             </div>
-            <div className="text-center fs-5 fw-bolder">{jumlahPegawai}</div>
+            <div className="text-center fs-5 fw-bolder">{jumlahSiswa}</div>
           </div>
         </div>
-        <div className="card shadow" id="jumlah-pegawai-hadir-card">
-          <div className="card-body" id="jumlah-pegawai-hadir-card-content">
+        <div className="card shadow" id="jumlah-siswa-hadir-card">
+          <div className="card-body" id="jumlah-siswa-hadir-card-content">
             <div className="d-flex align-items-center mb-2">
               <i className="bi bi-people-fill me-2 fs-5 my-auto"></i>
-              <span className="fs-5 fw-normal">Pegawai Hadir</span>
+              <span className="fs-5 fw-normal">Siswa Hadir</span>
             </div>
             <div className="text-center fs-5 fw-bolder">
-              {jumlahPegawaiHadir}
+              {jumlahSiswaHadir}
             </div>
           </div>
         </div>

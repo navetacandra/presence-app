@@ -20,13 +20,13 @@ class HomeController extends GetxController {
       [
         {
           "image": "assets/users.png",
-          "label": "Daftar Pegawai",
-          "navigation": Routes.DAFTAR_PEGAWAI,
+          "label": "Daftar Siswa",
+          "navigation": Routes.DAFTAR_SISWA,
         },
         {
           "image": "assets/user-plus.png",
-          "label": "Tambah Pegawai",
-          "navigation": Routes.TAMBAH_PEGAWAI,
+          "label": "Tambah Siswa",
+          "navigation": Routes.TAMBAH_SISWA,
         },
         {
           "image": "assets/card-plus.png",
@@ -117,7 +117,7 @@ class HomeController extends GetxController {
     while (true) {
       date.value = (DateTime.now().toUtc().add(const Duration(hours: 7))).day.toString();
       month.value = months[(DateTime.now().toUtc().add(const Duration(hours: 7))).month - 1];
-      DataSnapshot snap = await dbController.gets("/absensi/${month.value}/${date.value}/pegawai");
+      DataSnapshot snap = await dbController.gets("/absensi/${month.value}/${date.value}/siswa");
       if (!snap.exists) {
         present.value = 0;
       } else {

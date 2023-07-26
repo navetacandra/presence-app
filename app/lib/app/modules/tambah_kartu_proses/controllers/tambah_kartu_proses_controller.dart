@@ -23,16 +23,16 @@ class TambahKartuProsesController extends GetxController {
     TextEditingController(),
   ];
   List<String> textFieldName = [
-    "Telpon pegawai",
-    "Telpon atasan",
-    "Telpon PJ",
+    "WhatsApp siswa",
+    "WhatsApp wali kelas",
+    "WhatsApp wali murid",
   ];
   RxList validationErrors = ["", "", ""].obs;
   RxBool isLoading = false.obs;
   final RxString _method = "".obs;
   final RxString _cardId = "".obs;
-  RxList pegawai = [].obs;
-  final selectedPegawai = <String, String>{}.obs;
+  RxList siswa = [].obs;
+  final selectedSiswa = <String, String>{}.obs;
 
   String get method => _method.value;
   String get cardId => _cardId.value;
@@ -43,19 +43,19 @@ class TambahKartuProsesController extends GetxController {
     _method.value = Get.arguments["method"];
     _cardId.value = Get.arguments["id"];
 
-    dbC.stream("pegawai").listen(
+    dbC.stream("siswa").listen(
       (DatabaseEvent e) {
         DataSnapshot snapshot = e.snapshot;
         for (var ch in snapshot.children) {
           if (!ch.child("card").exists || ch.child("card").value == "") {
-            pegawai.add(
+            siswa.add(
               {
                 "id": ch.child("id").value as String,
                 "name": ch.child("name").value as String,
                 "email": ch.child("email").value as String,
-                "telPegawai": ch.child("telPegawai").value as String,
-                "telAtasan": ch.child("telAtasan").value as String,
-                "telPJ": ch.child("telPenanggungJawab").value as String,
+                "telSiswa": ch.child("telSiswa").value as String,
+                "telWaliKelas": ch.child("telWaliKelas").value as String,
+                "telWM": ch.child("telWaliMurid").value as String,
               },
             );
           }
@@ -87,12 +87,12 @@ class TambahKartuProsesController extends GetxController {
   }
 
   void changeSelection(dynamic value) {
-    selectedPegawai.value = value;
+    selectedSiswa.value = value;
     nameController.text = value["name"];
     emailController.text = value["email"];
-    textFieldControllers[0].text = value["telPegawai"];
-    textFieldControllers[1].text = value["telAtasan"];
-    textFieldControllers[2].text = value["telPJ"];
+    textFieldControllers[0].text = value["telSiswa"];
+    textFieldControllers[1].text = value["telWaliKelas"];
+    textFieldControllers[2].text = value["telWM"];
   }
 
   String? validateName(String? nameValue) {
@@ -149,15 +149,15 @@ class TambahKartuProsesController extends GetxController {
         String id = const Uuid().v4().replaceAll(RegExp(r'-'), "");
         try {
           await dbC.updates(
-            "pegawai/$id",
+            "siswa/$id",
             {
               "id": id,
               "card": cardId,
               "name": nameController.text,
               "email": emailController.text,
-              "telPegawai": textFieldControllers[0].text,
-              "telAtasan": textFieldControllers[1].text,
-              "telPenanggungJawab": textFieldControllers[2].text,
+              "telSiswa": textFieldControllers[0].text,
+              "telWaliKelas": textFieldControllers[1].text,
+              "telWaliMurid": textFieldControllers[2].text,
             },
           );
           nameController.clear();
@@ -172,7 +172,7 @@ class TambahKartuProsesController extends GetxController {
               snackPosition: SnackPosition.BOTTOM,
               snackStyle: SnackStyle.FLOATING,
               messageText: Text(
-                "Berhasil menambahkan pegawai!",
+                "Berhasil menambahkan siswa!",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
                   color: Colors.white,
@@ -193,7 +193,7 @@ class TambahKartuProsesController extends GetxController {
               snackPosition: SnackPosition.BOTTOM,
               snackStyle: SnackStyle.FLOATING,
               messageText: Text(
-                "Gagal menambahkan pegawai!",
+                "Gagal menambahkan siswa!",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
                   color: Colors.white,
@@ -208,7 +208,7 @@ class TambahKartuProsesController extends GetxController {
       } else {
         try {
           // ignore: invalid_use_of_protected_member
-          if (selectedPegawai.value["id"] == null) {
+          if (selectedSiswa.value["id"] == null) {
             Get.showSnackbar(
               GetSnackBar(
                 backgroundColor: const Color.fromRGBO(255, 0, 0, .8),
@@ -216,7 +216,7 @@ class TambahKartuProsesController extends GetxController {
                 snackPosition: SnackPosition.BOTTOM,
                 snackStyle: SnackStyle.FLOATING,
                 messageText: Text(
-                  "Pegawai belum dipilih!",
+                  "Siswa belum dipilih!",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.roboto(
                     color: Colors.white,
@@ -227,40 +227,40 @@ class TambahKartuProsesController extends GetxController {
                 borderRadius: Get.width * .025,
               ),
             );
-            return;
-          }
-          await dbC.updates(
-            // ignore: invalid_use_of_protected_member
-            "pegawai/${selectedPegawai.value["id"]}",
-            {
-              "card": cardId,
-            },
-          );
-          nameController.clear();
-          emailController.clear();
-          for (var i = 0; i < textFieldControllers.length; i++) {
-            textFieldControllers[i].clear();
-          }
-          Get.showSnackbar(
-            GetSnackBar(
-              backgroundColor: const Color.fromRGBO(0, 150, 0, .5),
-              duration: const Duration(milliseconds: 1500),
-              snackPosition: SnackPosition.BOTTOM,
-              snackStyle: SnackStyle.FLOATING,
-              messageText: Text(
-                "Berhasil mengubah pegawai!",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.roboto(
-                  color: Colors.white,
-                  fontSize: Get.width * .05,
-                  fontWeight: FontWeight.w400,
+          } else {
+            await dbC.updates(
+              // ignore: invalid_use_of_protected_member
+              "siswa/${selectedSiswa.value["id"]}",
+              {
+                "card": cardId,
+              },
+            );
+            nameController.clear();
+            emailController.clear();
+            for (var i = 0; i < textFieldControllers.length; i++) {
+              textFieldControllers[i].clear();
+            }
+            Get.showSnackbar(
+              GetSnackBar(
+                backgroundColor: const Color.fromRGBO(0, 150, 0, .5),
+                duration: const Duration(milliseconds: 1500),
+                snackPosition: SnackPosition.BOTTOM,
+                snackStyle: SnackStyle.FLOATING,
+                messageText: Text(
+                  "Berhasil mengubah siswa!",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.roboto(
+                    color: Colors.white,
+                    fontSize: Get.width * .05,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
+                borderRadius: Get.width * .025,
               ),
-              borderRadius: Get.width * .025,
-            ),
-          );
-          await dbC.remove("cards/$cardId");
-          Get.offAllNamed(Routes.HOME);
+            );
+            await dbC.remove("cards/$cardId");
+            Get.offAllNamed(Routes.HOME);
+          }
         } catch (e) {
           Get.showSnackbar(
             GetSnackBar(
@@ -269,7 +269,7 @@ class TambahKartuProsesController extends GetxController {
               snackPosition: SnackPosition.BOTTOM,
               snackStyle: SnackStyle.FLOATING,
               messageText: Text(
-                "Gagal mengubah pegawai!",
+                "Gagal mengubah siswa!",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
                   color: Colors.white,

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { db } from "../../../../../../firebase";
 import { useEffect } from "react";
 
-export default function EditModal({ editId, setEditId, allPegawaiData, triggerRefresh, refresh }) {
+export default function EditModal({ editId, setEditId, allSiswaData, triggerRefresh, refresh }) {
   useEffect(() => {
     document
       .querySelector("#editModal")
@@ -36,12 +36,12 @@ export default function EditModal({ editId, setEditId, allPegawaiData, triggerRe
           </div>
           <div className="modal-body">
             {editId.length &&
-            allPegawaiData.filter((f) => f.id == editId).length ? (
+            allSiswaData.filter((f) => f.id == editId).length ? (
               <>
                 <ul className="list-group" id="editForm">
                   <li className="list-group-item border-0">
                     <b className="me-3">ID: </b>
-                    {allPegawaiData.filter((f) => f.id == editId)[0].id}
+                    {allSiswaData.filter((f) => f.id == editId)[0].id}
                   </li>
                   <li className="list-group-item border-0 d-flex align-items-center">
                     <label htmlFor="nama" className="fw-bold">
@@ -52,7 +52,7 @@ export default function EditModal({ editId, setEditId, allPegawaiData, triggerRe
                       id="nama"
                       className="form-control ms-3"
                       defaultValue={
-                        allPegawaiData.filter((f) => f.id == editId)[0].name
+                        allSiswaData.filter((f) => f.id == editId)[0].name
                       }
                     />
                   </li>
@@ -65,53 +65,53 @@ export default function EditModal({ editId, setEditId, allPegawaiData, triggerRe
                       id="email"
                       className="form-control ms-3"
                       defaultValue={
-                        allPegawaiData.filter((f) => f.id == editId)[0].email
+                        allSiswaData.filter((f) => f.id == editId)[0].email
                       }
                     />
                   </li>
                   <li className="list-group-item border-0 d-flex align-items-center">
                     <b className="me-3">ID Card: </b>
-                    {allPegawaiData.filter((f) => f.id == editId)[0].card}
+                    {allSiswaData.filter((f) => f.id == editId)[0].card}
                   </li>
                   <li className="list-group-item border-0 d-flex align-items-center">
-                    <label htmlFor="telPegawai" className="fw-bold">
+                    <label htmlFor="telSiswa" className="fw-bold">
                       WhatsApp:
                     </label>
                     <input
                       type="tel"
-                      id="telPegawai"
+                      id="telSiswa"
                       className="form-control ms-3"
                       defaultValue={
-                        allPegawaiData.filter((f) => f.id == editId)[0]
-                          .telPegawai
+                        allSiswaData.filter((f) => f.id == editId)[0]
+                          .telSiswa
                       }
                     />
                   </li>
                   <li className="list-group-item border-0 d-flex align-items-center">
-                    <label htmlFor="telAtasan" className="fw-bold">
-                      WhatsApp Atasan:
+                    <label htmlFor="telWaliKelas" className="fw-bold">
+                      WhatsApp Wali Kelas:
                     </label>
                     <input
                       type="tel"
-                      id="telAtasan"
+                      id="telWaliKelas"
                       className="form-control ms-3"
                       defaultValue={
-                        allPegawaiData.filter((f) => f.id == editId)[0]
-                          .telAtasan
+                        allSiswaData.filter((f) => f.id == editId)[0]
+                          .telWaliKelas
                       }
                     />
                   </li>
                   <li className="list-group-item border-0 d-flex align-items-center">
-                    <label htmlFor="telPenanggungJawab" className="fw-bold">
+                    <label htmlFor="telWaliMurid" className="fw-bold">
                       WhatsApp PJ:
                     </label>
                     <input
                       type="tel"
-                      id="telPenanggungJawab"
+                      id="telWaliMurid"
                       className="form-control ms-3"
                       defaultValue={
-                        allPegawaiData.filter((f) => f.id == editId)[0]
-                          .telPenanggungJawab
+                        allSiswaData.filter((f) => f.id == editId)[0]
+                          .telWaliMurid
                       }
                     />
                   </li>
@@ -120,7 +120,7 @@ export default function EditModal({ editId, setEditId, allPegawaiData, triggerRe
             ) : null}
           </div>
           {editId.length &&
-          allPegawaiData.filter((f) => f.id == editId).length ? (
+          allSiswaData.filter((f) => f.id == editId).length ? (
             <div className="modal-footer">
               <button
                 type="button"
@@ -152,19 +152,19 @@ export default function EditModal({ editId, setEditId, allPegawaiData, triggerRe
                   const email = document
                     .querySelector("#editModal input#email")
                     .value.trim();
-                  const telPegawai = document
-                    .querySelector("#editModal input#telPegawai")
+                  const telSiswa = document
+                    .querySelector("#editModal input#telSiswa")
                     .value.trim();
-                  const telAtasan = document
-                    .querySelector("#editModal input#telAtasan")
+                  const telWaliKelas = document
+                    .querySelector("#editModal input#telWaliKelas")
                     .value.trim();
-                  const telPenanggungJawab = document
-                    .querySelector("#editModal input#telPenanggungJawab")
+                  const telWaliMurid = document
+                    .querySelector("#editModal input#telWaliMurid")
                     .value.trim();
-                  const _validTelPegawai = await validPhone(telPegawai);
-                  const _validTelAtasan = await validPhone(telAtasan);
-                  const _validTelPenanggungJawab = await validPhone(
-                    telPenanggungJawab
+                  const _validTelSiswa = await validPhone(telSiswa);
+                  const _validTelWaliKelas = await validPhone(telWaliKelas);
+                  const _validTelWaliMurid = await validPhone(
+                    telWaliMurid
                   );
 
                   if (name.length < 1) return alert("Nama wajib di-isi!");
@@ -178,56 +178,56 @@ export default function EditModal({ editId, setEditId, allPegawaiData, triggerRe
                     !email.endsWith("gmail.com")
                   )
                     return alert("Email harus beralamat gmail.com!");
-                  else if (telPegawai.length < 1)
-                    return alert("WhatsApp pegawai wajib di-isi!");
-                  else if (telPegawai.length >= 1 && _validTelPegawai == 500)
-                    return alert("Gagal mengecek nomor WhatsApp pegawai!");
-                  else if (telPegawai.length >= 1 && _validTelPegawai == 400)
-                    return alert("Gagal mengecek nomor WhatsApp pegawai!");
-                  else if (telPegawai.length >= 1 && _validTelPegawai == 404)
-                    return alert("Nomor WhatsApp pegawai tidak terdaftar!");
-                  else if (telAtasan.length < 1)
+                  else if (telSiswa.length < 1)
+                    return alert("WhatsApp siswa wajib di-isi!");
+                  else if (telSiswa.length >= 1 && _validTelSiswa == 500)
+                    return alert("Gagal mengecek nomor WhatsApp siswa!");
+                  else if (telSiswa.length >= 1 && _validTelSiswa == 400)
+                    return alert("Gagal mengecek nomor WhatsApp siswa!");
+                  else if (telSiswa.length >= 1 && _validTelSiswa == 404)
+                    return alert("Nomor WhatsApp siswa tidak terdaftar!");
+                  else if (telWaliKelas.length < 1)
                     return alert("WhatsApp atasan wajib di-isi!");
-                  else if (telAtasan.length >= 1 && _validTelAtasan == 500)
+                  else if (telWaliKelas.length >= 1 && _validTelWaliKelas == 500)
                     return alert("Gagal mengecek nomor WhatsApp atasan!");
-                  else if (telAtasan.length >= 1 && _validTelAtasan == 400)
+                  else if (telWaliKelas.length >= 1 && _validTelWaliKelas == 400)
                     return alert("Gagal mengecek nomor WhatsApp atasan!");
-                  else if (telAtasan.length >= 1 && _validTelAtasan == 404)
+                  else if (telWaliKelas.length >= 1 && _validTelWaliKelas == 404)
                     return alert("Nomor WhatsApp atasan tidak terdaftar!");
-                  else if (telPenanggungJawab.length < 1)
+                  else if (telWaliMurid.length < 1)
                     return alert("WhatsApp PJ wajib di-isi!");
                   else if (
-                    telPenanggungJawab.length >= 1 &&
-                    _validTelPenanggungJawab == 500
+                    telWaliMurid.length >= 1 &&
+                    _validTelWaliMurid == 500
                   )
                     return alert("Gagal mengecek nomor WhatsApp PJ!");
                   else if (
-                    telPenanggungJawab.length >= 1 &&
-                    _validTelPenanggungJawab == 400
+                    telWaliMurid.length >= 1 &&
+                    _validTelWaliMurid == 400
                   )
                     return alert("Gagal mengecek nomor WhatsApp PJ!");
                   else if (
-                    telPenanggungJawab.length >= 1 &&
-                    _validTelPenanggungJawab == 404
+                    telWaliMurid.length >= 1 &&
+                    _validTelWaliMurid == 404
                   )
                     return alert("Nomor WhatsApp PJ tidak terdaftar!");
                   else {
                     try {
-                      await update(ref(db, `pegawai/${editId}`), {
+                      await update(ref(db, `siswa/${editId}`), {
                         name,
                         email,
-                        telPegawai,
-                        telAtasan,
-                        telPenanggungJawab,
+                        telSiswa,
+                        telWaliKelas,
+                        telWaliMurid,
                       });
                       document
                         .querySelector(`#editModal [data-bs-dismiss="modal"]`)
                         .click();
-                      alert("Data pegawai berhasil di-update!");
+                      alert("Data siswa berhasil di-update!");
                       triggerRefresh(true);
                     } catch (err) {
                       console.log(err);
-                      alert("Terjadi kesalahan saat update data pegawai!");
+                      alert("Terjadi kesalahan saat update data siswa!");
                     }
                   }
                 }}
@@ -245,7 +245,7 @@ export default function EditModal({ editId, setEditId, allPegawaiData, triggerRe
 EditModal.propTypes = {
   editId: PropTypes.string.isRequired,
   setEditId: PropTypes.func,
-  allPegawaiData: PropTypes.array.isRequired,
+  allSiswaData: PropTypes.array.isRequired,
   triggerRefresh: PropTypes.func,
   refresh: PropTypes.bool
 };

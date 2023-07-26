@@ -1,5 +1,3 @@
-const { readdirSync, unlinkSync } = require("fs");
-const { resolve, join } = require("path");
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const Qrcode = require("qrcode");
 const qrt = require("qrcode-terminal");

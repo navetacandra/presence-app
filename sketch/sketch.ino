@@ -138,7 +138,7 @@ void loop() {
     }
 
     lcd.clear();
-    BEEP(1, 80);
+    // BEEP(1, 80);
     lcd.setCursor(2, 0);
     lcd.print("Memproses...");
     String content = "";
@@ -152,11 +152,10 @@ void loop() {
     Serial.println(content);
 
     httpRequest(content);
-    BEEP(2, 80);
-    delay(510);
+    // BEEP(2, 80);
 
     welcomeMessagePrinted = false;
-    delay(250);
+    delay(760);
   }
 }
 

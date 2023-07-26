@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import SideNav from "./SideNav";
 import DashboardScreen from "./Admin/Dashboard";
 import WhatsAppScreen from "./Admin/WhatsApp";
-import DaftarPegawaiScreen from "./Admin/DaftarPegawai";
+import DaftarSiswaScreen from "./Admin/DaftarSiswa";
 import { getUserData } from "../../firebase";
 import ProfileScreen from "./Profile";
 import LaporanAbsen from "./Admin/LaporanAbsen";
@@ -57,8 +57,8 @@ export default function Dashboard() {
       },
       {
         icon: "bi bi-people-fill",
-        title: "Daftar Pegawai",
-        element: <DaftarPegawaiScreen />,
+        title: "Daftar Siswa",
+        element: <DaftarSiswaScreen />,
       },
       {
         icon: "bi bi-journal-text",

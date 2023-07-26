@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-export default function DetailModal({ detailId, allPegawaiData }) {
+export default function DetailModal({ detailId, allSiswaData }) {
   return (
     <div
       className="modal fade"
@@ -24,44 +24,44 @@ export default function DetailModal({ detailId, allPegawaiData }) {
           </div>
           <div className="modal-body">
             {detailId.length &&
-            allPegawaiData.filter((f) => f.id == detailId).length ? (
+            allSiswaData.filter((f) => f.id == detailId).length ? (
               <>
                 <ul className="list-group">
                   <li className="list-group-item border-0">
                     <b>ID: </b>{" "}
-                    {allPegawaiData.filter((f) => f.id == detailId)[0].id}
+                    {allSiswaData.filter((f) => f.id == detailId)[0].id}
                   </li>
                   <li className="list-group-item border-0">
                     <b>Nama: </b>{" "}
-                    {allPegawaiData.filter((f) => f.id == detailId)[0].name}
+                    {allSiswaData.filter((f) => f.id == detailId)[0].name}
                   </li>
                   <li className="list-group-item border-0">
                     <b>Email: </b>{" "}
-                    {allPegawaiData.filter((f) => f.id == detailId)[0].email}
+                    {allSiswaData.filter((f) => f.id == detailId)[0].email}
                   </li>
                   <li className="list-group-item border-0">
                     <b>ID Card: </b>{" "}
-                    {allPegawaiData.filter((f) => f.id == detailId)[0].card}
+                    {allSiswaData.filter((f) => f.id == detailId)[0].card}
                   </li>
                   <li className="list-group-item border-0">
-                    <b>WhatsApp Pegawai: </b>{" "}
+                    <b>WhatsApp Siswa: </b>{" "}
                     {
-                      allPegawaiData.filter((f) => f.id == detailId)[0]
-                        .telPegawai
+                      allSiswaData.filter((f) => f.id == detailId)[0]
+                        .telSiswa
                     }
                   </li>
                   <li className="list-group-item border-0">
-                    <b>WhatsApp Atasan: </b>{" "}
+                    <b>WhatsApp Wali Kelas: </b>{" "}
                     {
-                      allPegawaiData.filter((f) => f.id == detailId)[0]
-                        .telAtasan
+                      allSiswaData.filter((f) => f.id == detailId)[0]
+                        .telWaliKelas
                     }
                   </li>
                   <li className="list-group-item border-0">
-                    <b>WhatsApp Penanggung Jawab: </b>{" "}
+                    <b>WhatsApp Wali Murid: </b>{" "}
                     {
-                      allPegawaiData.filter((f) => f.id == detailId)[0]
-                        .telPenanggungJawab
+                      allSiswaData.filter((f) => f.id == detailId)[0]
+                        .telWaliMurid
                     }
                   </li>
                 </ul>
@@ -76,5 +76,5 @@ export default function DetailModal({ detailId, allPegawaiData }) {
 
 DetailModal.propTypes = {
   detailId: PropTypes.string.isRequired,
-  allPegawaiData: PropTypes.array.isRequired,
+  allSiswaData: PropTypes.array.isRequired,
 };

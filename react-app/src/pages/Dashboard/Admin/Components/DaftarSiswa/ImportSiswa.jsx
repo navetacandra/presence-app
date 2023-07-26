@@ -1,10 +1,10 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import ExportPegawai from "./ExportPegawai";
+import ExportSiswa from "./ExportSiswa";
 import { ref, update } from "firebase/database";
 import { db } from "../../../../../firebase";
 
-export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
+export default function ImportSiswa({ allSiswaData, triggerRefresh }) {
   const [open, setOpen] = useState(false);
   const [load, setLoad] = useState(false);
 
@@ -31,9 +31,9 @@ export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
                 id,
                 name,
                 email,
-                telPegawai,
-                telAtasan,
-                telPenanggungJawab,
+                telSiswa,
+                telWaliKelas,
+                telWaliMurid,
                 card,
               }) => {
                 if (typeof id == "undefined" || id == null || id.length < 1) {
@@ -51,21 +51,21 @@ export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
                 ) {
                   return false;
                 } else if (
-                  typeof telPegawai == "undefined" ||
-                  telPegawai == null ||
-                  telPegawai.length < 1
+                  typeof telSiswa == "undefined" ||
+                  telSiswa == null ||
+                  telSiswa.length < 1
                 ) {
                   return false;
                 } else if (
-                  typeof telAtasan == "undefined" ||
-                  telAtasan == null ||
-                  telAtasan.length < 1
+                  typeof telWaliKelas == "undefined" ||
+                  telWaliKelas == null ||
+                  telWaliKelas.length < 1
                 ) {
                   return false;
                 } else if (
-                  typeof telPenanggungJawab == "undefined" ||
-                  telPenanggungJawab == null ||
-                  telPenanggungJawab.length < 1
+                  typeof telWaliMurid == "undefined" ||
+                  telWaliMurid == null ||
+                  telWaliMurid.length < 1
                 ) {
                   return false;
                 } else {
@@ -73,9 +73,9 @@ export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
                     id,
                     name,
                     email,
-                    telPegawai,
-                    telAtasan,
-                    telPenanggungJawab,
+                    telSiswa,
+                    telWaliKelas,
+                    telWaliMurid,
                     card: card ?? "",
                   };
                 }
@@ -90,7 +90,7 @@ export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
                 dataAsOBJ[el.id] = el;
               });
               try {
-                await update(ref(db, `/pegawai`), dataAsOBJ);
+                await update(ref(db, `/siswa`), dataAsOBJ);
                 triggerRefresh();
                 alert("Data berhasil di-import!");
               } catch (err) {
@@ -109,12 +109,12 @@ export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
               "card",
               "nama",
               "email",
-              "tel pegawai",
-              "whatsapp pegawai",
-              "tel atasan",
-              "whatsapp atasan",
-              "tel penanggung jawab",
-              "whatsapp penanggung jawab",
+              "tel siswa",
+              "whatsapp siswa",
+              "tel wali kelas",
+              "whatsapp wali kelas",
+              "tel wali murid",
+              "whatsapp wali murid",
             ];
 
             const invalidKeys =
@@ -134,14 +134,14 @@ export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
                   let key = keys[i].toLowerCase();
                   if (allowKeys.includes(key)) {
                     if (key == "id card") key = "card";
-                    if (key == "tel pegawai") key = "telPegawai";
-                    if (key == "whatsapp pegawai") key = "telPegawai";
-                    if (key == "tel atasan") key = "telAtasan";
-                    if (key == "whatsapp atasan") key = "telAtasan";
-                    if (key == "tel penanggung jawab")
-                      key = "telPenanggungJawab";
-                    if (key == "whatsapp penanggung jawab")
-                      key = "telPenanggungJawab";
+                    if (key == "tel siswa") key = "telSiswa";
+                    if (key == "whatsapp siswa") key = "telSiswa";
+                    if (key == "tel wali kelas") key = "telWaliKelas";
+                    if (key == "whatsapp wali kelas") key = "telWaliKelas";
+                    if (key == "tel wali murid")
+                      key = "telWaliMurid";
+                    if (key == "whatsapp wali murid")
+                      key = "telWaliMurid";
                     // eslint-disable-next-line no-useless-escape
                     tempData[key] = e.replace(/\"/g, "");
                   }
@@ -155,23 +155,23 @@ export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
                   card,
                   nama,
                   email,
-                  telPegawai,
-                  telAtasan,
-                  telPenanggungJawab,
+                  telSiswa,
+                  telWaliKelas,
+                  telWaliMurid,
                 }) => {
                   dataAsOBJ[id] = {
                     id,
                     card,
                     email,
-                    telPegawai,
-                    telAtasan,
-                    telPenanggungJawab,
+                    telSiswa,
+                    telWaliKelas,
+                    telWaliMurid,
                     name: nama,
                   };
                 }
               );
               try {
-                await update(ref(db, `/pegawai`), dataAsOBJ);
+                await update(ref(db, `/siswa`), dataAsOBJ);
                 triggerRefresh();
                 alert("Data berhasil di-import!");
               } catch (err) {
@@ -200,9 +200,9 @@ export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
         onClick={() => setOpen(!open)}
         style={{ cursor: "pointer" }}
       >
-        Import/Export Pegawai
+        Import/Export Siswa
         <i
-          className="ms-2 fs-6 bi bi-caret-right-fill my-auto add-pgw-caret"
+          className="ms-2 fs-6 bi bi-caret-right-fill my-auto add-ssw-caret"
           onClick={() => setOpen(!open)}
           style={
             open
@@ -229,11 +229,11 @@ export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
               }
         }
       >
-        <ExportPegawai allPegawaiData={allPegawaiData} />
+        <ExportSiswa allSiswaData={allSiswaData} />
         <div className="col-6">
           <div className="card shadow">
             <div className="card-body">
-              <h5 className="text-center">Import Pegawai</h5>
+              <h5 className="text-center">Import Siswa</h5>
               <input
                 className="form-control"
                 type="file"
@@ -265,7 +265,7 @@ export default function ImportPegawai({ allPegawaiData, triggerRefresh }) {
   );
 }
 
-ImportPegawai.propTypes = {
-  allPegawaiData: PropTypes.array,
+ImportSiswa.propTypes = {
+  allSiswaData: PropTypes.array,
   triggerRefresh: PropTypes.func,
 };

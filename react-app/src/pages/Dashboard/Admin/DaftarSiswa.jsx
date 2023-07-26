@@ -1,19 +1,19 @@
 import { get, onValue, ref } from "firebase/database";
 import { useEffect, useState } from "react";
 import { db } from "../../../firebase";
-import DeleteModal from "./Components/DaftarPegawai/Modal/DeleteModal";
-import DetailModal from "./Components/DaftarPegawai/Modal/DetailModal";
-import EditModal from "./Components/DaftarPegawai/Modal/EditModal";
-import AddPegawai from "./Components/DaftarPegawai/AddPegawai";
-import ImportPegawai from "./Components/DaftarPegawai/ImportPegawai";
+import DeleteModal from "./Components/DaftarSiswa/Modal/DeleteModal";
+import DetailModal from "./Components/DaftarSiswa/Modal/DetailModal";
+import EditModal from "./Components/DaftarSiswa/Modal/EditModal";
+import AddSiswa from "./Components/DaftarSiswa/AddSiswa";
+import ImportSiswa from "./Components/DaftarSiswa/ImportSiswa";
 
-export default function DaftarPegawaiScreen() {
+export default function DaftarSiswaScreen() {
   const [listLength, setListLength] = useState(10);
   const [maxPaginate, setMaxPaginate] = useState(0);
   const [paginateMenu, setPaginateMenu] = useState([]);
   const [paginate, setPaginate] = useState(1);
-  const [allPegawaiData, setAllPegawaiData] = useState([]);
-  const [pegawaisData, setPegawaisData] = useState([]);
+  const [allSiswaData, setAllSiswaData] = useState([]);
+  const [siswasData, setSiswasData] = useState([]);
   const [sortLogic, setSortLogic] = useState("nama");
   const [searchQuery, setSearchQuery] = useState("");
   const [_refresh, _triggerRefresh] = useState(true);
@@ -54,8 +54,8 @@ export default function DaftarPegawaiScreen() {
   }, []);
 
   useEffect(() => {
-    onValue(ref(db, `pegawai`), async (snap) => {
-      if (!snap.exists()) setAllPegawaiData([]);
+    onValue(ref(db, `siswa`), async (snap) => {
+      if (!snap.exists()) setAllSiswaData([]);
       const _p = Object.values(snap.val());
       let cm;
       if (!currentMonth.length) {
@@ -87,7 +87,7 @@ export default function DaftarPegawaiScreen() {
                     db,
                     `absensi/${
                       currentMonth.length ? currentMonth : cm
-                    }/${dy}/pegawai/${e.id}`
+                    }/${dy}/siswa/${e.id}`
                   )
                 );
 
@@ -105,17 +105,17 @@ export default function DaftarPegawaiScreen() {
         }))
       );
 
-      setAllPegawaiData(list);
+      setAllSiswaData(list);
     });
 
-    if (!allPegawaiData.length) {
+    if (!allSiswaData.length) {
       _triggerRefresh(!_refresh);
     }
-  }, [currentMonth, _refresh, allPegawaiData.length]);
+  }, [currentMonth, _refresh, allSiswaData.length]);
 
   useEffect(() => {
-    setPegawaisData(
-      allPegawaiData
+    setSiswasData(
+      allSiswaData
         .filter((f) => f.name.toLowerCase().includes(searchQuery.toLowerCase()))
         .sort((a, b) =>
           sortLogic == "nama"
@@ -141,10 +141,10 @@ export default function DaftarPegawaiScreen() {
         )
         .slice(listLength * (paginate - 1), listLength * paginate)
     );
-    // console.log(pegawaisData);
+    // console.log(siswasData);
 
     let _maxPaginate = Math.ceil(
-      allPegawaiData.filter((f) =>
+      allSiswaData.filter((f) =>
         f.name.toLowerCase().includes(searchQuery.toLowerCase())
       ).length / listLength
     );
@@ -205,25 +205,25 @@ export default function DaftarPegawaiScreen() {
       <EditModal
         editId={editId}
         setEditId={setEditId}
-        allPegawaiData={allPegawaiData}
+        allSiswaData={allSiswaData}
         triggerRefresh={_triggerRefresh}
         refresh={_refresh}
       />
       <DeleteModal
         deleteId={deleteId}
         setDeleteId={setDeleteId}
-        allPegawaiData={allPegawaiData}
+        allSiswaData={allSiswaData}
         triggerRefresh={_triggerRefresh}
         refresh={_refresh}
       />
-      <DetailModal detailId={detailId} allPegawaiData={allPegawaiData} />
+      <DetailModal detailId={detailId} allSiswaData={allSiswaData} />
 
       <div className="container d-flex justify-content-start flex-column mt-5">
-        <ImportPegawai allPegawaiData={allPegawaiData} triggerRefresh={_triggerRefresh} />
-        <AddPegawai triggerRefresh={_triggerRefresh} />
+        <ImportSiswa allSiswaData={allSiswaData} triggerRefresh={_triggerRefresh} />
+        <AddSiswa triggerRefresh={_triggerRefresh} />
 
-        {/* Daftar Pegawai */}
-        <section id="daftar-all-0" className="list-pgw-prnt">
+        {/* Daftar Siswa */}
+        <section id="daftar-all-0" className="list-ssw-prnt">
           <h4
             className="d-flex align-items-center"
             onClick={(el) =>
@@ -234,7 +234,7 @@ export default function DaftarPegawaiScreen() {
                 : el.target.parentElement.classList.toggle("show-table")
             }
           >
-            Daftar Pegawai
+            Daftar Siswa
             <i className="ms-2 fs-6 bi bi-caret-right-fill my-auto"></i>
           </h4>
           <div className="l-content">
@@ -297,7 +297,7 @@ export default function DaftarPegawaiScreen() {
                         type="number"
                         min="1"
                         max={
-                          allPegawaiData.filter((f) =>
+                          allSiswaData.filter((f) =>
                             f.name
                               .toLowerCase()
                               .includes(searchQuery.toLowerCase())
@@ -311,19 +311,19 @@ export default function DaftarPegawaiScreen() {
                             setListLength(1);
                           } else if (
                             e.target.value >
-                            allPegawaiData.filter((f) =>
+                            allSiswaData.filter((f) =>
                               f.name
                                 .toLowerCase()
                                 .includes(searchQuery.toLowerCase())
                             ).length
                           ) {
-                            e.target.value = allPegawaiData.filter((f) =>
+                            e.target.value = allSiswaData.filter((f) =>
                               f.name
                                 .toLowerCase()
                                 .includes(searchQuery.toLowerCase())
                             ).length;
                             setListLength(
-                              allPegawaiData.filter((f) =>
+                              allSiswaData.filter((f) =>
                                 f.name
                                   .toLowerCase()
                                   .includes(searchQuery.toLowerCase())
@@ -340,7 +340,7 @@ export default function DaftarPegawaiScreen() {
                         type="button"
                         onClick={() =>
                           listLength + 1 >
-                          allPegawaiData.filter((f) =>
+                          allSiswaData.filter((f) =>
                             f.name
                               .toLowerCase()
                               .includes(searchQuery.toLowerCase())
@@ -375,7 +375,7 @@ export default function DaftarPegawaiScreen() {
                   </tr>
                 </thead>
                 <tbody>
-                  {pegawaisData
+                  {siswasData
                     .filter(
                       (f) =>
                         f.name
@@ -390,7 +390,7 @@ export default function DaftarPegawaiScreen() {
                         <th scope="row">{i + 1}</th>
                         <td>{el.name}</td>
                         <td>{el.email}</td>
-                        <td>{el.telPegawai}</td>
+                        <td>{el.telSiswa}</td>
                         <td>
                           {el.absensi.filter((f) => f.status == "tepat").length}
                         </td>

@@ -1,6 +1,5 @@
 // ignore_for_file: unnecessary_overrides
 import 'dart:convert';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -70,18 +69,19 @@ class KoneksiEspController extends GetxController {
       final String ip = '${localIP.substring(0, localIP.lastIndexOf('.'))}.$i';
 
       try {
-        final url = Uri.parse('http://$ip$targetPath');
-        final response =
-            await http.get(url).timeout(const Duration(milliseconds: 150));
+        if (stream) {
+          final url = Uri.parse('http://$ip$targetPath');
+          final response = await http.get(url).timeout(const Duration(milliseconds: 150));
 
-        if (response.statusCode == 200) {
-          bool isEsp = jsonDecode(response.body)["isEsp"] as bool;
-          if (isEsp && !devices.contains(ip)) {
-            devices.add(ip);
-          }
+          if (response.statusCode == 200) {
+            bool isEsp = jsonDecode(response.body)["isEsp"] as bool;
+            if (isEsp && !devices.contains(ip)) {
+              devices.add(ip);
+            }
 
-          if (!isEsp && devices.contains(ip)) {
-            devices.removeAt(devices.indexOf(ip));
+            if (!isEsp && devices.contains(ip)) {
+              devices.removeAt(devices.indexOf(ip));
+            }
           }
         }
       } catch (e) {
@@ -96,10 +96,7 @@ class KoneksiEspController extends GetxController {
     final wifiInfo = await networkInfo.getWifiName();
     final wifiIP = await networkInfo.getWifiGatewayIP();
 
-    if (wifiInfo != null &&
-        wifiInfo.isNotEmpty &&
-        wifiIP != null &&
-        wifiIP.isNotEmpty) {
+    if (wifiInfo != null && wifiInfo.isNotEmpty && wifiIP != null && wifiIP.isNotEmpty) {
       return wifiIP;
     }
 
@@ -109,9 +106,7 @@ class KoneksiEspController extends GetxController {
   void resetEsp(String ip) async {
     Get.back();
     try {
-      final response = await http
-          .get(Uri.parse("http://$ip/reset-esp"))
-          .timeout(const Duration(milliseconds: 500));
+      final response = await http.get(Uri.parse("http://$ip/reset-esp")).timeout(const Duration(milliseconds: 500));
       if (response.statusCode == 200) {
         devices.removeAt(devices.indexOf(ip));
         Get.snackbar(
@@ -165,9 +160,7 @@ class KoneksiEspController extends GetxController {
   void deleteConfigEsp(String ip) async {
     Get.back();
     try {
-      final response = await http
-          .get(Uri.parse("http://$ip/delete-config"))
-          .timeout(const Duration(milliseconds: 500));
+      final response = await http.get(Uri.parse("http://$ip/delete-config")).timeout(const Duration(milliseconds: 500));
       if (response.statusCode == 200) {
         devices.removeAt(devices.indexOf(ip));
         Get.snackbar(
@@ -218,12 +211,6 @@ class KoneksiEspController extends GetxController {
     }
   }
 
-  String? validateEmail(String? emailValue) {
-    if (emailValue!.isEmpty) return "Auth Email wajib di-isi!";
-    if (!EmailValidator.validate(emailValue)) return "Auth Email tidak valid!";
-    return null;
-  }
-
   void streamGatewayESP() async {
     while (stream) {
       if (messageCounter > 2) {
@@ -243,7 +230,7 @@ class KoneksiEspController extends GetxController {
         isEsp.value = false;
         update();
         if (devices.isEmpty) {
-          if (!messageShown) {
+          if (!messageShown && stream) {
             Get.snackbar(
               "Terjadi Kesalahan",
               "",
@@ -292,7 +279,7 @@ class KoneksiEspController extends GetxController {
                 setted = true;
               }
             } catch (e) {
-              if (!messageShown) {
+              if (!messageShown && stream) {
                 Get.snackbar(
                   "Terjadi Kesalahan",
                   "",
@@ -310,7 +297,7 @@ class KoneksiEspController extends GetxController {
               }
             }
           } else {
-            if (!messageShown) {
+            if (!messageShown && stream) {
               Get.snackbar(
                 "Terjadi Kesalahan",
                 "",
@@ -328,7 +315,7 @@ class KoneksiEspController extends GetxController {
             }
           }
         } catch (e) {
-          if (!messageShown) {
+          if (!messageShown && stream) {
             Get.snackbar(
               "Terjadi Kesalahan",
               "",
@@ -355,8 +342,7 @@ class KoneksiEspController extends GetxController {
     isLoading.value = true;
     if (formField.currentState!.validate()) {
       try {
-        http.Response submitData = await http.get(Uri.parse(
-            "http://192.168.250.250/connect?ssid=${ssid.text}&password=${pass.text}&apikey=${apikey.text}"));
+        http.Response submitData = await http.get(Uri.parse("http://192.168.250.250/connect?ssid=${ssid.text}&password=${pass.text}&apikey=${apikey.text}"));
         if (jsonDecode(submitData.body)['status'] == 'sent') {
           Get.snackbar(
             "Data Terkirim",

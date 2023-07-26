@@ -144,7 +144,7 @@ class HomeView extends GetView<HomeController> {
                                         width: Get.width * .2,
                                         alignment: Alignment.topRight,
                                         child: Text(
-                                          "Pegawai Terdaftar",
+                                          "Siswa Terdaftar",
                                           style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
                                           textAlign: TextAlign.end,
                                           softWrap: true,
@@ -154,7 +154,7 @@ class HomeView extends GetView<HomeController> {
                                     ],
                                   ),
                                   StreamBuilder<DatabaseEvent>(
-                                    stream: dbC.stream("pegawai"),
+                                    stream: dbC.stream("siswa"),
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState == ConnectionState.active && snapshot.data!.snapshot.exists) {}
                                       return Container(
@@ -195,7 +195,7 @@ class HomeView extends GetView<HomeController> {
                                         width: Get.width * .2,
                                         alignment: Alignment.topRight,
                                         child: Text(
-                                          "Pegawai Hadir",
+                                          "Siswa Hadir",
                                           style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
                                           textAlign: TextAlign.end,
                                           softWrap: true,

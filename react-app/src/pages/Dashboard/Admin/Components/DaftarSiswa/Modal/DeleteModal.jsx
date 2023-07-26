@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { db } from "../../../../../../firebase";
 import { useEffect } from "react";
 
-export default function DeleteModal({ deleteId, setDeleteId, allPegawaiData, triggerRefresh, refresh }) {
+export default function DeleteModal({ deleteId, setDeleteId, allSiswaData, triggerRefresh, refresh }) {
   useEffect(() => {
     document
       .querySelector("#deleteModal")
@@ -37,44 +37,44 @@ export default function DeleteModal({ deleteId, setDeleteId, allPegawaiData, tri
           </div>
           <div className="modal-body">
             {deleteId.length &&
-            allPegawaiData.filter((f) => f.id == deleteId).length ? (
+            allSiswaData.filter((f) => f.id == deleteId).length ? (
               <>
                 <ul className="list-group">
                   <li className="list-group-item border-0">
                     <b>ID: </b>{" "}
-                    {allPegawaiData.filter((f) => f.id == deleteId)[0].id}
+                    {allSiswaData.filter((f) => f.id == deleteId)[0].id}
                   </li>
                   <li className="list-group-item border-0">
                     <b>Nama: </b>{" "}
-                    {allPegawaiData.filter((f) => f.id == deleteId)[0].name}
+                    {allSiswaData.filter((f) => f.id == deleteId)[0].name}
                   </li>
                   <li className="list-group-item border-0">
                     <b>Email: </b>{" "}
-                    {allPegawaiData.filter((f) => f.id == deleteId)[0].email}
+                    {allSiswaData.filter((f) => f.id == deleteId)[0].email}
                   </li>
                   <li className="list-group-item border-0">
                     <b>ID Card: </b>{" "}
-                    {allPegawaiData.filter((f) => f.id == deleteId)[0].card}
+                    {allSiswaData.filter((f) => f.id == deleteId)[0].card}
                   </li>
                   <li className="list-group-item border-0">
-                    <b>WhatsApp Pegawai: </b>{" "}
+                    <b>WhatsApp Siswa: </b>{" "}
                     {
-                      allPegawaiData.filter((f) => f.id == deleteId)[0]
-                        .telPegawai
+                      allSiswaData.filter((f) => f.id == deleteId)[0]
+                        .telSiswa
                     }
                   </li>
                   <li className="list-group-item border-0">
-                    <b>WhatsApp Atasan: </b>{" "}
+                    <b>WhatsApp Wali Kelas: </b>{" "}
                     {
-                      allPegawaiData.filter((f) => f.id == deleteId)[0]
-                        .telAtasan
+                      allSiswaData.filter((f) => f.id == deleteId)[0]
+                        .telWaliKelas
                     }
                   </li>
                   <li className="list-group-item border-0">
-                    <b>WhatsApp Penanggung Jawab: </b>{" "}
+                    <b>WhatsApp Wali Murid: </b>{" "}
                     {
-                      allPegawaiData.filter((f) => f.id == deleteId)[0]
-                        .telPenanggungJawab
+                      allSiswaData.filter((f) => f.id == deleteId)[0]
+                        .telWaliMurid
                     }
                   </li>
                 </ul>
@@ -82,7 +82,7 @@ export default function DeleteModal({ deleteId, setDeleteId, allPegawaiData, tri
             ) : null}
           </div>
           {deleteId.length &&
-          allPegawaiData.filter((f) => f.id == deleteId).length ? (
+          allSiswaData.filter((f) => f.id == deleteId).length ? (
             <div className="modal-footer">
               <button
                 type="button"
@@ -95,7 +95,7 @@ export default function DeleteModal({ deleteId, setDeleteId, allPegawaiData, tri
                 type="button"
                 className="btn btn-danger"
                 onClick={async () => {
-                  await remove(ref(db, `/pegawai/${deleteId}`));
+                  await remove(ref(db, `/siswa/${deleteId}`));
                   document
                     .querySelector('#deleteModal [data-bs-dismiss="modal"]')
                     .click();
@@ -115,7 +115,7 @@ export default function DeleteModal({ deleteId, setDeleteId, allPegawaiData, tri
 DeleteModal.propTypes = {
   deleteId: PropTypes.string.isRequired,
   setDeleteId: PropTypes.func,
-  allPegawaiData: PropTypes.array.isRequired,
+  allSiswaData: PropTypes.array.isRequired,
   triggerRefresh: PropTypes.func,
   refresh: PropTypes.bool
 };

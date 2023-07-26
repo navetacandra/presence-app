@@ -36,7 +36,7 @@ Array(31)
   .fill(0)
   .map((_, i) => {
     tgl_obj[i + 1] = {
-      pegawai: [],
+      siswa: [],
       details: {
         mode: true,
         active: true,
@@ -58,7 +58,7 @@ if (arg == "setup-rules") {
   const rules = {
     ".read": "auth.uid != null",
     ".write": "auth.uid != null",
-    pegawai: {
+    siswa: {
       ".indexOn": ["uid", "card", "email"],
     },
     users: {
@@ -79,16 +79,16 @@ if (arg == "setup-rules") {
     .map((_, i) => i + 1)
     .forEach((el) => {
         rules.absensi[e][el] = {
-          pegawai: {".indexOn": ["id", "card"]}
+          siswa: {".indexOn": ["id", "card"]}
         };
       });
   });
   writeFileSync("./dbrules.json", JSON.stringify({rules}, null, 2).split(`
-          "pegawai": {
+          "siswa": {
             ".indexOn": [
               "id",
               "card"
             ]
           }
-        `).join(` "pegawai": { ".indexOn": [ "id", "card" ] } `));
+        `).join(` "siswa": { ".indexOn": [ "id", "card" ] } `));
 }

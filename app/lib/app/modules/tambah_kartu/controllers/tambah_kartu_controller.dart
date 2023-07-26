@@ -23,7 +23,7 @@ class TambahKartuController extends GetxController {
       }
     });
 
-    dbC.stream("pegawai").listen(
+    dbC.stream("siswa").listen(
       (DatabaseEvent e) {
         DataSnapshot snapshot = e.snapshot;
         int noCard = 0;
@@ -89,7 +89,7 @@ class TambahKartuController extends GetxController {
         builder: (context) => AlertDialog(
           elevation: 3,
           content: Text(
-            "Pilih cara menambahkan kartu dengan id $id ke data pegawai",
+            "Pilih cara menambahkan kartu dengan id $id ke data siswa",
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
               fontSize: 16,
@@ -107,7 +107,7 @@ class TambahKartuController extends GetxController {
                 );
               },
               child: Text(
-                "Tambah Pegawai",
+                "Tambah Siswa",
                 style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w400, color: const Color.fromARGB(255, 83, 83, 238)),
               ),
             ),
@@ -123,7 +123,7 @@ class TambahKartuController extends GetxController {
                       }
                     : null,
                 child: Text(
-                  "Pilih Pegawai",
+                  "Pilih Siswa",
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,

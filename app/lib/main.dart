@@ -10,8 +10,6 @@ import 'package:presence/app/data/colors.dart';
 import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -28,15 +26,15 @@ class MyApp extends StatelessWidget {
     super.key,
   });
 
-  final locationController = Get.put(LocationController(), permanent: true);
+  // final locationController = Get.put(LocationController(), permanent: true);
   final authC = Get.put<AuthController>(AuthController(), permanent: true);
   final dbC = Get.put<DbController>(DbController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      // future: Future.delayed(const Duration(seconds: 3)),
-      future: Future.delayed(Duration.zero),
+      future: Future.delayed(const Duration(seconds: 3)),
+      // future: Future.delayed(Duration.zero),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return StreamBuilder<User?>(
@@ -61,38 +59,39 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           home: Scaffold(
-              backgroundColor: Colors.white,
-              body: Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.center,
+            backgroundColor: Colors.white,
+            body: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Ma5Ter Absensi",
+                    style: GoogleFonts.poppins(
+                      color: Colors.black,
+                      fontSize: Get.width / 10,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 20),
                     child: Text(
-                      "Ma5Ter Absensi",
+                      "SMKN 5 Kab. Tangerang",
                       style: GoogleFonts.poppins(
                         color: Colors.black,
-                        fontSize: Get.width / 10,
-                        fontWeight: FontWeight.bold,
+                        fontSize: Get.width / 18,
+                        fontWeight: FontWeight.w500,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 20),
-                      child: Text(
-                        "SMKN 5 Kab. Tangerang",
-                        style: GoogleFonts.poppins(
-                          color: Colors.black,
-                          fontSize: Get.width / 18,
-                          fontWeight: FontWeight.w500,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );

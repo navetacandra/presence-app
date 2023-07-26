@@ -80,7 +80,7 @@ class Firebase {
         console.log(`[${this.name}] Firebase intialize`);
         this.streamMode();
         this.streamSchedule();
-        this.streamDeletePegawai();
+        this.streamDeleteSiswa();
         this.streamAbsensi();
       })
       .catch((err) => console.log(`[${this.name}] ${err}`));
@@ -200,8 +200,8 @@ class Firebase {
     });
   }
 
-  streamDeletePegawai() {
-    onChildRemoved(ref(this.dbApp, "pegawai"), (snap) => {
+  streamDeleteSiswa() {
+    onChildRemoved(ref(this.dbApp, "siswa"), (snap) => {
       let removedId = snap.key;
       months.forEach((mth) => {
         Array(31)
@@ -209,7 +209,7 @@ class Firebase {
           .map((_, i) => i + 1)
           .forEach((dy) => {
             remove(
-              ref(this.dbApp, `absensi/${mth}/${dy}/pegawai/${removedId}`)
+              ref(this.dbApp, `absensi/${mth}/${dy}/siswa/${removedId}`)
             );
           });
       });
@@ -222,11 +222,11 @@ class Firebase {
         .fill(0)
         .map((_, i) => i + 1)
         .forEach(async (dy) => {
-          const m = await get(ref(this.dbApp, `absensi/${mth}/${dy}/pegawai`));
+          const m = await get(ref(this.dbApp, `absensi/${mth}/${dy}/siswa`));
           const intialData = Object.values(m.val() ?? {});
 
           onChildAdded(
-            ref(this.dbApp, `absensi/${mth}/${dy}/pegawai`),
+            ref(this.dbApp, `absensi/${mth}/${dy}/siswa`),
             async (snap) => {
               if (intialData.filter((f) => f.id == snap.val().id).length > 0)
                 return;
@@ -235,11 +235,11 @@ class Firebase {
               if (months.indexOf(mth) == d.getMonth() && d.getDate() == dy) {
                 if (snap.val().masuk != null) {
                   const pgw = await get(
-                    ref(this.dbApp, `/pegawai/${snap.val().id}`)
+                    ref(this.dbApp, `/siswa/${snap.val().id}`)
                   );
                   if (!pgw.exists()) console.log(`[${this.name}] ${snap.val().id} is empty`);
                   this.WA.sendMessage(
-                    pgw.val()["telPenanggungJawab"],
+                    pgw.val()["telWaliMurid"],
                     `Saudara *${pgw.val()["name"].trim()}* telah hadir pada pukul *${
                       snap.val().masuk
                     }* tanggal *${d.getDate()}/${
@@ -252,7 +252,7 @@ class Firebase {
           );
 
           onChildChanged(
-            ref(this.dbApp, `absensi/${mth}/${dy}/pegawai`),
+            ref(this.dbApp, `absensi/${mth}/${dy}/siswa`),
             async (snap) => {
               if (intialData.filter((f) => f.id == snap.val().id).length > 0)
                 return;
@@ -261,11 +261,11 @@ class Firebase {
               if (months.indexOf(mth) == d.getMonth() && d.getDate() == dy) {
                 if (snap.val().masuk != null && snap.val().pulang != null) {
                   const pgw = await get(
-                    ref(this.dbApp, `/pegawai/${snap.val().id}`)
+                    ref(this.dbApp, `/siswa/${snap.val().id}`)
                   );
                   if (!pgw.exists()) console.log(`[${this.name}] ${snap.val().id} is empty`);
                   this.WA.sendMessage(
-                    pgw.val()["telPenanggungJawab"],
+                    pgw.val()["telWaliMurid"],
                     `Saudara *${pgw.val().name.trim()}* telah pulang pada pukul *${
                       snap.val().pulang
                     }* tanggal *${d.getDate()}/${
@@ -281,16 +281,16 @@ class Firebase {
   }
 
   async exportAbsen(month = "januari", tanggal = ["1"]) {
-    const pgws = await get(ref(this.dbApp, "/pegawai"));
+    const pgws = await get(ref(this.dbApp, "/siswa"));
     if (!pgws.exists())
-      return { code: 400, data: { message: "Pegawai is empty" } };
+      return { code: 400, data: { message: "Siswa is empty" } };
 
-    let dataPegawai = (
+    let dataSiswa = (
       await Promise.all(
         Object.values(pgws.val()).map(async (snap) => {
           const dy = tanggal.map(async (tgl) => {
             const a = await get(
-              ref(this.dbApp, `/absensi/${month}/${tgl}/pegawai/${snap.id}`)
+              ref(this.dbApp, `/absensi/${month}/${tgl}/siswa/${snap.id}`)
             );
             return {
               tanggal: tgl,
@@ -314,10 +314,10 @@ class Firebase {
           return {
             id: snap.id,
             name: snap.name,
-            telPegawai: formatNumber(this.WA.prettifyNumber(snap.telPegawai)),
-            telAtasan: formatNumber(this.WA.prettifyNumber(snap.telAtasan)),
-            telPenanggungJawab: formatNumber(
-              this.WA.prettifyNumber(snap.telPenanggungJawab)
+            telSiswa: formatNumber(this.WA.prettifyNumber(snap.telSiswa)),
+            telWaliKelas: formatNumber(this.WA.prettifyNumber(snap.telWaliKelas)),
+            telWaliMurid: formatNumber(
+              this.WA.prettifyNumber(snap.telWaliMurid)
             ),
             dataAbsen: dataDY,
           };
@@ -326,24 +326,24 @@ class Firebase {
     ).sort((a, b) => a.name - b.name);
 
     let csvString = `LAPORAN ABSENSI BULAN ${month.toUpperCase()}\n\n`;
-    csvString += `No.,ID,Nama,No. Telpon Pegawai,No. Telpon Atasan, No. Telpon Penanggung Jawab,${month.toUpperCase()}\n`;
+    csvString += `No.,ID,Nama,WhatsApp Siswa,WhatsApp Atasan, WhatsApp Wali Murid,${month.toUpperCase()}\n`;
     csvString += ",,,,,," + tanggal.map((e) => e + ",,").join(",") + "\n";
     csvString +=
       ",,,,,," + "Status,Hadir,Pulang,".repeat(tanggal.length) + "\n";
 
-    dataPegawai.forEach((sn, i) => {
-      csvString += `${i + 1},${sn.id},${sn.name},${sn.telPegawai},${
-        sn.telAtasan
-      },${sn.telPenanggungJawab},`;
+    dataSiswa.forEach((sn, i) => {
+      csvString += `${i + 1},${sn.id},${sn.name},${sn.telSiswa},${
+        sn.telWaliKelas
+      },${sn.telWaliMurid},`;
       sn.dataAbsen.forEach((ab) => {
         csvString += `${ab.status},${ab.hadir},${ab.pulang},`;
       });
-      csvString += i < dataPegawai.length - 1 ? `\n` : "";
+      csvString += i < dataSiswa.length - 1 ? `\n` : "";
     });
 
     return {
       code: 200,
-      data: { csv: csvString, json: dataPegawai },
+      data: { csv: csvString, json: dataSiswa },
     };
   }
 }

@@ -8,7 +8,7 @@ import 'package:uuid/uuid.dart';
 import 'package:presence/app/controllers/db_controller.dart';
 import 'package:presence/app/controllers/whatsapp_controller.dart';
 
-class TambahPegawaiController extends GetxController {
+class TambahSiswaController extends GetxController {
   final dbC = Get.find<DbController>();
   final waController = Get.put<WhatsappController>(WhatsappController());
   final formField = GlobalKey<FormState>();
@@ -22,9 +22,9 @@ class TambahPegawaiController extends GetxController {
     TextEditingController(),
   ];
   List<String> textFieldName = [
-    "Telpon pegawai",
-    "Telpon atasan",
-    "Telpon PJ",
+    "WhatsApp siswa",
+    "WhatsApp wali kelas",
+    "WhatsApp wali murid",
   ];
   RxList validationErrors = ["", "", ""].obs;
   RxBool isLoading = false.obs;
@@ -52,8 +52,7 @@ class TambahPegawaiController extends GetxController {
   String? validateEmail(String? emailValue) {
     if (emailValue!.isEmpty) return "Email wajib di-isi!";
     if (!EmailValidator.validate(emailValue)) return "Email tidak valid!";
-    if (EmailValidator.validate(emailValue) &&
-        !emailValue.endsWith("@gmail.com")) {
+    if (EmailValidator.validate(emailValue) && !emailValue.endsWith("@gmail.com")) {
       return "Email harus beralamat gmail.com!";
     }
     return null;
@@ -69,8 +68,7 @@ class TambahPegawaiController extends GetxController {
       } else if (number.isNotEmpty && number.length < 10) {
         validationErrors[i] = "${textFieldName[i]} minimal berisi 10 karakter!";
       } else if (number.length > 13) {
-        validationErrors[i] =
-            "${textFieldName[i]} maksimal berisi 13 karakter!";
+        validationErrors[i] = "${textFieldName[i]} maksimal berisi 13 karakter!";
       } else {
         final resp = await waController.checkIsOnWhatsApp(number);
 
@@ -97,14 +95,14 @@ class TambahPegawaiController extends GetxController {
       String id = const Uuid().v4().replaceAll(RegExp(r'-'), "");
       try {
         await dbC.updates(
-          "pegawai/$id",
+          "siswa/$id",
           {
             "id": id,
             "name": nameController.text,
             "email": emailController.text,
-            "telPegawai": textFieldControllers[0].text,
-            "telAtasan": textFieldControllers[1].text,
-            "telPenanggungJawab": textFieldControllers[2].text,
+            "telSiswa": textFieldControllers[0].text,
+            "telWaliKelas": textFieldControllers[1].text,
+            "telWaliMurid": textFieldControllers[2].text,
           },
         );
         nameController.clear();
@@ -119,7 +117,7 @@ class TambahPegawaiController extends GetxController {
             snackPosition: SnackPosition.BOTTOM,
             snackStyle: SnackStyle.FLOATING,
             messageText: Text(
-              "Berhasil menambahkan pegawai!",
+              "Berhasil menambahkan siswa!",
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 color: Colors.white,
@@ -139,7 +137,7 @@ class TambahPegawaiController extends GetxController {
             snackPosition: SnackPosition.BOTTOM,
             snackStyle: SnackStyle.FLOATING,
             messageText: Text(
-              "Gagal menambahkan pegawai!",
+              "Gagal menambahkan siswa!",
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 color: Colors.white,

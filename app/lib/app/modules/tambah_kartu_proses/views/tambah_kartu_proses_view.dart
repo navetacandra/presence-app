@@ -35,7 +35,7 @@ class TambahKartuProsesView extends GetView<TambahKartuProsesController> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(
-              "${selfC.method == "new" ? "Tambah" : "Pilih"} Pegawai",
+              "${selfC.method == "new" ? "Tambah" : "Pilih"} Siswa",
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 fontSize: 26,
@@ -58,13 +58,13 @@ class TambahKartuProsesView extends GetView<TambahKartuProsesController> {
                           ),
                         ),
                         child: DropdownButton(
-                          items: selfC.buildMenu(selfC.pegawai),
-                          value: selfC.selectedPegawai["id"] != null
+                          items: selfC.buildMenu(selfC.siswa),
+                          value: selfC.selectedSiswa["id"] != null
                               // ignore: invalid_use_of_protected_member
-                              ? selfC.selectedPegawai.value
+                              ? selfC.selectedSiswa.value
                               : null,
                           hint: Text(
-                            "Pilih data pegawai disini",
+                            "Pilih data siswa disini",
                             style: GoogleFonts.poppins(
                               fontSize: 18,
                             ),
@@ -124,7 +124,7 @@ class TambahKartuProsesView extends GetView<TambahKartuProsesController> {
                         : null,
                 readOnly: selfC.method == "select",
                 decoration: InputDecoration(
-                  labelText: "Telpon Pegawai",
+                  labelText: "WhatsApp Siswa",
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.phone),
                   errorStyle: GoogleFonts.poppins(
@@ -151,7 +151,7 @@ class TambahKartuProsesView extends GetView<TambahKartuProsesController> {
                         : null,
                 readOnly: selfC.method == "select",
                 decoration: InputDecoration(
-                  labelText: "Telpon Atasan",
+                  labelText: "WhatsApp Wali Kelas",
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.phone),
                   errorStyle: GoogleFonts.poppins(
@@ -178,7 +178,7 @@ class TambahKartuProsesView extends GetView<TambahKartuProsesController> {
                         : null,
                 readOnly: selfC.method == "select",
                 decoration: InputDecoration(
-                  labelText: "Telpon Penanggung Jawab",
+                  labelText: "WhatsApp Wali Murid",
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.phone),
                   errorStyle: GoogleFonts.poppins(

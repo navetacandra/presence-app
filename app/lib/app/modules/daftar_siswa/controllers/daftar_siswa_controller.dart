@@ -5,10 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:presence/app/controllers/db_controller.dart';
 import 'package:presence/app/routes/app_pages.dart';
 
-class DaftarPegawaiController extends GetxController {
+class DaftarSiswaController extends GetxController {
   final dbC = Get.find<DbController>();
   RxString query = "".obs;
-  RxList pegawai = [].obs;
+  RxList siswa = [].obs;
 
   @override
   void onReady() {
@@ -21,20 +21,20 @@ class DaftarPegawaiController extends GetxController {
   }
 
   List<Widget> buildWidgetList(String searchQuery) {
-    List<Widget> widgetsList = pegawai.isNotEmpty ? [searchForm()] : [];
-    List pgwSort = pegawai;
-    if (pegawai.isNotEmpty) {
-      pgwSort.sort(
+    List<Widget> widgetsList = siswa.isNotEmpty ? [searchForm()] : [];
+    List sswSort = siswa;
+    if (siswa.isNotEmpty) {
+      sswSort.sort(
         (m1, m2) => m1["name"].toLowerCase().compareTo(
               m2["name"].toLowerCase(),
             ),
       );
     }
 
-    for (var elem in pgwSort) {
+    for (var elem in sswSort) {
       if (elem["name"].toLowerCase().contains(searchQuery) || elem["email"].toLowerCase().contains(searchQuery) || elem["tel"].toLowerCase().contains(searchQuery)) {
         widgetsList.add(
-          pegawaiCard(
+          siswaCard(
             id: elem["id"],
             name: elem["name"],
             email: elem["email"],
@@ -44,7 +44,7 @@ class DaftarPegawaiController extends GetxController {
       }
     }
 
-    if (pegawai.isNotEmpty && widgetsList.length == 1) {
+    if (siswa.isNotEmpty && widgetsList.length == 1) {
       widgetsList.add(
         Container(
           margin: EdgeInsets.only(top: Get.height * .1),
@@ -98,18 +98,18 @@ class DaftarPegawaiController extends GetxController {
     );
   }
 
-  Container pegawaiCard({
+  Container siswaCard({
     required String id,
     required String name,
     required String email,
     required String tel,
   }) {
-    void confirDeletePegawai() {
+    void confirDeleteSiswa() {
       Get.dialog(
         AlertDialog(
           elevation: 3,
           content: Text(
-            "Apakah anda yakin ingin menghapus data pegawai dengan nama $name",
+            "Apakah anda yakin ingin menghapus data siswa dengan nama $name",
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
               fontSize: 16,
@@ -127,14 +127,14 @@ class DaftarPegawaiController extends GetxController {
             TextButton(
               onPressed: () async {
                 try {
-                  await dbC.remove("pegawai/$id").whenComplete(() {
+                  await dbC.remove("siswa/$id").whenComplete(() {
                     Get.back();
                   });
                   Get.showSnackbar(
                     GetSnackBar(
                       duration: const Duration(seconds: 3),
                       titleText: Text(
-                        "Berhasil Menghapus Pegawai",
+                        "Berhasil Menghapus Siswa",
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
                           color: const Color.fromARGB(255, 15, 15, 15),
@@ -142,7 +142,7 @@ class DaftarPegawaiController extends GetxController {
                         ),
                       ),
                       messageText: Text(
-                        "Data pegawai $name telah dihapus",
+                        "Data siswa $name telah dihapus",
                         style: GoogleFonts.poppins(
                           color: const Color.fromARGB(255, 15, 15, 15),
                           fontSize: 12,
@@ -157,7 +157,7 @@ class DaftarPegawaiController extends GetxController {
                     GetSnackBar(
                       duration: const Duration(seconds: 3),
                       titleText: Text(
-                        "Gagal Menghapus Pegawai",
+                        "Gagal Menghapus Siswa",
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
                           color: const Color.fromARGB(255, 15, 15, 15),
@@ -165,7 +165,7 @@ class DaftarPegawaiController extends GetxController {
                         ),
                       ),
                       messageText: Text(
-                        "Terjadi kesalahan saat menghapus pegawai",
+                        "Terjadi kesalahan saat menghapus siswa",
                         style: GoogleFonts.poppins(
                           color: const Color.fromARGB(255, 15, 15, 15),
                           fontSize: 12,
@@ -254,7 +254,7 @@ class DaftarPegawaiController extends GetxController {
               children: <Widget>[
                 InkWell(
                   onTap: () => Get.toNamed(
-                    Routes.EDIT_PEGAWAI,
+                    Routes.EDIT_SISWA,
                     arguments: {"id": id},
                   ),
                   child: Image.asset(
@@ -264,7 +264,7 @@ class DaftarPegawaiController extends GetxController {
                   ),
                 ),
                 InkWell(
-                  onTap: () => confirDeletePegawai(),
+                  onTap: () => confirDeleteSiswa(),
                   child: Image.asset(
                     "assets/trash.png",
                     width: Get.width / 4.5 / 3,

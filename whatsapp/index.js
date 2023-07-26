@@ -199,23 +199,23 @@ app.post("/esp-handling", async (req, res) => {
           error: "date-not-active",
         });
       } else {
-        const currentPegawai = await get(
+        const currentSiswa = await get(
           query(
-            ref(firebase.dbApp, `/pegawai`),
+            ref(firebase.dbApp, `/siswa`),
             orderByChild(`card`),
             equalTo(tag)
           )
         );
-        if (!currentPegawai.exists()) {
+        if (!currentSiswa.exists()) {
           return res
             .status(404)
             .json({ mode: "absen", error: "card-not-found" });
         } else {
-          const pegawaiId = Object.values(currentPegawai.val())[0].id;
-          const _absenPegawai = await get(
+          const siswaId = Object.values(currentSiswa.val())[0].id;
+          const _absenSiswa = await get(
             ref(
               firebase.dbApp,
-              `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+              `/absensi/${month}/${date}/siswa/${siswaId}`
             )
           );
           const jamMasukStart = firebase.schedule.jam_hadir_start
@@ -237,8 +237,8 @@ app.post("/esp-handling", async (req, res) => {
             currTime[0] <= jamMasukEnd[0]
           ) {
             if (
-              _absenPegawai.exists() &&
-              _absenPegawai.child("masuk").exists()
+              _absenSiswa.exists() &&
+              _absenSiswa.child("masuk").exists()
             ) {
               return res
                 .status(400)
@@ -263,12 +263,12 @@ app.post("/esp-handling", async (req, res) => {
               await update(
                 ref(
                   firebase.dbApp,
-                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                  `/absensi/${month}/${date}/siswa/${siswaId}`
                 ),
                 {
                   status: "tepat",
                   masuk: time,
-                  id: pegawaiId,
+                  id: siswaId,
                 }
               );
               return res
@@ -284,12 +284,12 @@ app.post("/esp-handling", async (req, res) => {
               await update(
                 ref(
                   firebase.dbApp,
-                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                  `/absensi/${month}/${date}/siswa/${siswaId}`
                 ),
                 {
                   status: "tepat",
                   masuk: time,
-                  id: pegawaiId,
+                  id: siswaId,
                 }
               );
               return res
@@ -305,12 +305,12 @@ app.post("/esp-handling", async (req, res) => {
               await update(
                 ref(
                   firebase.dbApp,
-                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                  `/absensi/${month}/${date}/siswa/${siswaId}`
                 ),
                 {
                   status: "tepat",
                   masuk: time,
-                  id: pegawaiId,
+                  id: siswaId,
                 }
               );
               return res
@@ -327,12 +327,12 @@ app.post("/esp-handling", async (req, res) => {
               await update(
                 ref(
                   firebase.dbApp,
-                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                  `/absensi/${month}/${date}/siswa/${siswaId}`
                 ),
                 {
                   status: "telat",
                   masuk: time,
-                  id: pegawaiId,
+                  id: siswaId,
                 }
               );
               return res
@@ -365,8 +365,8 @@ app.post("/esp-handling", async (req, res) => {
             currTime[0] <= jamPulangEnd[0]
           ) {
             if (
-              _absenPegawai.exists() &&
-              _absenPegawai.child("pulang").exists()
+              _absenSiswa.exists() &&
+              _absenSiswa.child("pulang").exists()
             ) {
               return res
                 .status(400)
@@ -381,11 +381,11 @@ app.post("/esp-handling", async (req, res) => {
               await update(
                 ref(
                   firebase.dbApp,
-                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                  `/absensi/${month}/${date}/siswa/${siswaId}`
                 ),
                 {
                   masuk: time,
-                  id: pegawaiId,
+                  id: siswaId,
                 }
               );
               return res
@@ -401,11 +401,11 @@ app.post("/esp-handling", async (req, res) => {
               await update(
                 ref(
                   firebase.dbApp,
-                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                  `/absensi/${month}/${date}/siswa/${siswaId}`
                 ),
                 {
                   masuk: time,
-                  id: pegawaiId,
+                  id: siswaId,
                 }
               );
               return res
@@ -421,11 +421,11 @@ app.post("/esp-handling", async (req, res) => {
               await update(
                 ref(
                   firebase.dbApp,
-                  `/absensi/${month}/${date}/pegawai/${pegawaiId}`
+                  `/absensi/${month}/${date}/siswa/${siswaId}`
                 ),
                 {
                   masuk: time,
-                  id: pegawaiId,
+                  id: siswaId,
                 }
               );
               return res
@@ -437,9 +437,9 @@ app.post("/esp-handling", async (req, res) => {
       }
     } else {
       const card = await get(ref(firebase.dbApp, `/cards/${tag}/card`));
-      const cardInPegawai = await get(
+      const cardInSiswa = await get(
         query(
-          ref(firebase.dbApp, `/pegawai`),
+          ref(firebase.dbApp, `/siswa`),
           orderByChild(`card`),
           equalTo(tag)
         )
@@ -448,13 +448,13 @@ app.post("/esp-handling", async (req, res) => {
       if (card.exists()) {
         return res.status(400).json({ mode: "add", error: "already-add" });
       }
-      if (cardInPegawai.exists()) {
+      if (cardInSiswa.exists()) {
         return res
           .status(400)
           .json({ mode: "add", error: "already-registered" });
       }
 
-      if (!(card.exists() && cardInPegawai.exists())) {
+      if (!(card.exists() && cardInSiswa.exists())) {
         await update(ref(firebase.dbApp, `/cards/${tag}`), { card: tag });
         return res.status(200).json({ mode: "add", status: "registered" });
       }

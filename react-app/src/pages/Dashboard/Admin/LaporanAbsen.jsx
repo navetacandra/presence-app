@@ -55,7 +55,7 @@ export default function LaporanAbsen() {
       );
       const json = await response.json();
       if (json.csv != null) {
-        const filename = "data-absensi-pegawai.csv";
+        const filename = "data-absensi-siswa.csv";
         const blob = new Blob([json.csv], {
           type: "text/csv;charset=utf-8;",
         });

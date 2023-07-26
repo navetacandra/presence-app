@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-export default function ExportPegawai({ allPegawaiData }) {
+export default function ExportSiswa({ allSiswaData }) {
   const [load, setLoad] = useState(false);
   const [format, setFormat] = useState(0);
 
@@ -9,7 +9,7 @@ export default function ExportPegawai({ allPegawaiData }) {
     if (!load) {
       setLoad(true);
       if (format == 0) alert("Pilih format export terlebih dulu!");
-      const pegawaiList = allPegawaiData
+      const siswaList = allSiswaData
         .map((e) => {
           delete e.absensi;
           return e;
@@ -24,8 +24,8 @@ export default function ExportPegawai({ allPegawaiData }) {
         });
 
       if (format == 1) {
-        const filename = "data-pegawai.json";
-        const blob = new Blob([JSON.stringify(pegawaiList, null, 2)], {
+        const filename = "data-siswa.json";
+        const blob = new Blob([JSON.stringify(siswaList, null, 2)], {
           type: "application/json",
         });
         const url = URL.createObjectURL(blob);
@@ -36,16 +36,16 @@ export default function ExportPegawai({ allPegawaiData }) {
         link.click();
         URL.revokeObjectURL(url);
       } else if (format == 2) {
-        let csvContent = `No.,ID,ID Card,Nama,Email,WhatsApp Pegawai,WhatsApp Atasan,WhatsApp Penanggung Jawab\n`;
-        csvContent += pegawaiList
+        let csvContent = `No.,ID,ID Card,Nama,Email,WhatsApp Siswa,WhatsApp Wali Kelas,WhatsApp Wali Murid\n`;
+        csvContent += siswaList
           .map((e, i) => {
             return `${i + 1},${e.id},${e.card ?? "-"},"${e.name}",${e.email},"${
-              e.telPegawai
-            }","${e.telAtasan}","${e.telPenanggungJawab}"`;
+              e.telSiswa
+            }","${e.telWaliKelas}","${e.telWaliMurid}"`;
           })
           .join("\n");
         console.log(csvContent);
-        const filename = "data-pegawai.csv";
+        const filename = "data-siswa.csv";
         const blob = new Blob([csvContent], {
           type: "text/csv;charset=utf-8;",
         });
@@ -66,7 +66,7 @@ export default function ExportPegawai({ allPegawaiData }) {
     <div className="col-6">
       <div className="card shadow">
         <div className="card-body">
-          <h5 className="text-center">Export Pegawai</h5>
+          <h5 className="text-center">Export Siswa</h5>
           <div className="mt-3 mb-3">
             <select
               className="form-select"
@@ -99,6 +99,6 @@ export default function ExportPegawai({ allPegawaiData }) {
   );
 }
 
-ExportPegawai.propTypes = {
-  allPegawaiData: PropTypes.array,
+ExportSiswa.propTypes = {
+  allSiswaData: PropTypes.array,
 };

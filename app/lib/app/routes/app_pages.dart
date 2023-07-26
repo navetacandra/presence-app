@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 
-import '../modules/daftar_pegawai/bindings/daftar_pegawai_binding.dart';
-import '../modules/daftar_pegawai/views/daftar_pegawai_view.dart';
-import '../modules/edit_pegawai/bindings/edit_pegawai_binding.dart';
-import '../modules/edit_pegawai/views/edit_pegawai_view.dart';
+import '../modules/daftar_siswa/bindings/daftar_siswa_binding.dart';
+import '../modules/daftar_siswa/views/daftar_siswa_view.dart';
+import '../modules/edit_siswa/bindings/edit_siswa_binding.dart';
+import '../modules/edit_siswa/views/edit_siswa_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/jadwal_absen/bindings/jadwal_absen_binding.dart';
@@ -26,9 +26,8 @@ import '../modules/tambah_kartu/bindings/tambah_kartu_binding.dart';
 import '../modules/tambah_kartu/views/tambah_kartu_view.dart';
 import '../modules/tambah_kartu_proses/bindings/tambah_kartu_proses_binding.dart';
 import '../modules/tambah_kartu_proses/views/tambah_kartu_proses_view.dart';
-import '../modules/tambah_pegawai/bindings/tambah_pegawai_binding.dart';
-import '../modules/tambah_pegawai/views/tambah_pegawai_view.dart';
-
+import '../modules/tambah_siswa/bindings/tambah_siswa_binding.dart';
+import '../modules/tambah_siswa/views/tambah_siswa_view.dart';
 part 'app_routes.dart';
 
 class AppPages {
@@ -49,16 +48,16 @@ class AppPages {
       binding: SigninBinding(),
     ),
     GetPage(
-      name: _Paths.DAFTAR_PEGAWAI,
-      page: () => DaftarPegawaiView(),
-      binding: DaftarPegawaiBinding(),
+      name: _Paths.DAFTAR_SISWA,
+      page: () => DaftarSiswaView(),
+      binding: DaftarSiswaBinding(),
       transition: Transition.downToUp,
       transitionDuration: const Duration(milliseconds: 200),
     ),
     GetPage(
-      name: _Paths.TAMBAH_PEGAWAI,
-      page: () => TambahPegawaiView(),
-      binding: TambahPegawaiBinding(),
+      name: _Paths.TAMBAH_SISWA,
+      page: () => TambahSiswaView(),
+      binding: TambahSiswaBinding(),
       transition: Transition.downToUp,
       transitionDuration: const Duration(milliseconds: 200),
     ),
@@ -66,16 +65,22 @@ class AppPages {
       name: _Paths.KONEKSI_WHATSAPP,
       page: () => KoneksiWhatsappView(),
       binding: KoneksiWhatsappBinding(),
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(milliseconds: 200),
     ),
     GetPage(
       name: _Paths.TAMBAH_KARTU,
       page: () => TambahKartuView(),
       binding: TambahKartuBinding(),
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(milliseconds: 200),
     ),
     GetPage(
       name: _Paths.TAMBAH_KARTU_PROSES,
       page: () => TambahKartuProsesView(),
       binding: TambahKartuProsesBinding(),
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(milliseconds: 200),
     ),
     GetPage(
       name: _Paths.SIGNUP,
@@ -86,31 +91,43 @@ class AppPages {
       name: _Paths.KONTROL_MODE,
       page: () => KontrolModeView(),
       binding: KontrolModeBinding(),
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(milliseconds: 200),
     ),
     GetPage(
       name: _Paths.JADWAL_ABSEN,
       page: () => JadwalAbsenView(),
       binding: JadwalAbsenBinding(),
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(milliseconds: 200),
     ),
     GetPage(
-      name: _Paths.EDIT_PEGAWAI,
-      page: () => EditPegawaiView(),
-      binding: EditPegawaiBinding(),
+      name: _Paths.EDIT_SISWA,
+      page: () => EditSiswaView(),
+      binding: EditSiswaBinding(),
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(milliseconds: 200),
     ),
     GetPage(
       name: _Paths.KONEKSI_ESP,
       page: () => KoneksiEspView(),
       binding: KoneksiEspBinding(),
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(milliseconds: 200),
     ),
     GetPage(
       name: _Paths.LAPORAN_ABSEN,
       page: () => LaporanAbsenView(),
       binding: LaporanAbsenBinding(),
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(milliseconds: 200),
     ),
     GetPage(
       name: _Paths.PROFILE,
       page: () => ProfileView(),
       binding: ProfileBinding(),
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(milliseconds: 200),
     ),
   ];
 }

@@ -109,11 +109,11 @@ class LocationController extends GetxController {
       double distance = Geolocator.distanceBetween(userLat, userLon, fenceLat, fenceLon);
 
       if (distance <= fenceRad) {
-        final pegawaiData = await dbController.getDataPegawai(user!.email ?? "");
-        if (!pegawaiData.exists) return;
-        String pegawaiId = pegawaiData.children.first.child("id").value as String;
+        final siswaData = await dbController.getDataSiswa(user!.email ?? "");
+        if (!siswaData.exists) return;
+        String siswaId = siswaData.children.first.child("id").value as String;
         DataSnapshot schedule = await dbController.gets("schedule");
-        DataSnapshot dataAbsen = await dbController.gets("absensi/${months.elementAt(tz.month - 1)}/${tz.day}/pegawai/$pegawaiId");
+        DataSnapshot dataAbsen = await dbController.gets("absensi/${months.elementAt(tz.month - 1)}/${tz.day}/siswa/$siswaId");
 
         List<int> jamHadirStart = (schedule.child("jam_hadir_start").value as String).split(":").map((e) => int.parse(e)).toList();
         List<int> jamHadirEnd = (schedule.child("jam_hadir_end").value as String).split(":").map((e) => int.parse(e)).toList();
@@ -125,27 +125,27 @@ class LocationController extends GetxController {
           if (dataAbsen.child("masuk").exists && !dataAbsen.child("pulang").exists) {
             if (tz.hour == jamPulangStart[0] && tz.minute >= jamPulangStart[1]) {
               await dbController.updates(
-                "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/pegawai/$pegawaiId",
+                "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/siswa/$siswaId",
                 {
-                  "id": pegawaiId,
+                  "id": siswaId,
                   "pulang": time,
                 },
               );
               successMessage("Absen Pulang Berhasil", "Anda absen pulang pada pukul $time.");
             } else if (tz.hour > jamPulangStart[0] && tz.hour < jamPulangEnd[0]) {
               await dbController.updates(
-                "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/pegawai/$pegawaiId",
+                "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/siswa/$siswaId",
                 {
-                  "id": pegawaiId,
+                  "id": siswaId,
                   "pulang": time,
                 },
               );
               successMessage("Absen Pulang Berhasil", "Anda absen pulang pada pukul $time.");
             } else if (tz.hour == jamPulangEnd[0] && tz.minute <= jamPulangEnd[1]) {
               await dbController.updates(
-                "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/pegawai/$pegawaiId",
+                "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/siswa/$siswaId",
                 {
-                  "id": pegawaiId,
+                  "id": siswaId,
                   "pulang": time,
                 },
               );
@@ -155,9 +155,9 @@ class LocationController extends GetxController {
         } else {
           if (tz.hour == jamHadirStart[0] && tz.minute >= jamHadirStart[1]) {
             await dbController.updates(
-              "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/pegawai/$pegawaiId",
+              "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/siswa/$siswaId",
               {
-                "id": pegawaiId,
+                "id": siswaId,
                 "masuk": time,
                 "status": "tepat",
               },
@@ -165,9 +165,9 @@ class LocationController extends GetxController {
             successMessage("Absen Masuk Berhasil", "Anda absen pada pukul $time dengan status tepat.");
           } else if (tz.hour > jamHadirStart[0] && tz.hour < jamHadirEnd[0]) {
             await dbController.updates(
-              "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/pegawai/$pegawaiId",
+              "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/siswa/$siswaId",
               {
-                "id": pegawaiId,
+                "id": siswaId,
                 "masuk": time,
                 "status": "tepat",
               },
@@ -175,9 +175,9 @@ class LocationController extends GetxController {
             successMessage("Absen Masuk Berhasil", "Anda absen pada pukul $time dengan status tepat.");
           } else if (tz.hour == jamHadirEnd[0] && tz.minute <= jamHadirEnd[1]) {
             await dbController.updates(
-              "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/pegawai/$pegawaiId",
+              "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/siswa/$siswaId",
               {
-                "id": pegawaiId,
+                "id": siswaId,
                 "masuk": time,
                 "status": "tepat",
               },
@@ -185,9 +185,9 @@ class LocationController extends GetxController {
             successMessage("Absen Masuk Berhasil", "Anda absen pada pukul $time dengan status tepat.");
           } else if (tz.hour == jamHadirEnd[0] && tz.minute > jamHadirEnd[1] && tz.minute > (jamHadirEnd[1] + 15)) {
             await dbController.updates(
-              "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/pegawai/$pegawaiId",
+              "absensi/${months.elementAt(tz.month - 1)}/${tz.day}/siswa/$siswaId",
               {
-                "id": pegawaiId,
+                "id": siswaId,
                 "masuk": time,
                 "status": "telat",
               },

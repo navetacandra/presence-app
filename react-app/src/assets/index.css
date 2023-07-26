@@ -34,11 +34,11 @@
   background-color: #0d6efd;
 }
 
-.list-pgw-prnt h4 {
+.list-ssw-prnt h4 {
   cursor: pointer;
 }
 
-.list-pgw-prnt > h4 > i {
+.list-ssw-prnt > h4 > i {
   display: block;
   transition: all 0.5s;
   -webkit-transform: rotate(0deg);
@@ -48,25 +48,25 @@
   transform: rotate(0deg);
 }
 
-.list-pgw-prnt .l-content {
+.list-ssw-prnt .l-content {
   opacity: 0;
   height: 0;
   transition: all 0.3s;
 }
 
-.list-pgw-prnt.show-table .l-content {
+.list-ssw-prnt.show-table .l-content {
   opacity: 1;
   height: auto;
 }
 
-.list-pgw-prnt.show-table > h4 > i {
+.list-ssw-prnt.show-table > h4 > i {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   -o-transform: rotate(90deg);
   transform: rotate(90deg);
 }
-.list-pgw-prnt.show-table .table-icon {
+.list-ssw-prnt.show-table .table-icon {
   cursor: pointer;
 }
 
@@ -91,12 +91,12 @@
   }
 }
 
-#jumlah-pegawai-terdaftar-card-content,
-#jumlah-pegawai-hadir-card-content {
+#jumlah-siswa-terdaftar-card-content,
+#jumlah-siswa-hadir-card-content {
   position: relative;
 }
-#jumlah-pegawai-terdaftar-card-content::before,
-#jumlah-pegawai-hadir-card-content::before {
+#jumlah-siswa-terdaftar-card-content::before,
+#jumlah-siswa-hadir-card-content::before {
   content: "";
   position: absolute;
   display: block;
@@ -107,19 +107,19 @@
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
-#jumlah-pegawai-terdaftar-card,
-#jumlah-pegawai-hadir-card {
+#jumlah-siswa-terdaftar-card,
+#jumlah-siswa-hadir-card {
   width: 22vw;
 }
 
-#jumlah-pegawai-hadir-card {
+#jumlah-siswa-hadir-card {
   margin-left: 5rem;
 }
 
-#jumlah-pegawai-terdaftar-card-content::before {
+#jumlah-siswa-terdaftar-card-content::before {
   background-color: #20c997;
 }
-#jumlah-pegawai-hadir-card-content::before {
+#jumlah-siswa-hadir-card-content::before {
   background-color: #ffc107;
 }
 
@@ -154,8 +154,8 @@
     min-width: 50vw;
     min-height: 50vw;
   }
-  #jumlah-pegawai-terdaftar-card,
-  #jumlah-pegawai-hadir-card,
+  #jumlah-siswa-terdaftar-card,
+  #jumlah-siswa-hadir-card,
   .dashboard-graph-container {
     width: 95vw;
     margin-top: 2rem;
@@ -168,8 +168,8 @@
     min-width: 70vw;
     min-height: 70vw;
   }
-  #jumlah-pegawai-terdaftar-card,
-  #jumlah-pegawai-hadir-card,
+  #jumlah-siswa-terdaftar-card,
+  #jumlah-siswa-hadir-card,
   .dashboard-graph-container {
     width: 100vw;
     margin-top: 2rem;

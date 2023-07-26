@@ -4,13 +4,13 @@ import { get, ref, update } from "firebase/database";
 import { useState } from "react";
 import { db } from "../../../../../firebase";
 
-export default function AddPegawai({ triggerRefresh }) {
+export default function AddSiswa({ triggerRefresh }) {
   const [open, setOpen] = useState(false);
   const [load, setLoad] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [telPegawai, setTelPegawai] = useState("");
-  const [telAtasan, setTelAtasan] = useState("");
+  const [telSiswa, setTelSiswa] = useState("");
+  const [telWaliKelas, setTelWaliKelas] = useState("");
   const [telPJ, setTelPJ] = useState("");
 
   const validPhone = async (phone) => {
@@ -25,29 +25,29 @@ export default function AddPegawai({ triggerRefresh }) {
   const emailRegex =
     /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
 
-  const addPegawaiToDB = async () => {
+  const addSiswaToDB = async () => {
     const uid = uuidv4().replace(/-/g, "");
-    const _pgw = await get(ref(db, `/pegawai/${uid}`));
-    if (_pgw.exists()) addPegawaiToDB();
+    const _ssw = await get(ref(db, `/siswa/${uid}`));
+    if (_ssw.exists()) addSiswaToDB();
     else {
-      await update(ref(db, `/pegawai/${uid}`), {
+      await update(ref(db, `/siswa/${uid}`), {
         name: name.trim(),
         email: email.trim(),
-        telPegawai: telPegawai.trim(),
-        telAtasan: telAtasan.trim(),
+        telSiswa: telSiswa.trim(),
+        telWaliKelas: telWaliKelas.trim(),
         id: uid,
-        telPenanggungJawab: telPJ.trim(),
+        telWaliMurid: telPJ.trim(),
       });
     }
   };
 
-  async function addPegawai(e) {
+  async function addSiswa(e) {
     e.preventDefault();
     if (!load) {
       setLoad(true);
 
-      const _validTelPegawai = await validPhone(telPegawai.trim());
-      const _validTelAtasan = await validPhone(telAtasan.trim());
+      const _validTelSiswa = await validPhone(telSiswa.trim());
+      const _validTelWaliKelas = await validPhone(telWaliKelas.trim());
       const _validTelPJ = await validPhone(telPJ.trim());
 
       if (name.trim().length < 1) alert("Nama wajib di-isi!");
@@ -60,21 +60,21 @@ export default function AddPegawai({ triggerRefresh }) {
         !email.endsWith("gmail.com")
       )
         alert("Email harus beralamat gmail.com!");
-      else if (telPegawai.trim().length < 1)
-        alert("WhatsApp pegawai wajib di-isi!");
-      else if (telPegawai.trim().length >= 1 && _validTelPegawai == 500)
-        alert("Gagal mengecek nomor WhatsApp pegawai!");
-      else if (telPegawai.trim().length >= 1 && _validTelPegawai == 400)
-        alert("Gagal mengecek nomor WhatsApp pegawai!");
-      else if (telPegawai.trim().length >= 1 && _validTelPegawai == 404)
-        alert("Nomor WhatsApp pegawai tidak terdaftar!");
-      else if (telAtasan.trim().length < 1)
+      else if (telSiswa.trim().length < 1)
+        alert("WhatsApp siswa wajib di-isi!");
+      else if (telSiswa.trim().length >= 1 && _validTelSiswa == 500)
+        alert("Gagal mengecek nomor WhatsApp siswa!");
+      else if (telSiswa.trim().length >= 1 && _validTelSiswa == 400)
+        alert("Gagal mengecek nomor WhatsApp siswa!");
+      else if (telSiswa.trim().length >= 1 && _validTelSiswa == 404)
+        alert("Nomor WhatsApp siswa tidak terdaftar!");
+      else if (telWaliKelas.trim().length < 1)
         alert("WhatsApp atasan wajib di-isi!");
-      else if (telAtasan.trim().length >= 1 && _validTelAtasan == 500)
+      else if (telWaliKelas.trim().length >= 1 && _validTelWaliKelas == 500)
         alert("Gagal mengecek nomor WhatsApp atasan!");
-      else if (telAtasan.trim().length >= 1 && _validTelAtasan == 400)
+      else if (telWaliKelas.trim().length >= 1 && _validTelWaliKelas == 400)
         alert("Gagal mengecek nomor WhatsApp atasan!");
-      else if (telAtasan.trim().length >= 1 && _validTelAtasan == 404)
+      else if (telWaliKelas.trim().length >= 1 && _validTelWaliKelas == 404)
         alert("Nomor WhatsApp atasan tidak terdaftar!");
       else if (telPJ.trim().length < 1) alert("WhatsApp PJ wajib di-isi!");
       else if (telPJ.trim().length >= 1 && _validTelPJ == 500)
@@ -85,18 +85,18 @@ export default function AddPegawai({ triggerRefresh }) {
         alert("Nomor WhatsApp PJ tidak terdaftar!");
       else {
         try {
-          await addPegawaiToDB();
+          await addSiswaToDB();
           e.target.reset();
           setName("");
           setEmail("");
-          setTelPegawai("");
-          setTelAtasan("");
+          setTelSiswa("");
+          setTelWaliKelas("");
           setTelPJ("");
           triggerRefresh();
-          alert("Pegawai berhasil ditambahkan!");
+          alert("Siswa berhasil ditambahkan!");
         } catch (error) {
           console.log(error);
-          alert("Pegawai gagal ditambahkan!");
+          alert("Siswa gagal ditambahkan!");
         }
       }
 
@@ -111,9 +111,9 @@ export default function AddPegawai({ triggerRefresh }) {
         onClick={() => setOpen(!open)}
         style={{ cursor: "pointer" }}
       >
-        Tambah Pegawai
+        Tambah Siswa
         <i
-          className="ms-2 fs-6 bi bi-caret-right-fill my-auto add-pgw-caret"
+          className="ms-2 fs-6 bi bi-caret-right-fill my-auto add-ssw-caret"
           onClick={() => setOpen(!open)}
           style={
             open
@@ -142,8 +142,8 @@ export default function AddPegawai({ triggerRefresh }) {
       >
         <div className="card shadow">
           <div className="card-body">
-            <h5 className="text-center">Tambah Pegawai</h5>
-            <form onSubmit={(e) => addPegawai(e)}>
+            <h5 className="text-center">Tambah Siswa</h5>
+            <form onSubmit={(e) => addSiswa(e)}>
               <div className="mb-3">
                 <label htmlFor="nama" className="form-label">
                   Nama
@@ -169,27 +169,27 @@ export default function AddPegawai({ triggerRefresh }) {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="telPegawai" className="form-label">
-                  WhatsApp Pegawai
+                <label htmlFor="telSiswa" className="form-label">
+                  WhatsApp Siswa
                 </label>
                 <input
                   type="tel"
                   className="form-control"
-                  id="telPegawai"
-                  placeholder="WhatsApp Pegawai"
-                  onInput={(e) => setTelPegawai(e.target.value)}
+                  id="telSiswa"
+                  placeholder="WhatsApp Siswa"
+                  onInput={(e) => setTelSiswa(e.target.value)}
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="telAtasan" className="form-label">
-                  WhatsApp Atasan
+                <label htmlFor="telWaliKelas" className="form-label">
+                  WhatsApp Wali Kelas
                 </label>
                 <input
                   type="tel"
                   className="form-control"
-                  id="telAtasan"
-                  placeholder="WhatsApp Atasan"
-                  onInput={(e) => setTelAtasan(e.target.value)}
+                  id="telWaliKelas"
+                  placeholder="WhatsApp Wali Kelas"
+                  onInput={(e) => setTelWaliKelas(e.target.value)}
                 />
               </div>
               <div className="mb-3">
@@ -200,7 +200,7 @@ export default function AddPegawai({ triggerRefresh }) {
                   type="tel"
                   className="form-control"
                   id="telPJ"
-                  placeholder="WhatsApp Penanggung Jawab"
+                  placeholder="WhatsApp Wali Murid"
                   onInput={(e) => setTelPJ(e.target.value)}
                 />
               </div>
@@ -216,7 +216,7 @@ export default function AddPegawai({ triggerRefresh }) {
                       <span className="visually-hidden">Loading...</span>
                     </div>
                   ) : (
-                    "Tambah Pegawai"
+                    "Tambah Siswa"
                   )}
                 </button>
               </div>
@@ -228,6 +228,6 @@ export default function AddPegawai({ triggerRefresh }) {
   );
 }
 
-AddPegawai.propTypes = {
+AddSiswa.propTypes = {
   triggerRefresh: PropTypes.func,
 };

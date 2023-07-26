@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:presence/app/controllers/db_controller.dart';
 import 'package:presence/app/controllers/whatsapp_controller.dart';
 
-class EditPegawaiController extends GetxController {
+class EditSiswaController extends GetxController {
   final dbC = Get.find<DbController>();
   final waController = Get.put<WhatsappController>(WhatsappController());
   final formField = GlobalKey<FormState>();
@@ -21,28 +21,28 @@ class EditPegawaiController extends GetxController {
     TextEditingController(),
   ];
   List<String> textFieldName = [
-    "Telpon pegawai",
-    "Telpon atasan",
-    "Telpon PJ",
+    "WhatsApp siswa",
+    "WhatsApp wali kelas",
+    "WhatsApp wali murid",
   ];
   RxList validationErrors = ["", "", ""].obs;
   RxBool isLoading = false.obs;
   final RxString _id = "".obs;
-  RxMap pegawaiData = {}.obs;
+  RxMap siswaData = {}.obs;
 
   String get id => _id.value;
 
   @override
   void onInit() async {
     _id.value = Get.arguments["id"];
-    DataSnapshot dataPegawai = await dbC.gets("pegawai/$id");
-    if (!dataPegawai.exists) {
+    DataSnapshot dataSiswa = await dbC.gets("siswa/$id");
+    if (!dataSiswa.exists) {
       Get.back();
       Get.showSnackbar(
         GetSnackBar(
           duration: const Duration(seconds: 3),
           titleText: Text(
-            "Pegawawi Tidak Ditemukan",
+            "Siswa Tidak Ditemukan",
             style: GoogleFonts.poppins(
               fontWeight: FontWeight.bold,
               color: const Color.fromARGB(255, 15, 15, 15),
@@ -50,7 +50,7 @@ class EditPegawaiController extends GetxController {
             ),
           ),
           messageText: Text(
-            "Terjadi kesalahan saat mengedit pegawai",
+            "Terjadi kesalahan saat mengedit siswa",
             style: GoogleFonts.poppins(
               color: const Color.fromARGB(255, 15, 15, 15),
               fontSize: 12,
@@ -60,23 +60,23 @@ class EditPegawaiController extends GetxController {
         ),
       );
     } else {
-      pegawaiData.value = {
-        "name": dataPegawai.child("name").value,
-        "email": dataPegawai.child("email").value,
-        "telPegawai": dataPegawai.child("telPegawai").value,
-        "telAtasan": dataPegawai.child("telAtasan").value,
-        "telPenanggungJawab": dataPegawai.child("telPenanggungJawab").value,
+      siswaData.value = {
+        "name": dataSiswa.child("name").value,
+        "email": dataSiswa.child("email").value,
+        "telSiswa": dataSiswa.child("telSiswa").value,
+        "telWaliKelas": dataSiswa.child("telWaliKelas").value,
+        "telWaliMurid": dataSiswa.child("telWaliMurid").value,
       };
       nameController.value =
-          TextEditingValue(text: pegawaiData["name"] as String);
+          TextEditingValue(text: siswaData["name"] as String);
       emailController.value =
-          TextEditingValue(text: pegawaiData["email"] as String);
+          TextEditingValue(text: siswaData["email"] as String);
       textFieldControllers[0].value =
-          TextEditingValue(text: pegawaiData["telPegawai"] as String);
+          TextEditingValue(text: siswaData["telSiswa"] as String);
       textFieldControllers[1].value =
-          TextEditingValue(text: pegawaiData["telAtasan"] as String);
+          TextEditingValue(text: siswaData["telWaliKelas"] as String);
       textFieldControllers[2].value =
-          TextEditingValue(text: pegawaiData["telPenanggungJawab"] as String);
+          TextEditingValue(text: siswaData["telWaliMurid"] as String);
     }
     super.onInit();
   }
@@ -109,13 +109,13 @@ class EditPegawaiController extends GetxController {
   Future<void> validatePhone() async {
     for (var i = 0; i < textFieldControllers.length; i++) {
       String number = textFieldControllers[i].text;
-      if (i == 0 && number == pegawaiData["telPegawai"]) {
+      if (i == 0 && number == siswaData["telSiswa"]) {
         validationErrors[i] = "";
       }
-      if (i == 1 && number == pegawaiData["telAtasan"]) {
+      if (i == 1 && number == siswaData["telWaliKelas"]) {
         validationErrors[i] = "";
       }
-      if (i == 2 && number == pegawaiData["telPenanggungJawab"]) {
+      if (i == 2 && number == siswaData["telWaliMurid"]) {
         validationErrors[i] = "";
       }
       if (number.isEmpty) {
@@ -151,12 +151,12 @@ class EditPegawaiController extends GetxController {
     await validatePhone();
     if (formField.currentState!.validate()) {
       try {
-        await dbC.updates("pegawai/$id", {
+        await dbC.updates("siswa/$id", {
           "name": nameController.text,
           "email": emailController.text,
-          "telPegawai": textFieldControllers[0].text,
-          "telAtasan": textFieldControllers[1].text,
-          "telPenanggungJawab": textFieldControllers[2].text,
+          "telSiswa": textFieldControllers[0].text,
+          "telWaliKelas": textFieldControllers[1].text,
+          "telWaliMurid": textFieldControllers[2].text,
         });
         Get.back();
         Get.showSnackbar(
@@ -165,7 +165,7 @@ class EditPegawaiController extends GetxController {
             duration: const Duration(milliseconds: 1500),
             snackPosition: SnackPosition.BOTTOM,
             messageText: Text(
-              "Berhasil mengedit pegawai!",
+              "Berhasil mengedit siswa!",
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 color: Colors.white,
@@ -183,7 +183,7 @@ class EditPegawaiController extends GetxController {
             duration: const Duration(milliseconds: 1500),
             snackPosition: SnackPosition.BOTTOM,
             messageText: Text(
-              "Gagal mengedit pegawai!",
+              "Gagal mengedit siswa!",
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 color: Colors.white,

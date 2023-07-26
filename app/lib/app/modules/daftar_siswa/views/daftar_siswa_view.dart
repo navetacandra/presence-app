@@ -4,18 +4,18 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:presence/app/controllers/db_controller.dart';
 import 'package:presence/app/data/colors.dart';
-import '../controllers/daftar_pegawai_controller.dart';
+import '../controllers/daftar_siswa_controller.dart';
 
-class DaftarPegawaiView extends GetView<DaftarPegawaiController> {
-  DaftarPegawaiView({Key? key}) : super(key: key);
-  final selfC = Get.find<DaftarPegawaiController>();
+class DaftarSiswaView extends GetView<DaftarSiswaController> {
+  DaftarSiswaView({Key? key}) : super(key: key);
+  final selfC = Get.find<DaftarSiswaController>();
   final dbC = Get.find<DbController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Daftar Pegawai'),
+        title: const Text('Daftar Siswa'),
         flexibleSpace: Container(
           decoration: const BoxDecoration(gradient: mPrimaryGradientColor),
         ),
@@ -30,7 +30,7 @@ class DaftarPegawaiView extends GetView<DaftarPegawaiController> {
           ),
           child: SingleChildScrollView(
             child: StreamBuilder<DatabaseEvent>(
-              stream: dbC.stream("pegawai"),
+              stream: dbC.stream("siswa"),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   final snap = snapshot.data!.snapshot;
@@ -51,14 +51,14 @@ class DaftarPegawaiView extends GetView<DaftarPegawaiController> {
                     );
                   }
                   
-                  selfC.pegawai.clear();
+                  selfC.siswa.clear();
                   for (var ch in snap.children) {
-                    selfC.pegawai.add(
+                    selfC.siswa.add(
                       {
                         "id": ch.child("id").value as String,
                         "name": ch.child("name").value as String,
                         "email": ch.child("email").value as String,
-                        "tel": ch.child("telPegawai").value as String,
+                        "tel": ch.child("telSiswa").value as String,
                       },
                     );
                   }

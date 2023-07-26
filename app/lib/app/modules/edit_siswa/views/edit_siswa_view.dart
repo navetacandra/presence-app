@@ -2,19 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:presence/app/data/colors.dart';
-import '../controllers/tambah_pegawai_controller.dart';
+import '../controllers/edit_siswa_controller.dart';
 
-class TambahPegawaiView extends GetView<TambahPegawaiController> {
-  TambahPegawaiView({Key? key}) : super(key: key);
-  final selfC = Get.find<TambahPegawaiController>();
+class EditSiswaView extends GetView<EditSiswaController> {
+  EditSiswaView({Key? key}) : super(key: key);
+  final selfC = Get.find<EditSiswaController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tambah Pegawai'),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(gradient: mPrimaryGradientColor),
-        ),
+        title: const Text('Edit Siswa'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -29,16 +26,20 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "Tambah Pegawai",
+                    "Edit Siswa",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
-                        fontSize: 26, fontWeight: FontWeight.w600),
+                      fontSize: 26,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 30),
                   TextFormField(
-                    controller: selfC.nameController,
                     keyboardType: TextInputType.text,
-                    validator: (nameValue) => selfC.validateName(nameValue),
+                    validator: (nameValue) => selfC.siswaData["name"] == nameValue
+                        ? null
+                        : selfC.validateName(nameValue),
+                    controller: selfC.nameController,
                     decoration: InputDecoration(
                       labelText: "Nama",
                       border: const OutlineInputBorder(),
@@ -51,9 +52,11 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
-                    controller: selfC.emailController,
                     keyboardType: TextInputType.emailAddress,
-                    validator: (emailValue) => selfC.validateEmail(emailValue),
+                    validator: (emailValue) => selfC.siswaData["email"] == emailValue
+                        ? null
+                        : selfC.validateEmail(emailValue),
+                    controller: selfC.emailController,
                     decoration: InputDecoration(
                       labelText: "Email",
                       border: const OutlineInputBorder(),
@@ -69,21 +72,24 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                     () => TextFormField(
                       keyboardType: TextInputType.phone,
                       controller: selfC.textFieldControllers[0],
-                      validator: (numberValue) =>
-                          selfC.validationErrors[0].isNotEmpty
+                      validator: (numberValue) => selfC.siswaData["telSiswa"] == numberValue
+                          ? null
+                          : selfC.validationErrors[0].isNotEmpty
                               ? selfC.validationErrors[0]
                               : null,
                       decoration: InputDecoration(
-                        labelText: "Telpon Pegawai",
+                        labelText: "WhatsApp Siswa",
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.phone),
                         errorStyle: GoogleFonts.poppins(
                           color: Colors.red,
                           fontSize: 15,
                         ),
-                        errorText: selfC.validationErrors[0].isNotEmpty
-                            ? selfC.validationErrors[0]
-                            : null,
+                        errorText: selfC.siswaData["telSiswa"] == selfC.textFieldControllers[0].text
+                            ? null
+                            : selfC.validationErrors[0].isNotEmpty
+                                ? selfC.validationErrors[0]
+                                : null,
                       ),
                     ),
                   ),
@@ -92,21 +98,24 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                     () => TextFormField(
                       keyboardType: TextInputType.phone,
                       controller: selfC.textFieldControllers[1],
-                      validator: (numberValue) =>
-                          selfC.validationErrors[1].isNotEmpty
+                      validator: (numberValue) => selfC.siswaData["telWaliKelas"] == numberValue
+                          ? null
+                          : selfC.validationErrors[1].isNotEmpty
                               ? selfC.validationErrors[1]
                               : null,
                       decoration: InputDecoration(
-                        labelText: "Telpon Atasan",
+                        labelText: "WhatsApp Wali Kelas",
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.phone),
                         errorStyle: GoogleFonts.poppins(
                           color: Colors.red,
                           fontSize: 15,
                         ),
-                        errorText: selfC.validationErrors[1].isNotEmpty
-                            ? selfC.validationErrors[1]
-                            : null,
+                        errorText: selfC.siswaData["telWaliKelas"] == selfC.textFieldControllers[1].text
+                            ? null
+                            : selfC.validationErrors[1].isNotEmpty
+                                ? selfC.validationErrors[1]
+                                : null,
                       ),
                     ),
                   ),
@@ -115,21 +124,24 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                     () => TextFormField(
                       keyboardType: TextInputType.phone,
                       controller: selfC.textFieldControllers[2],
-                      validator: (numberValue) =>
-                          selfC.validationErrors[2].isNotEmpty
+                      validator: (numberValue) => selfC.siswaData["telWaliMurid"] == numberValue
+                          ? null
+                          : selfC.validationErrors[2].isNotEmpty
                               ? selfC.validationErrors[2]
                               : null,
                       decoration: InputDecoration(
-                        labelText: "Telpon Penanggung Jawab",
+                        labelText: "WhatsApp Wali Murid",
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.phone),
                         errorStyle: GoogleFonts.poppins(
                           color: Colors.red,
                           fontSize: 15,
                         ),
-                        errorText: selfC.validationErrors[2].isNotEmpty
-                            ? selfC.validationErrors[2]
-                            : null,
+                        errorText: selfC.siswaData["telWaliMurid"] == selfC.textFieldControllers[2].text
+                            ? null
+                            : selfC.validationErrors[2].isNotEmpty
+                                ? selfC.validationErrors[2]
+                                : null,
                       ),
                     ),
                   ),
@@ -147,7 +159,7 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                         child: Obx(
                           () => selfC.isLoading.isFalse
                               ? Text(
-                                  "Tambah",
+                                  "Update",
                                   style: GoogleFonts.poppins(
                                     color: Colors.white,
                                     fontSize: 20,

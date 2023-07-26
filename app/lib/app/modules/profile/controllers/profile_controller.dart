@@ -250,7 +250,7 @@ class ProfileController extends GetxController {
   void updateProfile() async {
     if ((profileDetail["uid"] as String).isNotEmpty) {
       final pgwData = await dbController.mDb
-          .ref("pegawai")
+          .ref("siswa")
           .orderByChild("email")
           .equalTo(profileDetail["email"])
           .get();
@@ -258,7 +258,7 @@ class ProfileController extends GetxController {
           .updates("users/${profileDetail["uid"]}", {"name": nameText.value});
       if (pgwData.exists) {
         final pgwId = pgwData.children.first.child("id").value as String;
-        await dbController.updates("pegawai/$pgwId", {"name": nameText.value});
+        await dbController.updates("siswa/$pgwId", {"name": nameText.value});
       }
     }
   }

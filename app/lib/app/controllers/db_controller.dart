@@ -7,7 +7,7 @@ class DbController extends GetxController {
 
   Stream<DatabaseEvent> stream(String ref) => mDb.ref(ref).onValue;
   Future<DataSnapshot> gets(String ref) async => await mDb.ref(ref).get();
-  Future<DataSnapshot> getDataPegawai(String email) async => await mDb.ref("pegawai").orderByChild("email").equalTo(email).get();
+  Future<DataSnapshot> getDataSiswa(String email) async => await mDb.ref("siswa").orderByChild("email").equalTo(email).get();
   Future<void> updates(String ref, Map<String, Object?> data) => mDb.ref(ref).update(data);
   Future<void> remove(String ref) => mDb.ref(ref).remove();
 
