@@ -124,42 +124,40 @@ class HomeView extends GetView<HomeController> {
                           horizontal: 0,
                           vertical: 20,
                         ),
-                        child: Obx(
-                          () => selfC.role.value == 0
-                              ? adminHomeCard()
-                              : Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Obx(
+                        child: selfC.role.value == 0
+                            ? adminHomeCard()
+                            : Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Obx(
+                                      () => Text(
+                                        "${selfC.date.value} ${selfC.month.value.capitalizeFirst} ${selfC.year.value}",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: Get.width,
+                                      margin: const EdgeInsets.only(top: 20),
+                                      child: Obx(
                                         () => Text(
-                                          "${selfC.date.value} ${selfC.month.value.capitalizeFirst} ${selfC.year.value}",
+                                          "${selfC.hour.value}:${selfC.minute.value}:${selfC.second.value}",
                                           style: GoogleFonts.poppins(
-                                            fontSize: 22,
+                                            fontSize: 28,
                                             fontWeight: FontWeight.w600,
                                           ),
+                                          textAlign: TextAlign.center,
                                         ),
                                       ),
-                                      Container(
-                                        width: Get.width,
-                                        margin: const EdgeInsets.only(top: 20),
-                                        child: Obx(
-                                          () => Text(
-                                            "${selfC.hour.value}:${selfC.minute.value}:${selfC.second.value}",
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 28,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                        ),
+                              ),
                       ),
                     ),
                     // End Detail Info Card
