@@ -10,8 +10,12 @@ import 'package:presence/app/routes/app_pages.dart';
 class HomeController extends GetxController {
   final authController = Get.find<AuthController>();
   final dbController = Get.find<DbController>();
+  RxString hour = ''.obs;
+  RxString minute = ''.obs;
+  RxString second = ''.obs;
   RxString date = ''.obs;
   RxString month = ''.obs;
+  RxString year = ''.obs;
   RxString name = '...'.obs;
   RxInt present = 0.obs;
   RxInt role = 1.obs;
@@ -62,6 +66,18 @@ class HomeController extends GetxController {
         },
       ],
     ],
+    "support": [
+      [{}]
+    ],
+    "user": [
+      [
+        {
+          "image": "assets/users.png",
+          "label": "Data Absen",
+          "navigation": Routes.ABSEN_TABLE,
+        }
+      ]
+    ]
   };
   List<String> months = [
     "januari",
@@ -79,8 +95,6 @@ class HomeController extends GetxController {
   ];
 
   RxList currentMenu = [].obs;
-
-  
 
   @override
   void onInit() async {
@@ -115,13 +129,20 @@ class HomeController extends GetxController {
   void onReady() async {
     super.onReady();
     while (true) {
-      date.value = (DateTime.now().toUtc().add(const Duration(hours: 7))).day.toString();
-      month.value = months[(DateTime.now().toUtc().add(const Duration(hours: 7))).month - 1];
-      DataSnapshot snap = await dbController.gets("/absensi/${month.value}/${date.value}/siswa");
-      if (!snap.exists) {
-        present.value = 0;
-      } else {
-        present.value = snap.children.length;
+      final tz = (DateTime.now().toUtc().add(const Duration(hours: 7)));
+      hour.value = tz.hour.toString().length > 1 ? tz.hour.toString() : "0${tz.hour.toString()}";
+      minute.value = tz.minute.toString().length > 1 ? tz.minute.toString() : "0${tz.minute.toString()}";
+      second.value = tz.second.toString().length > 1 ? tz.second.toString() : "0${tz.second.toString()}";
+      date.value = tz.day.toString().length > 1 ? tz.day.toString() : "0${tz.day.toString()}";
+      month.value = months[tz.month - 1];
+      year.value = tz.year.toString();
+      if (role.value == 0) {
+        DataSnapshot snap = await dbController.gets("/absensi/${month.value}/${date.value}/siswa");
+        if (!snap.exists) {
+          present.value = 0;
+        } else {
+          present.value = snap.children.length;
+        }
       }
       await Future.delayed(const Duration(seconds: 1));
     }

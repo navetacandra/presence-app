@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:presence/app/controllers/auth_controller.dart';
 import 'package:presence/app/controllers/db_controller.dart';
-import 'package:presence/app/controllers/location_controller.dart';
+// import 'package:presence/app/controllers/location_controller.dart';
 import 'package:presence/app/data/colors.dart';
 import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';
@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.delayed(const Duration(seconds: 3)),
-      // future: Future.delayed(Duration.zero),
+      // future: Future.delayed(const Duration(seconds: 3)),
+      future: Future.delayed(Duration.zero),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return StreamBuilder<User?>(

@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/absen_table/bindings/absen_table_binding.dart';
+import '../modules/absen_table/views/absen_table_view.dart';
 import '../modules/daftar_siswa/bindings/daftar_siswa_binding.dart';
 import '../modules/daftar_siswa/views/daftar_siswa_view.dart';
 import '../modules/edit_siswa/bindings/edit_siswa_binding.dart';
@@ -28,6 +30,7 @@ import '../modules/tambah_kartu_proses/bindings/tambah_kartu_proses_binding.dart
 import '../modules/tambah_kartu_proses/views/tambah_kartu_proses_view.dart';
 import '../modules/tambah_siswa/bindings/tambah_siswa_binding.dart';
 import '../modules/tambah_siswa/views/tambah_siswa_view.dart';
+
 part 'app_routes.dart';
 
 class AppPages {
@@ -126,6 +129,13 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => ProfileView(),
       binding: ProfileBinding(),
+      transition: Transition.downToUp,
+      transitionDuration: const Duration(milliseconds: 200),
+    ),
+    GetPage(
+      name: _Paths.ABSEN_TABLE,
+      page: () => AbsenTableView(),
+      binding: AbsenTableBinding(),
       transition: Transition.downToUp,
       transitionDuration: const Duration(milliseconds: 200),
     ),

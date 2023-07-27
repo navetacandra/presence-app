@@ -124,105 +124,40 @@ class HomeView extends GetView<HomeController> {
                           horizontal: 0,
                           vertical: 20,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            SizedBox(
-                              width: Get.width * .4,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      Image.asset(
-                                        'assets/users.png',
-                                        width: 50,
-                                        height: 50,
-                                      ),
-                                      Container(
-                                        width: Get.width * .2,
-                                        alignment: Alignment.topRight,
-                                        child: Text(
-                                          "Siswa Terdaftar",
-                                          style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
-                                          textAlign: TextAlign.end,
-                                          softWrap: true,
-                                          overflow: TextOverflow.clip,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  StreamBuilder<DatabaseEvent>(
-                                    stream: dbC.stream("siswa"),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.active && snapshot.data!.snapshot.exists) {}
-                                      return Container(
-                                        margin: const EdgeInsets.only(top: 10),
-                                        child: Text(
-                                          snapshot.connectionState == ConnectionState.active
-                                              ? snapshot.data!.snapshot.exists
-                                                  ? "${snapshot.data!.snapshot.children.length}"
-                                                  : "0"
-                                              : "-",
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                          softWrap: true,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: Get.width * .4,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: <Widget>[
-                                      Image.asset(
-                                        'assets/users-check.png',
-                                        width: 50,
-                                        height: 50,
-                                      ),
-                                      Container(
-                                        width: Get.width * .2,
-                                        alignment: Alignment.topRight,
-                                        child: Text(
-                                          "Siswa Hadir",
-                                          style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
-                                          textAlign: TextAlign.end,
-                                          softWrap: true,
-                                          overflow: TextOverflow.clip,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Obx(
-                                    () => Container(
-                                      margin: const EdgeInsets.only(top: 10),
-                                      child: Text(
-                                        selfC.present.value.toString(),
+                        child: selfC.role.value == 0
+                            ? adminHomeCard()
+                            : Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Obx(
+                                      () => Text(
+                                        "${selfC.date.value} ${selfC.month.value.capitalizeFirst} ${selfC.year.value}",
                                         style: GoogleFonts.poppins(
-                                          fontSize: 24,
+                                          fontSize: 22,
                                           fontWeight: FontWeight.w600,
                                         ),
-                                        overflow: TextOverflow.ellipsis,
-                                        softWrap: true,
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    Container(
+                                      width: Get.width,
+                                      margin: const EdgeInsets.only(top: 20),
+                                      child: Obx(
+                                        () => Text(
+                                          "${selfC.hour.value}:${selfC.minute.value}:${selfC.second.value}",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
                       ),
                     ),
                     // End Detail Info Card
@@ -266,6 +201,108 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
       ),
+    );
+  }
+
+  Row adminHomeCard() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        SizedBox(
+          width: Get.width * .4,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/users.png',
+                    width: 50,
+                    height: 50,
+                  ),
+                  Container(
+                    width: Get.width * .2,
+                    alignment: Alignment.topRight,
+                    child: Text(
+                      "Siswa Terdaftar",
+                      style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.end,
+                      softWrap: true,
+                      overflow: TextOverflow.clip,
+                    ),
+                  )
+                ],
+              ),
+              StreamBuilder<DatabaseEvent>(
+                stream: dbC.stream("siswa"),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active && snapshot.data!.snapshot.exists) {}
+                  return Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      snapshot.connectionState == ConnectionState.active
+                          ? snapshot.data!.snapshot.exists
+                              ? "${snapshot.data!.snapshot.children.length}"
+                              : "0"
+                          : "-",
+                      style: GoogleFonts.poppins(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: Get.width * .4,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/users-check.png',
+                    width: 50,
+                    height: 50,
+                  ),
+                  Container(
+                    width: Get.width * .2,
+                    alignment: Alignment.topRight,
+                    child: Text(
+                      "Siswa Hadir",
+                      style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.end,
+                      softWrap: true,
+                      overflow: TextOverflow.clip,
+                    ),
+                  )
+                ],
+              ),
+              Obx(
+                () => Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    selfC.present.value.toString(),
+                    style: GoogleFonts.poppins(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

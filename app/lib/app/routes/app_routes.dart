@@ -19,6 +19,7 @@ abstract class Routes {
   static const KONEKSI_ESP = _Paths.KONEKSI_ESP;
   static const LAPORAN_ABSEN = _Paths.LAPORAN_ABSEN;
   static const PROFILE = _Paths.PROFILE;
+  static const ABSEN_TABLE = _Paths.ABSEN_TABLE;
 }
 
 abstract class _Paths {
@@ -37,4 +38,5 @@ abstract class _Paths {
   static const KONEKSI_ESP = '/koneksi-esp';
   static const LAPORAN_ABSEN = '/laporan-absen';
   static const PROFILE = '/profile';
+  static const ABSEN_TABLE = '/absen-table';
 }

@@ -62,8 +62,7 @@ class ProfileView extends GetView<ProfileController> {
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.circular(Get.width * .25),
+                                    borderRadius: BorderRadius.circular(Get.width * .25),
                                     boxShadow: <BoxShadow>[
                                       BoxShadow(
                                         color: Colors.black87.withAlpha(20),
@@ -74,11 +73,9 @@ class ProfileView extends GetView<ProfileController> {
                                     ],
                                   ),
                                   child: ClipRRect(
-                                    borderRadius:
-                                        BorderRadius.circular(Get.width * .25),
+                                    borderRadius: BorderRadius.circular(Get.width * .25),
                                     child: Image.network(
-                                      (selfC.profileDetail["photoURL"]
-                                          as String),
+                                      (selfC.profileDetail["photoURL"] as String),
                                       width: Get.width * .3,
                                       height: Get.width * .3,
                                     ),
@@ -186,12 +183,10 @@ class ProfileView extends GetView<ProfileController> {
                           InkWell(
                             onTap: () => selfC.changePasswordForm(context),
                             child: Container(
-                              margin: EdgeInsets.all(10),
+                              margin: const EdgeInsets.all(10),
                               height: 50,
                               width: Get.width * .75,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.red.shade700),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.red.shade700),
                               child: Center(
                                 child: Text(
                                   "Ganti Password",
@@ -206,32 +201,17 @@ class ProfileView extends GetView<ProfileController> {
                           ),
                           Obx(
                             () => InkWell(
-                              onTap: () => (selfC.nameText.value ==
-                                          (selfC.profileDetail["name"]
-                                              as String) ||
-                                      selfC.nameText.isEmpty)
-                                  ? null
-                                  : selfC.updateProfile(),
+                              onTap: () => (selfC.nameText.value == (selfC.profileDetail["name"] as String) || selfC.nameText.isEmpty) ? null : selfC.updateProfile(),
                               child: Container(
                                 width: Get.width * .75,
                                 height: 50,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: (selfC.nameText.value ==
-                                                (selfC.profileDetail["name"]
-                                                    as String) ||
-                                            selfC.nameText.isEmpty)
-                                        ? Colors.yellow.shade700
-                                        : Colors.transparent,
+                                    color: (selfC.nameText.value == (selfC.profileDetail["name"] as String) || selfC.nameText.isEmpty) ? Colors.yellow.shade700 : Colors.transparent,
                                     width: 2,
                                   ),
-                                  color: (selfC.nameText.value ==
-                                              (selfC.profileDetail["name"]
-                                                  as String) ||
-                                          selfC.nameText.isEmpty)
-                                      ? Colors.transparent
-                                      : Colors.yellow.shade700,
+                                  color: (selfC.nameText.value == (selfC.profileDetail["name"] as String) || selfC.nameText.isEmpty) ? Colors.transparent : Colors.yellow.shade700,
                                 ),
                                 child: Center(
                                   child: Text(
@@ -239,12 +219,7 @@ class ProfileView extends GetView<ProfileController> {
                                     style: GoogleFonts.poppins(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
-                                      color: (selfC.nameText.value ==
-                                                  (selfC.profileDetail["name"]
-                                                      as String) ||
-                                              selfC.nameText.isEmpty)
-                                          ? Colors.yellow.shade700
-                                          : Colors.white,
+                                      color: (selfC.nameText.value == (selfC.profileDetail["name"] as String) || selfC.nameText.isEmpty) ? Colors.yellow.shade700 : Colors.white,
                                     ),
                                   ),
                                 ),
