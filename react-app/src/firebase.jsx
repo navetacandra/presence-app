@@ -24,8 +24,8 @@ export const nestATOB = (repeat, string) => {
   }
   return str ?? '';
 };
-export const getUserData = (hasedData) => {
-  let _data = hasedData ? hasedData : localStorage.getItem(nestBTOA(3, "user-credential"));
+export const getUserData = (hashedData) => {
+  let _data = hashedData ? hashedData : localStorage.getItem(nestBTOA(3, "user-credential"));
   _data = (typeof _data != "undefined" && _data != null) ? _data : nestBTOA(5, '{}')
   _data = nestATOB(5, _data);
   _data = JSON.parse(_data);

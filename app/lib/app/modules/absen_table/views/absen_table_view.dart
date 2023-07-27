@@ -56,6 +56,7 @@ class AbsenTableView extends GetView<AbsenTableController> {
                   ),
                 ),
               ],
+              headingRowColor: MaterialStateProperty.all(const Color.fromRGBO(255, 255, 255, 1)),
               rows: <DataRow>[
                 ...selfC.dataAbsenList
                     .map(
@@ -102,6 +103,9 @@ class AbsenTableView extends GetView<AbsenTableController> {
                             ),
                           ),
                         ],
+                        color: MaterialStateProperty.all(
+                          int.parse(el["tanggal"] ?? "0") % 2 == 0 ? Color.fromRGBO(242, 242, 242, 1) : Color.fromRGBO(255, 255, 255, 1),
+                        ),
                       ),
                     )
                     .toList(),

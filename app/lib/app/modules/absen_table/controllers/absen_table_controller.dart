@@ -62,7 +62,8 @@ class AbsenTableController extends GetxController {
   void getMonthsReport() async {
     User? currentUser = authC.mAuth.currentUser;
     if (currentUser == null) Get.offAllNamed(Routes.HOME);
-    DataSnapshot data = await dbC.mDb.ref('/siswa').orderByChild('email').equalTo(currentUser!.email).get();
+    DataSnapshot data = await dbC.mDb.ref('/siswa').orderByChild('email').equalTo("dummy_001@gmail.com").get();
+    // DataSnapshot data = await dbC.mDb.ref('/siswa').orderByChild('email').equalTo(currentUser!.email).get();
     if (!data.exists) {
       Get.snackbar(
         "",
@@ -78,7 +79,7 @@ class AbsenTableController extends GetxController {
           ),
         ),
         messageText: Text(
-          "Siswa dengan email ${currentUser.email} tidak ditemukan.",
+          "Siswa dengan email ${currentUser!.email} tidak ditemukan.",
           style: GoogleFonts.poppins(
             fontSize: 14,
             fontWeight: FontWeight.w500,

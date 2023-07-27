@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import SideNav from "./SideNav";
-import DashboardScreen from "./Admin/Dashboard";
+import AdminDashboardScreen from "./Admin/Dashboard";
+import UserDashboardScreen from "./User/Dashboard";
 import WhatsAppScreen from "./Admin/WhatsApp";
 import DaftarSiswaScreen from "./Admin/DaftarSiswa";
 import { getUserData } from "../../firebase";
@@ -53,7 +54,7 @@ export default function Dashboard() {
       {
         icon: "bi bi-speedometer2",
         title: "Dashboard",
-        element: <DashboardScreen />,
+        element: <AdminDashboardScreen />,
       },
       {
         icon: "bi bi-people-fill",
@@ -86,7 +87,7 @@ export default function Dashboard() {
       {
         icon: "bi bi-speedometer2",
         title: "Dashboard",
-        element: <DashboardScreen />,
+        element: <UserDashboardScreen />,
       },
       {
         icon: "bi bi-person-fill",

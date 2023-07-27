@@ -3,7 +3,16 @@ const { getDatabase, ref, set } = require("firebase/database");
 const { writeFileSync } = require("fs");
 require("dotenv").config();
 
-const app = initializeApp({});
+const app = initializeApp({
+  "apiKey": "AIzaSyD-JP8GCi27H55NBuh3nNhVMS4UzU0B6As",
+  "authDomain": "ma5ter-absensi.firebaseapp.com",
+  "databaseURL": "https://ma5ter-absensi-default-rtdb.asia-southeast1.firebasedatabase.app",
+  "projectId": "ma5ter-absensi",
+  "storageBucket": "ma5ter-absensi.appspot.com",
+  "messagingSenderId": "199771004996",
+  "appId": "1:199771004996:web:4b93e9d4a1c318162d9c11",
+  "measurementId": "G-4WZS5RF9C0"
+});
 const db = getDatabase(app);
 const arg = process.argv[2];
 
